@@ -63,11 +63,13 @@
               ) );
           } else {
               // デフォルトメニュー
+              $news_page_url = get_permalink( get_option( 'page_for_posts' ) ) ?: home_url( '/news/' );
               $nav_items = array(
                   array( 'title' => 'ホーム', 'en' => 'HOME', 'url' => home_url( '/' ) ),
                   array( 'title' => 'お店について', 'en' => 'ABOUT', 'url' => home_url( '/about/' ) ),
                   array( 'title' => 'メニュー', 'en' => 'MENU', 'url' => home_url( '/menu/' ) ),
                   array( 'title' => '岡山の果物', 'en' => 'FRUITS', 'url' => home_url( '/fruits/' ) ),
+                  array( 'title' => 'お知らせ', 'en' => 'NEWS', 'url' => $news_page_url ),
                   array( 'title' => 'アクセス', 'en' => 'ACCESS', 'url' => home_url( '/access/' ) ),
                   array( 'title' => 'お問い合わせ', 'en' => 'CONTACT', 'url' => home_url( '/contact/' ) ),
               );
@@ -123,6 +125,7 @@
       <a href="<?php echo esc_url( home_url( '/about/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">お店について</a>
       <a href="<?php echo esc_url( home_url( '/menu/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">メニュー</a>
       <a href="<?php echo esc_url( home_url( '/fruits/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">岡山の果物</a>
+      <a href="<?php echo esc_url( $news_page_url ?? home_url( '/news/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">お知らせ</a>
       <a href="<?php echo esc_url( home_url( '/access/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">アクセス</a>
       <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">お問い合わせ</a>
     </div>

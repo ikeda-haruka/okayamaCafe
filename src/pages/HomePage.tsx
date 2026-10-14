@@ -431,7 +431,16 @@ export const HomePage: React.FC = () => {
                 店舗からのお知らせ
               </h3>
             </div>
-            <span className="text-xs text-[#a48c6f]">最新の入荷・営業カレンダー</span>
+            <div className="flex items-center gap-4">
+              <span className="text-xs text-[#a48c6f] hidden sm:inline">最新の入荷・営業カレンダー</span>
+              <Link
+                to="/news"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#b54737] hover:underline"
+              >
+                <span>すべてのお知らせを見る</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
 
           <div className="divide-y divide-[#f4eee3]">

@@ -239,7 +239,13 @@ $theme_uri = get_template_directory_uri();
           <span class="text-xs font-semibold tracking-widest text-[#a48c6f] uppercase block">NEWS & TOPICS</span>
           <h3 class="font-serif text-xl sm:text-2xl font-bold text-[#392d23]">店舗からのお知らせ</h3>
         </div>
-        <span class="text-xs text-[#a48c6f]">WordPress管理画面の「投稿」から更新可能</span>
+        <div class="flex items-center gap-4">
+          <span class="text-xs text-[#a48c6f] hidden md:inline">最新の入荷・営業案内</span>
+          <a href="<?php echo esc_url( get_permalink( get_option( 'page_for_posts' ) ) ?: home_url( '/news/' ) ); ?>" class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#b54737] hover:underline">
+            <span>すべてのお知らせを見る</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
       </div>
 
       <div class="divide-y divide-[#f4eee3]">

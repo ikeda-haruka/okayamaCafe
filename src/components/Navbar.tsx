@@ -31,6 +31,7 @@ export const Navbar: React.FC = () => {
     { name: 'お店について', path: '/about', en: 'ABOUT' },
     { name: 'メニュー', path: '/menu', en: 'MENU' },
     { name: '岡山の果物', path: '/fruits', en: 'OKAYAMA FRUITS' },
+    { name: 'お知らせ', path: '/news', en: 'NEWS' },
     { name: 'アクセス', path: '/access', en: 'ACCESS' },
     { name: 'お問い合わせ', path: '/contact', en: 'CONTACT' },
   ];

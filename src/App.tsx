@@ -9,6 +9,7 @@ import { MenuPage } from './pages/MenuPage';
 import { FruitsPage } from './pages/FruitsPage';
 import { AccessPage } from './pages/AccessPage';
 import { ContactPage } from './pages/ContactPage';
+import { NewsPage } from './pages/NewsPage';
 
 // ページ遷移時にスクロールを最上部に移動させるコンポーネント
 const ScrollToTop: React.FC = () => {
@@ -36,6 +37,7 @@ export function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/menu" element={<MenuPage />} />
             <Route path="/fruits" element={<FruitsPage />} />
+            <Route path="/news" element={<NewsPage />} />
             <Route path="/access" element={<AccessPage />} />
             <Route path="/contact" element={<ContactPage />} />
           </Routes>
