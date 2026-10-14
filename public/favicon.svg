@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- 葉っぱ（マスカットグリーン） -->
+  <path d="M34 16 C34 6, 48 4, 52 8 C54 18, 42 22, 34 16 Z" fill="#6cae54" />
+  <path d="M36 15 C41 12, 47 11, 50 10" stroke="#a9d997" stroke-width="1.5" stroke-linecap="round" fill="none" />
+  
+  <!-- 桃の果実（ピーチグラデーション） -->
+  <defs>
+    <linearGradient id="peachGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff0eb" />
+      <stop offset="40%" stop-color="#fbc6b6" />
+      <stop offset="85%" stop-color="#e26d5c" />
+      <stop offset="100%" stop-color="#b54737" />
+    </linearGradient>
+  </defs>
+  
+  <path d="M32 20 C22 14, 10 24, 10 38 C10 52, 26 58, 32 60 C38 58, 54 52, 54 38 C54 24, 42 14, 32 20 Z" fill="url(#peachGrad)" />
+  
+  <!-- 桃の中心の自然なくぼみライン -->
+  <path d="M32 20 C31 30, 31 44, 32 58" stroke="#f7a48d" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.6" />
+</svg>

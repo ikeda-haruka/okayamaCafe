@@ -1,0 +1,58 @@
+/*
+Theme Name: CAFE HAREKA Theme (晴果)
+Theme URI: https://github.com/your-username/okayamaCafe
+Author: CAFE HAREKA Development Team
+Author URI: https://github.com/your-username
+Description: 岡山県・地産地消の旬果スイーツと心地よい空間を届けるカフェ「CAFE HAREKA（晴果）」公式WordPressテーマ。カスタム投稿タイプ（メニュー・果物図鑑）とREST API完全対応。
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: hareka-theme
+Tags: custom-background, custom-menu, featured-images, responsive-layout, theme-options, translation-ready
+*/
+
+/* WordPress core required styles */
+.alignnone {
+  margin: 5px 20px 20px 0;
+}
+.aligncenter, div.aligncenter {
+  display: block;
+  margin: 5px auto 5px auto;
+}
+.alignright {
+  float: right;
+  margin: 5px 0 20px 20px;
+}
+.alignleft {
+  float: left;
+  margin: 5px 20px 20px 0;
+}
+a img.alignright {
+  float: right;
+  margin: 5px 0 20px 20px;
+}
+a img.alignnone {
+  margin: 5px 20px 20px 0;
+}
+a img.alignleft {
+  float: left;
+  margin: 5px 20px 20px 0;
+}
+a img.aligncenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.wp-caption {
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  max-width: 96%;
+  padding: 5px 3px 10px;
+  text-align: center;
+}
+.wp-caption-text {
+  font-size: 11px;
+  line-height: 17px;
+  margin: 0;
+  padding: 0 4px 5px;
+}

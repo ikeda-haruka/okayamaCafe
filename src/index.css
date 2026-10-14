@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-peach-light: #fff5f2;
+    --color-peach-50: #fef2ee;
+    --color-peach-100: #fde2d9;
+    --color-peach-200: #fbc6b6;
+    --color-peach-300: #f7a48d;
+    --color-peach-500: #e26d5c;
+    --color-peach-700: #b54737;
+
+    --color-muscat-light: #f4f8f0;
+    --color-muscat-100: #e2f0d9;
+    --color-muscat-300: #a9d997;
+    --color-muscat-500: #6cae54;
+    --color-muscat-700: #4a8235;
+
+    --color-wood-50: #faf7f2;
+    --color-wood-100: #f4eee3;
+    --color-wood-200: #e7dac5;
+    --color-wood-500: #a48c6f;
+    --color-wood-800: #574636;
+    --color-wood-900: #392d23;
+  }
+
+  body {
+    font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+    background-color: #faf7f2;
+    color: #433932;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+  }
+}
+
+/* スムーズスクロール */
+html {
+  scroll-behavior: smooth;
+}
+
+/* カスタムスクロールバー */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f4eee3;
+}
+::-webkit-scrollbar-thumb {
+  background: #d8c8b2;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b5a289;
+}
