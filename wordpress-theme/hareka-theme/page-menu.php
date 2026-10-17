@@ -137,6 +137,40 @@ $theme_uri = get_template_directory_uri();
                   $cat_slugs[] = 'テイクアウト・ギフト';
               }
 
+              // 特徴タグの取得（メタまたはmenu_tagタクソノミー）
+              $tags_meta = get_post_meta( get_the_ID(), '_hareka_tags', true );
+              $tags = array();
+              if ( ! empty( $tags_meta ) ) {
+                  if ( is_array( $tags_meta ) ) {
+                      $tags = $tags_meta;
+                  } else {
+                      $tags = array_filter( array_map( 'trim', preg_split( '/[,、\s]+/u', $tags_meta ) ) );
+                  }
+              } else {
+                  $terms = get_the_terms( get_the_ID(), 'menu_tag' );
+                  if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+                      $tags = wp_list_pluck( $terms, 'name' );
+                  }
+              }
+
+              // 未設定時の親切なフォールバック（初期メニューのタグ）
+              if ( empty( $tags ) ) {
+                  $m_title = get_the_title();
+                  if ( mb_strpos( $m_title, '清水白桃' ) !== false ) {
+                      $tags = array( '数量限定', '看板メニュー', '朝採れ果実' );
+                  } elseif ( mb_strpos( $m_title, '晴王' ) !== false || mb_strpos( $m_title, 'シャインマスカット' ) !== false ) {
+                      $tags = array( 'おすすめ', '皮ごと果実', '手土産可' );
+                  } elseif ( mb_strpos( $m_title, 'ピオーネ' ) !== false || mb_strpos( $m_title, 'パンケーキ' ) !== false ) {
+                      $tags = array( 'グルテンフリー米粉', '焼き立て' );
+                  } elseif ( mb_strpos( $m_title, 'メロン' ) !== false ) {
+                      $tags = array( 'グラスデザート' );
+                  } elseif ( mb_strpos( $m_title, 'カレー' ) !== false ) {
+                      $tags = array( '千屋牛', 'スパイス仕込み' );
+                  } elseif ( mb_strpos( $m_title, 'パニーニ' ) !== false || mb_strpos( $m_title, 'サンド' ) !== false ) {
+                      $tags = array( '地場野菜', '温製' );
+                  }
+              }
+
               $cat_class = implode( ' ', array_unique( $cat_slugs ) );
       ?>
         <div class="menu-card bg-white rounded-3xl overflow-hidden border border-[#e7dac5] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group" data-categories="<?php echo esc_attr( $cat_class ); ?>">
@@ -164,6 +198,19 @@ $theme_uri = get_template_directory_uri();
               <?php endif; ?>
               <h3 class="font-serif text-lg font-bold text-[#392d23] group-hover:text-[#b54737] transition-colors leading-snug"><?php the_title(); ?></h3>
               <div class="text-xs text-[#6b5a4d] leading-relaxed"><?php the_content(); ?></div>
+
+              <?php if ( ! empty( $tags ) ) : ?>
+                <div class="flex flex-wrap gap-1.5 pt-1">
+                  <?php foreach ( $tags as $tag_item ) :
+                    $clean_tag = ltrim( trim( $tag_item ), '#' );
+                    if ( empty( $clean_tag ) ) continue;
+                  ?>
+                    <span class="bg-[#faf7f2] text-[#8c735d] text-[10px] font-medium px-2 py-0.5 rounded border border-[#e7dac5]">
+                      #<?php echo esc_html( $clean_tag ); ?>
+                    </span>
+                  <?php endforeach; ?>
+                </div>
+              <?php endif; ?>
             </div>
 
             <div class="pt-4 border-t border-[#f4eee3] flex items-center justify-between">

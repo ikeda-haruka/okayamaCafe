@@ -125,6 +125,29 @@ function hareka_register_custom_post_types() {
     );
     register_taxonomy( 'menu_category', array( 'menu_item' ), $cat_args );
 
+    // メニュータグ (menu_tag) - #数量限定、#看板メニュー等
+    $tag_labels = array(
+        'name'              => 'メニュータグ',
+        'singular_name'     => 'メニュータグ',
+        'search_items'      => 'タグを検索',
+        'all_items'         => 'すべてのタグ',
+        'edit_item'         => 'タグを編集',
+        'update_item'       => 'タグを更新',
+        'add_new_item'      => '新規タグを追加',
+        'new_item_name'     => '新しいタグ名',
+        'menu_name'         => 'メニュータグ',
+    );
+    $tag_args = array(
+        'hierarchical'      => false,
+        'labels'            => $tag_labels,
+        'show_ui'           => true,
+        'show_admin_column' => true,
+        'show_in_rest'      => true,
+        'query_var'         => true,
+        'rewrite'           => array( 'slug' => 'menu-tag' ),
+    );
+    register_taxonomy( 'menu_tag', array( 'menu_item' ), $tag_args );
+
     // 2. 岡山の果物図鑑 (fruit_info)
     $fruit_labels = array(
         'name'               => '岡山の果物図鑑',
@@ -273,6 +296,24 @@ function hareka_render_menu_meta_box( $post ) {
     $takeout = get_post_meta( $post->ID, '_hareka_takeout', true );
     $featured = get_post_meta( $post->ID, '_hareka_featured', true );
 
+    // 特徴タグ取得（メタフィールドまたはmenu_tagタクソノミー）
+    $tags_meta = get_post_meta( $post->ID, '_hareka_tags', true );
+    if ( empty( $tags_meta ) ) {
+        $terms = get_the_terms( $post->ID, 'menu_tag' );
+        if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+            $tags_meta = implode( ', ', wp_list_pluck( $terms, 'name' ) );
+        }
+    }
+    if ( empty( $tags_meta ) ) {
+        $title = $post->post_title;
+        if ( mb_strpos( $title, '清水白桃' ) !== false ) {
+            $tags_meta = '数量限定, 看板メニュー, 朝採れ果実';
+        } elseif ( mb_strpos( $title, '晴王' ) !== false || mb_strpos( $title, 'シャインマスカット' ) !== false ) {
+            $tags_meta = 'おすすめ, 皮ごと果実, 手土産可';
+        }
+    }
+    $tags_str = is_array( $tags_meta ) ? implode( ', ', $tags_meta ) : (string) $tags_meta;
+
     // カテゴリ取得（menu_categoryタクソノミーまたはメタ）
     $current_cat = get_post_meta( $post->ID, '_hareka_category', true );
     if ( ! $current_cat ) {
@@ -407,6 +448,55 @@ function hareka_render_menu_meta_box( $post ) {
             />
         </div>
 
+        <!-- 特徴タグ（ハッシュタグ） -->
+        <div style="background:#faf7f2;border:1px solid #d8c8b2;padding:10px;border-radius:8px;">
+            <label for="hareka_tags" style="display:block;font-weight:700;margin-bottom:4px;color:#392d23;font-size:12px;">
+                🏷️ 特徴タグ（#ハッシュタグ）
+            </label>
+            <input
+                type="text"
+                id="hareka_tags"
+                name="hareka_tags"
+                value="<?php echo esc_attr( $tags_str ); ?>"
+                style="width:100%;padding:6px 8px;font-size:12px;border:1px solid #ccc;border-radius:4px;background:#fff;"
+                placeholder="例: 数量限定, 看板メニュー, 朝採れ果実"
+            />
+            <div style="margin-top:6px;">
+                <span style="font-size:10px;color:#8c735d;display:block;margin-bottom:4px;">クリックで追加:</span>
+                <div style="display:flex;flex-wrap:wrap;gap:4px;" id="hareka-tag-presets">
+                    <button type="button" class="button button-small hareka-tag-btn" data-tag="数量限定">#数量限定</button>
+                    <button type="button" class="button button-small hareka-tag-btn" data-tag="看板メニュー">#看板メニュー</button>
+                    <button type="button" class="button button-small hareka-tag-btn" data-tag="朝採れ果実">#朝採れ果実</button>
+                    <button type="button" class="button button-small hareka-tag-btn" data-tag="おすすめ">#おすすめ</button>
+                    <button type="button" class="button button-small hareka-tag-btn" data-tag="皮ごと果実">#皮ごと果実</button>
+                    <button type="button" class="button button-small hareka-tag-btn" data-tag="手土産可">#手土産可</button>
+                    <button type="button" class="button button-small hareka-tag-btn" data-tag="グルテンフリー米粉">#グルテンフリー米粉</button>
+                    <button type="button" class="button button-small hareka-tag-btn" data-tag="焼き立て">#焼き立て</button>
+                    <button type="button" class="button button-small hareka-tag-btn" data-tag="自家製">#自家製</button>
+                </div>
+            </div>
+            <p style="font-size:10px;color:#8c735d;margin:4px 0 0;line-height:1.3;">
+                ※カンマ（,）区切りで複数入力可能。「#」は自動付与されます。
+            </p>
+            <script>
+            (function(){
+                document.querySelectorAll('.hareka-tag-btn').forEach(function(btn){
+                    btn.addEventListener('click', function(e){
+                        e.preventDefault();
+                        var tag = this.getAttribute('data-tag');
+                        var input = document.getElementById('hareka_tags');
+                        if (!input) return;
+                        var cur = input.value ? input.value.split(/[,、\s]+/).filter(Boolean) : [];
+                        if (cur.indexOf(tag) === -1) {
+                            cur.push(tag);
+                            input.value = cur.join(', ');
+                        }
+                    });
+                });
+            })();
+            </script>
+        </div>
+
         <div style="border-top:1px solid #eee;padding-top:10px;">
             <span style="display:block;font-weight:600;margin-bottom:8px;color:#333;font-size:12px;">
                 🏷️ バッジ・表示設定
@@ -479,6 +569,19 @@ function hareka_save_custom_meta( $post_id ) {
         update_post_meta( $post_id, '_hareka_takeout', isset( $_POST['hareka_takeout'] ) ? '1' : '0' );
         update_post_meta( $post_id, '_hareka_featured', isset( $_POST['hareka_featured'] ) ? '1' : '0' );
 
+        // 特徴タグ（_hareka_tags & menu_tagタクソノミー）の保存
+        if ( isset( $_POST['hareka_tags'] ) ) {
+            $tags_raw = sanitize_text_field( $_POST['hareka_tags'] );
+            $tags_arr = array_filter( array_map( function( $t ) {
+                return ltrim( trim( $t ), '#' );
+            }, preg_split( '/[,、\s]+/u', $tags_raw ) ) );
+            $tags_str = implode( ', ', $tags_arr );
+            update_post_meta( $post_id, '_hareka_tags', $tags_str );
+
+            // menu_tag タクソノミーにも同期
+            wp_set_post_terms( $post_id, $tags_arr, 'menu_tag' );
+        }
+
         // カテゴリ（menu_category）の保存
         if ( isset( $_POST['hareka_menu_category'] ) ) {
             $cat_slug = sanitize_text_field( $_POST['hareka_menu_category'] );
@@ -518,6 +621,7 @@ function hareka_set_menu_item_columns( $columns ) {
             $new_columns['menu_category'] = '📁 カテゴリ';
             $new_columns['menu_price']    = '💰 税込価格';
             $new_columns['menu_origin']   = '📍 産地・契約農家';
+            $new_columns['menu_tags']     = '🏷️ 特徴タグ';
         }
     }
     return $new_columns;
@@ -553,6 +657,33 @@ function hareka_custom_menu_item_column( $column, $post_id ) {
     if ( $column === 'menu_origin' ) {
         $origin = get_post_meta( $post_id, '_hareka_origin', true );
         echo $origin ? esc_html( $origin ) : '<span style="color:#999;">—</span>';
+    }
+    if ( $column === 'menu_tags' ) {
+        $tags_meta = get_post_meta( $post_id, '_hareka_tags', true );
+        $tags = array();
+        if ( ! empty( $tags_meta ) ) {
+            $tags = is_array( $tags_meta ) ? $tags_meta : array_filter( array_map( 'trim', preg_split( '/[,、\s]+/u', $tags_meta ) ) );
+        } else {
+            $terms = get_the_terms( $post_id, 'menu_tag' );
+            if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+                $tags = wp_list_pluck( $terms, 'name' );
+            }
+        }
+        if ( empty( $tags ) ) {
+            $p_title = get_the_title( $post_id );
+            if ( mb_strpos( $p_title, '清水白桃' ) !== false ) {
+                $tags = array( '数量限定', '看板メニュー', '朝採れ果実' );
+            } elseif ( mb_strpos( $p_title, '晴王' ) !== false || mb_strpos( $p_title, 'シャインマスカット' ) !== false ) {
+                $tags = array( 'おすすめ', '皮ごと果実', '手土産可' );
+            }
+        }
+        if ( ! empty( $tags ) ) {
+            foreach ( $tags as $t ) {
+                echo '<span style="display:inline-block;margin:1px 2px;background:#faf7f2;color:#8c735d;border:1px solid #e7dac5;padding:1px 6px;border-radius:4px;font-size:10px;">#' . esc_html( ltrim( trim( $t ), '#' ) ) . '</span>';
+            }
+        } else {
+            echo '<span style="color:#bbb;font-size:11px;">—</span>';
+        }
     }
 }
 add_action( 'manage_menu_item_posts_custom_column', 'hareka_custom_menu_item_column', 10, 2 );
@@ -664,6 +795,24 @@ add_action( 'admin_head', 'hareka_admin_news_ui_styles' );
 function hareka_register_rest_fields() {
     register_rest_field( 'menu_item', 'menu_meta', array(
         'get_callback' => function( $post ) {
+            $tags_raw = get_post_meta( $post['id'], '_hareka_tags', true );
+            $tags = array();
+            if ( ! empty( $tags_raw ) ) {
+                $tags = is_array( $tags_raw ) ? $tags_raw : array_filter( array_map( 'trim', preg_split( '/[,、\s]+/u', $tags_raw ) ) );
+            } else {
+                $terms = get_the_terms( $post['id'], 'menu_tag' );
+                if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+                    $tags = wp_list_pluck( $terms, 'name' );
+                }
+            }
+            if ( empty( $tags ) ) {
+                $p_title = get_the_title( $post['id'] );
+                if ( mb_strpos( $p_title, '清水白桃' ) !== false ) {
+                    $tags = array( '数量限定', '看板メニュー', '朝採れ果実' );
+                } elseif ( mb_strpos( $p_title, '晴王' ) !== false || mb_strpos( $p_title, 'シャインマスカット' ) !== false ) {
+                    $tags = array( 'おすすめ', '皮ごと果実', '手土産可' );
+                }
+            }
             return array(
                 'price'     => (int) get_post_meta( $post['id'], '_hareka_price', true ),
                 'origin'    => get_post_meta( $post['id'], '_hareka_origin', true ),
@@ -671,6 +820,7 @@ function hareka_register_rest_fields() {
                 'seasonal'  => get_post_meta( $post['id'], '_hareka_seasonal', true ) === '1',
                 'takeout'   => get_post_meta( $post['id'], '_hareka_takeout', true ) === '1',
                 'featured'  => get_post_meta( $post['id'], '_hareka_featured', true ) === '1',
+                'tags'      => array_values( $tags ),
                 'thumbnail' => get_the_post_thumbnail_url( $post['id'], 'hareka-card' ),
             );
         },
