@@ -26,9 +26,9 @@ get_header();
     </section>
 
     <!-- 記事一覧 -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <?php if ( have_posts() ) : ?>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <?php while ( have_posts() ) : the_post(); ?>
                     <?php
                     $cats      = get_the_category();
@@ -40,8 +40,8 @@ get_header();
                         $badge_cls = 'bg-[#f4eee3] text-[#574636]';
                     }
                     ?>
-                    <article id="post-<?php the_ID(); ?>" <?php post_class( 'bg-white rounded-3xl overflow-hidden border border-[#e7dac5] shadow-sm hover:shadow-md transition flex flex-col' ); ?>>
-                        <div class="aspect-video bg-[#faf7f2] relative overflow-hidden">
+                    <article id="post-<?php the_ID(); ?>" <?php post_class( 'bg-white rounded-3xl overflow-hidden border border-[#e7dac5] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1' ); ?>>
+                        <div class="aspect-video bg-[#faf7f2] relative overflow-hidden border-b border-[#f4eee3]">
                             <?php if ( has_post_thumbnail() ) : ?>
                                 <?php the_post_thumbnail( 'hareka-card', array( 'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300' ) ); ?>
                             <?php else : ?>
@@ -55,12 +55,13 @@ get_header();
                         </div>
 
                         <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
-                            <div class="space-y-2">
-                                <time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>" class="text-[11px] text-[#a48c6f] font-medium block">
-                                    <?php echo esc_html( get_the_date( 'Y.m.d' ) ); ?>
+                            <div class="space-y-2.5">
+                                <time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>" class="text-[11px] text-[#a48c6f] font-medium flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5 text-[#e26d5c]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    <span><?php echo esc_html( get_the_date( 'Y.m.d' ) ); ?></span>
                                 </time>
-                                <h2 class="font-serif text-base font-bold text-[#392d23] line-clamp-2 leading-snug">
-                                    <a href="<?php the_permalink(); ?>" class="hover:text-[#b54737] transition">
+                                <h2 class="font-serif text-base font-bold text-[#392d23] group-hover:text-[#b54737] transition-colors line-clamp-2 leading-snug">
+                                    <a href="<?php the_permalink(); ?>">
                                         <?php the_title(); ?>
                                     </a>
                                 </h2>
@@ -69,11 +70,12 @@ get_header();
                                 </p>
                             </div>
 
-                            <div class="pt-3 border-t border-[#f4eee3]">
-                                <a href="<?php the_permalink(); ?>" class="text-xs font-semibold text-[#b54737] hover:underline inline-flex items-center gap-1">
+                            <div class="pt-4 border-t border-[#f4eee3] flex items-center justify-between">
+                                <a href="<?php the_permalink(); ?>" class="text-xs font-semibold text-[#b54737] group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
                                     <span>詳しく読む</span>
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                                 </a>
+                                <span class="text-[10px] text-[#a48c6f]">CAFE HAREKA</span>
                             </div>
                         </div>
                     </article>

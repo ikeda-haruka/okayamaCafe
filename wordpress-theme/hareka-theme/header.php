@@ -16,7 +16,7 @@
     <!-- ポートフォリオ実績用 架空サイト固定告知バナー -->
     <div class="w-full bg-[#221c17] text-[#f4eee3] border-b border-[#574636] shadow-sm relative z-[60]">
       <div class="max-w-7xl mx-auto px-4 py-2 sm:py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-[280px]">
+        <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-[280px]">
           <span class="inline-flex items-center gap-1.5 bg-[#b54737] text-white font-bold px-2.5 py-0.5 rounded-full text-[11px] tracking-wide shrink-0 shadow-sm">
             ポートフォリオ実績用
           </span>
