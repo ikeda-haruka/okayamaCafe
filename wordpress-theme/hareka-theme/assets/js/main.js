@@ -66,8 +66,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // カードのフィルタリング表示
                 menuCards.forEach(card => {
-                    const cardCat = card.getAttribute('data-category');
-                    if (targetCategory === 'all' || cardCat === targetCategory) {
+                    const cardCats = (card.getAttribute('data-categories') || card.getAttribute('data-category') || '').split(/\s+/);
+                    if (targetCategory === 'all' || cardCats.includes(targetCategory)) {
                         card.style.display = '';
                         card.style.opacity = '0';
                         card.style.transform = 'translateY(8px)';

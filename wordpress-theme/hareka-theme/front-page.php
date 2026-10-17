@@ -194,7 +194,13 @@ $theme_uri = get_template_directory_uri();
             </div>
             <div class="pt-4 border-t border-[#f4eee3] flex items-center justify-between">
               <span class="text-xs text-[#a48c6f]">税込</span>
-              <span class="font-serif text-xl font-bold text-[#392d23]">¥<?php echo number_format( (int)$price ); ?></span>
+              <?php if ( $price !== '' && is_numeric( $price ) && (int)$price > 0 ) : ?>
+                <span class="font-serif text-xl font-bold text-[#392d23]">¥<?php echo number_format( (int)$price ); ?></span>
+              <?php else : ?>
+                <span class="text-[11px] font-bold text-[#b54737] bg-[#fef2ee] border border-[#fbc6b6] px-2 py-0.5 rounded">
+                  価格未設定
+                </span>
+              <?php endif; ?>
             </div>
           </div>
         </div>

@@ -135,7 +135,13 @@ $theme_uri = get_template_directory_uri();
 
             <div class="pt-4 border-t border-[#f4eee3] flex items-center justify-between">
               <span class="text-xs text-[#a48c6f]">税込価格</span>
-              <span class="font-serif text-2xl font-bold text-[#392d23]">¥<?php echo number_format( (int)$price ); ?></span>
+              <?php if ( $price !== '' && is_numeric( $price ) && (int)$price > 0 ) : ?>
+                <span class="font-serif text-2xl font-bold text-[#392d23]">¥<?php echo number_format( (int)$price ); ?></span>
+              <?php else : ?>
+                <span class="text-xs font-bold text-[#b54737] bg-[#fef2ee] border border-[#fbc6b6] px-2.5 py-1 rounded-lg" title="管理画面で価格を入力してください">
+                  価格未設定 (要入力)
+                </span>
+              <?php endif; ?>
             </div>
           </div>
         </div>

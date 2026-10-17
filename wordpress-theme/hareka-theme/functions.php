@@ -145,13 +145,13 @@ add_action( 'init', 'hareka_register_custom_post_types' );
  * カスタムフィールド（メタボックス）の登録
  */
 function hareka_add_custom_meta_boxes() {
-    // メニュー項目用メタボックス
+    // メニュー項目用メタボックス（右サイドバーに配置して見落としを防止）
     add_meta_box(
         'hareka_menu_details',
-        'メニュー詳細設定（価格・産地・糖度等）',
+        '🍽️ メニュー詳細設定（価格・産地等）',
         'hareka_render_menu_meta_box',
         'menu_item',
-        'normal',
+        'side',
         'high'
     );
 
@@ -167,7 +167,7 @@ function hareka_add_custom_meta_boxes() {
 }
 add_action( 'add_meta_boxes', 'hareka_add_custom_meta_boxes' );
 
-// メニュー項目の入力フォーム
+// メニュー項目の入力フォーム（右サイドバー・ブロックエディタ最適化UI）
 function hareka_render_menu_meta_box( $post ) {
     wp_nonce_field( 'hareka_menu_save_meta', 'hareka_menu_meta_nonce' );
 
@@ -178,37 +178,76 @@ function hareka_render_menu_meta_box( $post ) {
     $takeout = get_post_meta( $post->ID, '_hareka_takeout', true );
     $featured = get_post_meta( $post->ID, '_hareka_featured', true );
     ?>
-    <table class="form-table">
-        <tr>
-            <th><label for="hareka_price">税込価格 (円)</label></th>
-            <td><input type="number" id="hareka_price" name="hareka_price" value="<?php echo esc_attr( $price ); ?>" style="width:200px;" placeholder="1980" /> 円</td>
-        </tr>
-        <tr>
-            <th><label for="hareka_origin">契約農家・産地</label></th>
-            <td><input type="text" id="hareka_origin" name="hareka_origin" value="<?php echo esc_attr( $origin ); ?>" style="width:100%;" placeholder="赤磐市・吉井果樹園 直送" /></td>
-        </tr>
-        <tr>
-            <th><label for="hareka_sugar">糖度表示（任意）</label></th>
-            <td><input type="text" id="hareka_sugar" name="hareka_sugar" value="<?php echo esc_attr( $sugar ); ?>" style="width:200px;" placeholder="糖度14度以上" /></td>
-        </tr>
-        <tr>
-            <th>フラグ設定</th>
-            <td>
-                <label style="margin-right:20px;">
+    <div style="display:flex;flex-direction:column;gap:14px;padding:4px 0;">
+        <div style="background:#fef2ee;border:1px solid #fbc6b6;padding:10px;border-radius:8px;">
+            <label for="hareka_price" style="display:block;font-weight:700;margin-bottom:4px;color:#b54737;font-size:13px;">
+                💰 税込価格 (円) <span style="color:#d9534f;font-weight:normal;">*重要</span>
+            </label>
+            <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-weight:bold;color:#555;font-size:15px;">¥</span>
+                <input
+                    type="number"
+                    id="hareka_price"
+                    name="hareka_price"
+                    value="<?php echo esc_attr( $price ); ?>"
+                    style="width:100%;font-size:15px;font-weight:bold;padding:6px 8px;border:1px solid #d8c8b2;border-radius:4px;"
+                    placeholder="例: 1480"
+                    min="0"
+                />
+            </div>
+            <p style="font-size:11px;color:#8c735d;margin:4px 0 0;line-height:1.4;">
+                ※数字のみ入力してください。未入力のままだとWebサイト上で「価格設定中」と表示されます。
+            </p>
+        </div>
+
+        <div>
+            <label for="hareka_origin" style="display:block;font-weight:600;margin-bottom:4px;color:#333;font-size:12px;">
+                📍 契約農家・産地表示
+            </label>
+            <input
+                type="text"
+                id="hareka_origin"
+                name="hareka_origin"
+                value="<?php echo esc_attr( $origin ); ?>"
+                style="width:100%;padding:6px 8px;font-size:12px;border:1px solid #ccc;border-radius:4px;"
+                placeholder="例: 赤磐市・吉井果樹園 直送"
+            />
+        </div>
+
+        <div>
+            <label for="hareka_sugar" style="display:block;font-weight:600;margin-bottom:4px;color:#333;font-size:12px;">
+                🍇 糖度表示（任意）
+            </label>
+            <input
+                type="text"
+                id="hareka_sugar"
+                name="hareka_sugar"
+                value="<?php echo esc_attr( $sugar ); ?>"
+                style="width:100%;padding:6px 8px;font-size:12px;border:1px solid #ccc;border-radius:4px;"
+                placeholder="例: 糖度18度以上"
+            />
+        </div>
+
+        <div style="border-top:1px solid #eee;padding-top:10px;">
+            <span style="display:block;font-weight:600;margin-bottom:8px;color:#333;font-size:12px;">
+                🏷️ バッジ・表示設定
+            </span>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:#444;">
+                <label style="cursor:pointer;display:flex;align-items:center;gap:6px;">
                     <input type="checkbox" name="hareka_seasonal" value="1" <?php checked( $seasonal, '1' ); ?> />
-                    季節・旬果限定
+                    <span>🌸 季節・旬果限定バッジ</span>
                 </label>
-                <label style="margin-right:20px;">
+                <label style="cursor:pointer;display:flex;align-items:center;gap:6px;">
                     <input type="checkbox" name="hareka_takeout" value="1" <?php checked( $takeout, '1' ); ?> />
-                    テイクアウト（お持ち帰り）可能
+                    <span>🥡 テイクアウト可</span>
                 </label>
-                <label>
+                <label style="cursor:pointer;display:flex;align-items:center;gap:6px;">
                     <input type="checkbox" name="hareka_featured" value="1" <?php checked( $featured, '1' ); ?> />
-                    TOPページおすすめ枠に表示
+                    <span>⭐ TOPページおすすめ枠</span>
                 </label>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
     <?php
 }
 
@@ -275,6 +314,38 @@ function hareka_save_custom_meta( $post_id ) {
     }
 }
 add_action( 'save_post', 'hareka_save_custom_meta' );
+
+/**
+ * 管理画面のメニュー一覧テーブルに価格・産地カラムを追加
+ */
+function hareka_set_menu_item_columns( $columns ) {
+    $new_columns = array();
+    foreach ( $columns as $key => $title ) {
+        $new_columns[$key] = $title;
+        if ( $key === 'title' ) {
+            $new_columns['menu_price']  = '💰 税込価格';
+            $new_columns['menu_origin'] = '📍 産地・契約農家';
+        }
+    }
+    return $new_columns;
+}
+add_filter( 'manage_menu_item_posts_columns', 'hareka_set_menu_item_columns' );
+
+function hareka_custom_menu_item_column( $column, $post_id ) {
+    if ( $column === 'menu_price' ) {
+        $price = get_post_meta( $post_id, '_hareka_price', true );
+        if ( $price !== '' && is_numeric( $price ) && (int)$price > 0 ) {
+            echo '<span style="font-weight:bold;color:#2b6cb0;font-size:13px;">¥' . number_format( (int)$price ) . '</span>';
+        } else {
+            echo '<span style="color:#d9534f;font-weight:bold;background:#fef2ee;padding:2px 6px;border-radius:4px;font-size:11px;">⚠️ 未設定 (¥0)</span>';
+        }
+    }
+    if ( $column === 'menu_origin' ) {
+        $origin = get_post_meta( $post_id, '_hareka_origin', true );
+        echo $origin ? esc_html( $origin ) : '<span style="color:#999;">—</span>';
+    }
+}
+add_action( 'manage_menu_item_posts_custom_column', 'hareka_custom_menu_item_column', 10, 2 );
 
 /**
  * REST API にカスタムメタフィールドを登録（ヘッドレスWordPress連携用）
