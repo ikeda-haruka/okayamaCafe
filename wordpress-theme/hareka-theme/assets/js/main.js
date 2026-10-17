@@ -66,8 +66,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // カードのフィルタリング表示
                 menuCards.forEach(card => {
-                    const cardCats = (card.getAttribute('data-categories') || card.getAttribute('data-category') || '').split(/\s+/);
-                    if (targetCategory === 'all' || cardCats.includes(targetCategory)) {
+                    const rawCats = (card.getAttribute('data-categories') || card.getAttribute('data-category') || '');
+                    const cardCats = rawCats.split(/\s+/).filter(Boolean);
+
+                    let isMatch = false;
+                    if (targetCategory === 'all') {
+                        isMatch = true;
+                    } else if (cardCats.includes(targetCategory)) {
+                        isMatch = true;
+                    } else if (targetCategory === 'sweets' && (cardCats.includes('旬果スイーツ') || cardCats.includes('sweet'))) {
+                        isMatch = true;
+                    } else if (targetCategory === 'lunch' && (cardCats.includes('ランチ・軽食') || cardCats.includes('ランチ'))) {
+                        isMatch = true;
+                    } else if (targetCategory === 'drinks' && (cardCats.includes('drink') || cardCats.includes('ドリンク'))) {
+                        isMatch = true;
+                    } else if (targetCategory === 'takeout' && (cardCats.includes('テイクアウト') || cardCats.includes('テイクアウト・ギフト') || cardCats.includes('ギフト'))) {
+                        isMatch = true;
+                    }
+
+                    if (isMatch) {
                         card.style.display = '';
                         card.style.opacity = '0';
                         card.style.transform = 'translateY(8px)';

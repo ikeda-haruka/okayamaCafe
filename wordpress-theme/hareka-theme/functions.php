@@ -142,6 +142,24 @@ function hareka_register_custom_post_types() {
 add_action( 'init', 'hareka_register_custom_post_types' );
 
 /**
+ * メニューカテゴリの初期ターム自動登録
+ */
+function hareka_ensure_default_menu_categories() {
+    $defaults = array(
+        'sweets'  => '旬果スイーツ',
+        'lunch'   => 'ランチ・軽食',
+        'drinks'  => 'ドリンク',
+        'takeout' => 'テイクアウト・ギフト',
+    );
+    foreach ( $defaults as $slug => $name ) {
+        if ( ! term_exists( $slug, 'menu_category' ) && ! term_exists( $name, 'menu_category' ) ) {
+            wp_insert_term( $name, 'menu_category', array( 'slug' => $slug ) );
+        }
+    }
+}
+add_action( 'init', 'hareka_ensure_default_menu_categories', 20 );
+
+/**
  * カスタムフィールド（メタボックス）の登録
  */
 function hareka_add_custom_meta_boxes() {
@@ -243,8 +261,92 @@ function hareka_render_menu_meta_box( $post ) {
     $seasonal = get_post_meta( $post->ID, '_hareka_seasonal', true );
     $takeout = get_post_meta( $post->ID, '_hareka_takeout', true );
     $featured = get_post_meta( $post->ID, '_hareka_featured', true );
+
+    // カテゴリ取得（menu_categoryタクソノミーまたはメタ）
+    $current_cat = get_post_meta( $post->ID, '_hareka_category', true );
+    if ( ! $current_cat ) {
+        $terms = get_the_terms( $post->ID, 'menu_category' );
+        if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+            $current_cat = $terms[0]->slug;
+        }
+    }
+    if ( ! $current_cat ) {
+        $title = $post->post_title;
+        if ( preg_match( '/カレー|サンド|パスタ|ランチ|ピザ|プレート/u', $title ) ) {
+            $current_cat = 'lunch';
+        } elseif ( preg_match( '/コーヒー|珈琲|ティー|お茶|ラテ|ジュース|ソーダ|スムージー|ドリンク/u', $title ) ) {
+            $current_cat = 'drinks';
+        } else {
+            $current_cat = 'sweets';
+        }
+    }
+
+    $cat_options = array(
+        'sweets' => array(
+            'icon'  => '🍑',
+            'name'  => '旬果スイーツ',
+            'en'    => 'SWEETS',
+            'desc'  => 'パフェ・タルト・ケーキ・旬の果実デザート',
+            'bg'    => '#fef2ee',
+            'color' => '#b54737',
+        ),
+        'lunch' => array(
+            'icon'  => '🥗',
+            'name'  => 'ランチ・軽食',
+            'en'    => 'LUNCH',
+            'desc'  => '千屋牛カレー・地場野菜サンド・パスタ等',
+            'bg'    => '#f4f8f0',
+            'color' => '#4a8235',
+        ),
+        'drinks' => array(
+            'icon'  => '☕',
+            'name'  => 'ドリンク',
+            'en'    => 'DRINKS',
+            'desc'  => '果実スムージー・珈琲・クラフトソーダ等',
+            'bg'    => '#faf7f2',
+            'color' => '#574636',
+        ),
+        'takeout' => array(
+            'icon'  => '🎁',
+            'name'  => 'テイクアウト・ギフト',
+            'en'    => 'TAKEOUT',
+            'desc'  => '手土産ギフト・焼き菓子BOX・ジャム等',
+            'bg'    => '#fbf5e6',
+            'color' => '#b45309',
+        ),
+    );
     ?>
     <div style="display:flex;flex-direction:column;gap:14px;padding:4px 0;">
+        <!-- メニューカテゴリ（必須選択） -->
+        <div style="background:#faf7f2;border:1px solid #d8c8b2;padding:10px;border-radius:8px;">
+            <label style="display:block;font-weight:700;margin-bottom:6px;color:#392d23;font-size:12px;">
+                🍽️ メニューカテゴリ <span style="color:#d9534f;font-weight:normal;">*タブ表示に連動</span>
+            </label>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <?php foreach ( $cat_options as $slug => $opt ) : ?>
+                    <label style="display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border-radius:6px;border:1px solid #e7dac5;background:<?php echo $opt['bg']; ?>;cursor:pointer;">
+                        <input
+                            type="radio"
+                            name="hareka_menu_category"
+                            value="<?php echo esc_attr( $slug ); ?>"
+                            <?php checked( $current_cat, $slug ); ?>
+                            style="margin-top:2px;"
+                        />
+                        <div style="flex:1;">
+                            <div style="display:flex;align-items:center;gap:4px;">
+                                <span><?php echo $opt['icon']; ?></span>
+                                <strong style="font-size:12px;color:<?php echo $opt['color']; ?>;"><?php echo esc_html( $opt['name'] ); ?></strong>
+                                <span style="font-size:9px;color:#8c735d;font-weight:normal;">(<?php echo esc_html( $opt['en'] ); ?>)</span>
+                            </div>
+                            <div style="font-size:10px;color:#6b5a4d;margin-top:1px;line-height:1.2;">
+                                <?php echo esc_html( $opt['desc'] ); ?>
+                            </div>
+                        </div>
+                    </label>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
         <div style="background:#fef2ee;border:1px solid #fbc6b6;padding:10px;border-radius:8px;">
             <label for="hareka_price" style="display:block;font-weight:700;margin-bottom:4px;color:#b54737;font-size:13px;">
                 💰 税込価格 (円) <span style="color:#d9534f;font-weight:normal;">*重要</span>
@@ -365,6 +467,19 @@ function hareka_save_custom_meta( $post_id ) {
         update_post_meta( $post_id, '_hareka_seasonal', isset( $_POST['hareka_seasonal'] ) ? '1' : '0' );
         update_post_meta( $post_id, '_hareka_takeout', isset( $_POST['hareka_takeout'] ) ? '1' : '0' );
         update_post_meta( $post_id, '_hareka_featured', isset( $_POST['hareka_featured'] ) ? '1' : '0' );
+
+        // カテゴリ（menu_category）の保存
+        if ( isset( $_POST['hareka_menu_category'] ) ) {
+            $cat_slug = sanitize_text_field( $_POST['hareka_menu_category'] );
+            update_post_meta( $post_id, '_hareka_category', $cat_slug );
+
+            $term = get_term_by( 'slug', $cat_slug, 'menu_category' );
+            if ( $term ) {
+                wp_set_object_terms( $post_id, (int) $term->term_id, 'menu_category' );
+            } else {
+                wp_set_object_terms( $post_id, $cat_slug, 'menu_category' );
+            }
+        }
     }
 
     // 果物情報保存
@@ -382,15 +497,16 @@ function hareka_save_custom_meta( $post_id ) {
 add_action( 'save_post', 'hareka_save_custom_meta' );
 
 /**
- * 管理画面のメニュー一覧テーブルに価格・産地カラムを追加
+ * 管理画面のメニュー一覧テーブルに価格・産地・カテゴリ一覧カラムを追加
  */
 function hareka_set_menu_item_columns( $columns ) {
     $new_columns = array();
     foreach ( $columns as $key => $title ) {
         $new_columns[$key] = $title;
         if ( $key === 'title' ) {
-            $new_columns['menu_price']  = '💰 税込価格';
-            $new_columns['menu_origin'] = '📍 産地・契約農家';
+            $new_columns['menu_category'] = '📁 カテゴリ';
+            $new_columns['menu_price']    = '💰 税込価格';
+            $new_columns['menu_origin']   = '📍 産地・契約農家';
         }
     }
     return $new_columns;
@@ -398,6 +514,23 @@ function hareka_set_menu_item_columns( $columns ) {
 add_filter( 'manage_menu_item_posts_columns', 'hareka_set_menu_item_columns' );
 
 function hareka_custom_menu_item_column( $column, $post_id ) {
+    if ( $column === 'menu_category' ) {
+        $terms = get_the_terms( $post_id, 'menu_category' );
+        $cat_badges = array(
+            'sweets'  => array( 'name' => '🍑 旬果スイーツ', 'bg' => '#fef2ee', 'color' => '#b54737', 'border' => '#fbc6b6' ),
+            'lunch'   => array( 'name' => '🥗 ランチ・軽食', 'bg' => '#f4f8f0', 'color' => '#4a8235', 'border' => '#a9d997' ),
+            'drinks'  => array( 'name' => '☕ ドリンク', 'bg' => '#faf7f2', 'color' => '#574636', 'border' => '#d8c8b2' ),
+            'takeout' => array( 'name' => '🎁 テイクアウト', 'bg' => '#fbf5e6', 'color' => '#b45309', 'border' => '#fcd34d' ),
+        );
+        if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+            foreach ( $terms as $term ) {
+                $style = $cat_badges[$term->slug] ?? array( 'name' => $term->name, 'bg' => '#faf7f2', 'color' => '#574636', 'border' => '#d8c8b2' );
+                echo '<span style="display:inline-block;margin:2px;font-weight:600;color:' . esc_attr( $style['color'] ) . ';background:' . esc_attr( $style['bg'] ) . ';border:1px solid ' . esc_attr( $style['border'] ) . ';padding:2px 8px;border-radius:12px;font-size:11px;">' . esc_html( $style['name'] ) . '</span>';
+            }
+        } else {
+            echo '<span style="color:#d9534f;font-weight:bold;background:#fef2ee;border:1px solid #fbc6b6;padding:2px 6px;border-radius:4px;font-size:11px;">⚠️ 未設定</span>';
+        }
+    }
     if ( $column === 'menu_price' ) {
         $price = get_post_meta( $post_id, '_hareka_price', true );
         if ( $price !== '' && is_numeric( $price ) && (int)$price > 0 ) {

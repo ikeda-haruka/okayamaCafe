@@ -102,9 +102,42 @@ $theme_uri = get_template_directory_uri();
               if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
                   foreach ( $terms as $term ) {
                       $cat_slugs[] = $term->slug;
+                      $cat_slugs[] = $term->name;
                   }
               }
-              $cat_class = implode( ' ', $cat_slugs );
+
+              // メタデータ _hareka_category からも取得
+              $meta_cat = get_post_meta( get_the_ID(), '_hareka_category', true );
+              if ( $meta_cat ) {
+                  $cat_slugs[] = $meta_cat;
+              }
+
+              // 未設定時のフォールバック（タイトルからの自動判定）
+              if ( empty( $cat_slugs ) ) {
+                  $title = get_the_title();
+                  if ( preg_match( '/パフェ|タルト|パンケーキ|ケーキ|スイーツ|アイス|ゼリー|シャーベット/u', $title ) ) {
+                      $cat_slugs[] = 'sweets';
+                      $cat_slugs[] = '旬果スイーツ';
+                  } elseif ( preg_match( '/カレー|サンド|パスタ|ランチ|ピザ|プレート/u', $title ) ) {
+                      $cat_slugs[] = 'lunch';
+                      $cat_slugs[] = 'ランチ・軽食';
+                  } elseif ( preg_match( '/コーヒー|珈琲|ティー|お茶|ラテ|ジュース|ソーダ|スムージー|ドリンク/u', $title ) ) {
+                      $cat_slugs[] = 'drinks';
+                      $cat_slugs[] = 'ドリンク';
+                  } else {
+                      $cat_slugs[] = 'sweets';
+                      $cat_slugs[] = '旬果スイーツ';
+                  }
+              }
+
+              // テイクアウト可の場合、テイクアウトタブにも連動
+              if ( $takeout ) {
+                  $cat_slugs[] = 'takeout';
+                  $cat_slugs[] = 'テイクアウト';
+                  $cat_slugs[] = 'テイクアウト・ギフト';
+              }
+
+              $cat_class = implode( ' ', array_unique( $cat_slugs ) );
       ?>
         <div class="menu-card bg-white rounded-3xl overflow-hidden border border-[#e7dac5] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group" data-categories="<?php echo esc_attr( $cat_class ); ?>">
           <div class="relative h-64 overflow-hidden bg-[#f4eee3]">
