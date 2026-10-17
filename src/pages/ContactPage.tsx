@@ -38,7 +38,6 @@ export const ContactPage: React.FC = () => {
   // フォーム状態
   const [formData, setFormData] = useState({
     name: '',
-    kana: '',
     email: '',
     phone: '',
     type: '席のご予約',
@@ -171,10 +170,6 @@ export const ContactPage: React.FC = () => {
       nameLabel: 'お名前',
       nameSub: 'Full Name',
       namePlaceholder: '例：山田 太郎 / Taro Yamada',
-      kanaLabel: 'フリガナ',
-      kanaSub: 'Furigana or Alphabet',
-      kanaPlaceholder: '例：ヤマダ タロウ / TARO YAMADA',
-      kanaHint: '※海外の方・カタカナをお持ちでない方はローマ字でご入力いただけます。',
       emailLabel: 'メールアドレス',
       emailSub: 'Email Address',
       emailPlaceholder: 'example@hareka.jp',
@@ -238,10 +233,6 @@ export const ContactPage: React.FC = () => {
       nameLabel: 'Your Full Name',
       nameSub: 'First & Last Name',
       namePlaceholder: 'e.g. John Smith / Taro Yamada',
-      kanaLabel: 'Name in Roman Alphabet / Furigana',
-      kanaSub: 'Roman Alphabet is OK',
-      kanaPlaceholder: 'e.g. JOHN SMITH',
-      kanaHint: '※ International visitors can enter their name in Roman Alphabet (English).',
       emailLabel: 'Email Address',
       emailSub: 'For Booking Confirmation',
       emailPlaceholder: 'yourname@example.com',
@@ -401,7 +392,6 @@ export const ContactPage: React.FC = () => {
                       setSubmitted(false);
                       setFormData({
                         name: '',
-                        kana: '',
                         email: '',
                         phone: '',
                         type: '席のご予約',
@@ -626,35 +616,19 @@ export const ContactPage: React.FC = () => {
                 )}
 
                 {/* お客様情報 */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-[#392d23] block">
-                      {currentT.nameLabel} <span className="text-[10px] text-[#a48c6f]">/ {currentT.nameSub}</span> <span className="text-[#e26d5c]">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder={currentT.namePlaceholder}
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-[#392d23] block">
-                      {currentT.kanaLabel} <span className="text-[10px] text-[#a48c6f]">/ {currentT.kanaSub}</span> <span className="text-[#e26d5c]">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder={currentT.kanaPlaceholder}
-                      value={formData.kana}
-                      onChange={(e) => setFormData({ ...formData, kana: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
-                    />
-                    <span className="text-[10px] text-[#a48c6f] block">{currentT.kanaHint}</span>
-                  </div>
+                {/* お名前 */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-[#392d23] block">
+                    {currentT.nameLabel} <span className="text-[10px] text-[#a48c6f]">/ {currentT.nameSub}</span> <span className="text-[#e26d5c]">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder={currentT.namePlaceholder}
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

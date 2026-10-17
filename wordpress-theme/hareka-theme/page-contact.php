@@ -291,41 +291,20 @@ $faq_items = array(
                     </div>
 
                     <!-- お客様基本情報 -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label for="user-name" class="block text-xs font-bold text-[#392d23] mb-1.5">
-                                <span id="label-name-text">お名前</span>
-                                <span class="text-[10px] text-[#a48c6f]">/ Full Name</span>
-                                <span class="text-[#e26d5c]">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="user-name"
-                                name="user_name"
-                                required
-                                placeholder="山田 太郎 / John Smith"
-                                class="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
-                            />
-                        </div>
-
-                        <div>
-                            <label for="user-kana" class="block text-xs font-bold text-[#392d23] mb-1.5">
-                                <span id="label-kana-text">フリガナ</span>
-                                <span class="text-[10px] text-[#a48c6f]">/ Furigana or English Name</span>
-                                <span class="text-[#e26d5c]">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="user-kana"
-                                name="user_kana"
-                                required
-                                placeholder="ヤマダ タロウ / JOHN SMITH"
-                                class="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
-                            />
-                            <span class="text-[10px] text-[#a48c6f] mt-1 block" id="kana-hint-text">
-                                ※海外の方・カタカナをお持ちでない方はローマ字でご入力いただけます。
-                            </span>
-                        </div>
+                    <div>
+                        <label for="user-name" class="block text-xs font-bold text-[#392d23] mb-1.5">
+                            <span id="label-name-text">お名前</span>
+                            <span class="text-[10px] text-[#a48c6f]">/ Full Name</span>
+                            <span class="text-[#e26d5c]">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="user-name"
+                            name="user_name"
+                            required
+                            placeholder="山田 太郎 / John Smith"
+                            class="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
+                        />
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

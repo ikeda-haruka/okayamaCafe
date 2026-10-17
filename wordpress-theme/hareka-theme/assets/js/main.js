@@ -141,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const formHeadingTitle = document.getElementById('form-heading-title');
     const formHeadingDesc = document.getElementById('form-heading-desc');
     const safeBadgeText = document.getElementById('safe-badge-text');
-    const kanaHintText = document.getElementById('kana-hint-text');
     const privacyAgreeText = document.getElementById('privacy-agree-text');
     const faqMainTitle = document.getElementById('faq-main-title');
     const faqMainSub = document.getElementById('faq-main-sub');
@@ -194,13 +193,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // 誤予約防止バッジ
         if (safeBadgeText) {
             safeBadgeText.textContent = lang === 'ja' ? '満席誤予約防止機能 ON' : 'Live Availability Active';
-        }
-
-        // フリガナ注記
-        if (kanaHintText) {
-            kanaHintText.textContent = lang === 'ja'
-                ? '※海外の方・カタカナをお持ちでない方はローマ字でご入力いただけます。'
-                : '* International guests may enter names in English alphabet / Romaji.';
         }
 
         // プライバシー同意文
