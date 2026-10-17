@@ -30,22 +30,27 @@ get_header();
         <?php if ( have_posts() ) : ?>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <?php while ( have_posts() ) : the_post(); ?>
+                    <?php
+                    $cats      = get_the_category();
+                    $cat_name  = ! empty( $cats ) ? $cats[0]->name : 'お知らせ';
+                    $badge_cls = 'bg-[#fde2d9] text-[#b54737]';
+                    if ( $cat_name === '旬の入荷' ) {
+                        $badge_cls = 'bg-[#e2f0d9] text-[#4a8235]';
+                    } elseif ( $cat_name === 'イベント' ) {
+                        $badge_cls = 'bg-[#f4eee3] text-[#574636]';
+                    }
+                    ?>
                     <article id="post-<?php the_ID(); ?>" <?php post_class( 'bg-white rounded-3xl overflow-hidden border border-[#e7dac5] shadow-sm hover:shadow-md transition flex flex-col' ); ?>>
-                        <div class="aspect-video bg-[#f4eee3] relative overflow-hidden">
+                        <div class="aspect-video bg-[#faf7f2] relative overflow-hidden">
                             <?php if ( has_post_thumbnail() ) : ?>
                                 <?php the_post_thumbnail( 'hareka-card', array( 'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300' ) ); ?>
                             <?php else : ?>
-                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/shimizu_peach.jpg' ); ?>" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-cover" />
+                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/hareka-placeholder.svg' ); ?>" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                             <?php endif; ?>
                             <div class="absolute top-3 left-3">
-                                <?php
-                                $categories = get_the_category();
-                                if ( ! empty( $categories ) ) :
-                                    ?>
-                                    <span class="bg-white/90 backdrop-blur-sm text-[#b54737] text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">
-                                        <?php echo esc_html( $categories[0]->name ); ?>
-                                    </span>
-                                <?php endif; ?>
+                                <span class="text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm backdrop-blur-sm <?php echo esc_attr( $badge_cls ); ?>">
+                                    <?php echo esc_html( $cat_name ); ?>
+                                </span>
                             </div>
                         </div>
 

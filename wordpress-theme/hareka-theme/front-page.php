@@ -265,11 +265,17 @@ $theme_uri = get_template_directory_uri();
             while ( $news_query->have_posts() ) : $news_query->the_post();
                 $cats = get_the_category();
                 $cat_name = ! empty( $cats ) ? $cats[0]->name : 'お知らせ';
+                $badge_cls = 'bg-[#fde2d9] text-[#b54737]';
+                if ( $cat_name === '旬の入荷' ) {
+                    $badge_cls = 'bg-[#e2f0d9] text-[#4a8235]';
+                } elseif ( $cat_name === 'イベント' ) {
+                    $badge_cls = 'bg-[#f4eee3] text-[#574636]';
+                }
         ?>
           <div class="py-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
             <div class="flex items-center gap-3 shrink-0">
               <span class="text-xs font-medium text-[#a48c6f]"><?php echo get_the_date( 'Y.m.d' ); ?></span>
-              <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#fde2d9] text-[#b54737]"><?php echo esc_html( $cat_name ); ?></span>
+              <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full <?php echo esc_attr( $badge_cls ); ?>"><?php echo esc_html( $cat_name ); ?></span>
             </div>
             <a href="<?php the_permalink(); ?>" class="text-sm font-medium text-[#392d23] hover:text-[#b54737] transition">
               <?php the_title(); ?>
