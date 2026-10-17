@@ -83,8 +83,7 @@ $theme_uri = get_template_directory_uri();
       $all_menu = new WP_Query( array(
           'post_type'      => 'menu_item',
           'posts_per_page' => -1,
-          'orderby'        => 'menu_order date',
-          'order'          => 'DESC',
+          'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
       ) );
 
       if ( $all_menu->have_posts() ) :

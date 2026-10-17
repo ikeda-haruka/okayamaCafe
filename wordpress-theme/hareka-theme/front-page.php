@@ -156,6 +156,7 @@ $theme_uri = get_template_directory_uri();
           'posts_per_page' => 3,
           'meta_key'       => '_hareka_featured',
           'meta_value'     => '1',
+          'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
       ) );
 
       if ( ! $menu_query->have_posts() ) {
@@ -163,6 +164,7 @@ $theme_uri = get_template_directory_uri();
           $menu_query = new WP_Query( array(
               'post_type'      => 'menu_item',
               'posts_per_page' => 3,
+              'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
           ) );
       }
 

@@ -97,7 +97,7 @@ function hareka_register_custom_post_types() {
         'show_in_rest'       => true, // REST API (Gutenberg & Headless) 有効
         'rest_base'          => 'menu_items',
         'menu_icon'          => 'dashicons-food',
-        'supports'           => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'excerpt' ),
+        'supports'           => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'excerpt', 'page-attributes' ),
         'rewrite'            => array( 'slug' => 'menu-item' ),
     );
     register_post_type( 'menu_item', $menu_args );
@@ -516,6 +516,25 @@ function hareka_render_menu_meta_box( $post ) {
                 </label>
             </div>
         </div>
+
+        <!-- 表示順序（並び替え） -->
+        <div style="border-top:1px solid #eee;padding-top:10px;">
+            <label for="menu_order" style="display:block;font-weight:600;margin-bottom:4px;color:#333;font-size:12px;">
+                ↕️ 表示順序（並び順）
+            </label>
+            <input
+                type="number"
+                id="menu_order"
+                name="menu_order"
+                value="<?php echo esc_attr( $post->menu_order ); ?>"
+                style="width:90px;padding:4px 8px;font-size:12px;border:1px solid #ccc;border-radius:4px;"
+                min="0"
+                step="1"
+            />
+            <p style="font-size:10px;color:#666;margin:4px 0 0;line-height:1.4;">
+                ※数字が小さいほど先頭に表示されます。<br>※メニュー一覧画面でドラッグ＆ドロップでも直感的に並び替えが可能です。
+            </p>
+        </div>
     </div>
     <?php
 }
@@ -594,6 +613,20 @@ function hareka_save_custom_meta( $post_id ) {
                 wp_set_object_terms( $post_id, $cat_slug, 'menu_category' );
             }
         }
+
+        // 表示順序（menu_order）の保存
+        if ( isset( $_POST['menu_order'] ) ) {
+            $menu_order = (int) $_POST['menu_order'];
+            global $wpdb;
+            $wpdb->update(
+                $wpdb->posts,
+                array( 'menu_order' => $menu_order ),
+                array( 'ID' => $post_id ),
+                array( '%d' ),
+                array( '%d' )
+            );
+            clean_post_cache( $post_id );
+        }
     }
 
     // 果物情報保存
@@ -611,11 +644,14 @@ function hareka_save_custom_meta( $post_id ) {
 add_action( 'save_post', 'hareka_save_custom_meta' );
 
 /**
- * 管理画面のメニュー一覧テーブルに価格・産地・カテゴリ一覧カラムを追加
+ * 管理画面のメニュー一覧テーブルに並び順・価格・産地・カテゴリ一覧カラムを追加
  */
 function hareka_set_menu_item_columns( $columns ) {
     $new_columns = array();
     foreach ( $columns as $key => $title ) {
+        if ( $key === 'title' ) {
+            $new_columns['menu_order_col'] = '↕ 並び順';
+        }
         $new_columns[$key] = $title;
         if ( $key === 'title' ) {
             $new_columns['menu_category'] = '📁 カテゴリ';
@@ -628,7 +664,21 @@ function hareka_set_menu_item_columns( $columns ) {
 }
 add_filter( 'manage_menu_item_posts_columns', 'hareka_set_menu_item_columns' );
 
+// ソート可能カラムとして登録
+add_filter( 'manage_edit-menu_item_sortable_columns', function( $columns ) {
+    $columns['menu_order_col'] = 'menu_order';
+    return $columns;
+} );
+
 function hareka_custom_menu_item_column( $column, $post_id ) {
+    if ( $column === 'menu_order_col' ) {
+        $p = get_post( $post_id );
+        $num = $p ? (int) $p->menu_order : 0;
+        echo '<span class="hareka-drag-handle" title="ドラッグして上下に並び替えできます">';
+        echo '<span class="dashicons dashicons-move"></span>';
+        echo '<span class="hareka-order-number">' . esc_html( $num ) . '</span>';
+        echo '</span>';
+    }
     if ( $column === 'menu_category' ) {
         $terms = get_the_terms( $post_id, 'menu_category' );
         $cat_badges = array(
@@ -687,6 +737,183 @@ function hareka_custom_menu_item_column( $column, $post_id ) {
     }
 }
 add_action( 'manage_menu_item_posts_custom_column', 'hareka_custom_menu_item_column', 10, 2 );
+
+/**
+ * 管理画面メニュー一覧のデフォルト並び順を menu_order 昇順（並び替え順）に設定
+ */
+function hareka_admin_menu_item_order( $query ) {
+    if ( is_admin() && $query->is_main_query() && $query->get( 'post_type' ) === 'menu_item' ) {
+        if ( ! isset( $_GET['orderby'] ) ) {
+            $query->set( 'orderby', 'menu_order' );
+            $query->set( 'order', 'ASC' );
+        }
+    }
+}
+add_action( 'pre_get_posts', 'hareka_admin_menu_item_order' );
+
+/**
+ * メニュー一覧でのドラッグ＆ドロップ並び替えスクリプト & CSS
+ */
+function hareka_admin_menu_sortable_scripts( $hook ) {
+    global $post_type;
+    if ( $hook === 'edit.php' && $post_type === 'menu_item' ) {
+        wp_enqueue_script( 'jquery-ui-sortable' );
+        wp_localize_script( 'jquery-ui-sortable', 'harekaOrderData', array(
+            'ajaxurl' => admin_url( 'admin-ajax.php' ),
+            'nonce'   => wp_create_nonce( 'hareka_menu_order_nonce' ),
+        ) );
+
+        $custom_js = "
+        jQuery(function($) {
+            var \$tbody = $('#the-list');
+            if (!\$tbody.length) return;
+
+            // ドラッグ並び替えの初期化
+            \$tbody.sortable({
+                items: 'tr',
+                cursor: 'grabbing',
+                axis: 'y',
+                handle: '.hareka-drag-handle, .column-menu_order_col',
+                placeholder: 'ui-sortable-placeholder',
+                helper: function(e, tr) {
+                    var \$originals = tr.children();
+                    var \$helper = tr.clone();
+                    \$helper.children().each(function(index) {
+                        \$(this).width(\$originals.eq(index).width());
+                    });
+                    return \$helper;
+                },
+                start: function(e, ui) {
+                    ui.placeholder.height(ui.item.height());
+                },
+                update: function(event, ui) {
+                    var orderData = [];
+                    \$tbody.find('tr').each(function(index) {
+                        var idAttr = \$(this).attr('id');
+                        if (idAttr && idAttr.indexOf('post-') === 0) {
+                            var postId = idAttr.replace('post-', '');
+                            orderData.push(postId);
+                            \$(this).find('.hareka-order-number').text(index + 1);
+                        }
+                    });
+
+                    showToast('並び順を更新中...', 'info');
+
+                    $.ajax({
+                        url: harekaOrderData.ajaxurl,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            action: 'hareka_save_menu_order',
+                            order: orderData,
+                            nonce: harekaOrderData.nonce
+                        },
+                        success: function(res) {
+                            if (res && res.success) {
+                                showToast('✅ メニューの並び順を保存しました', 'success');
+                            } else {
+                                showToast('⚠️ 並び順の保存に失敗しました', 'error');
+                            }
+                        },
+                        error: function() {
+                            showToast('⚠️ 通信エラーが発生しました', 'error');
+                        }
+                    });
+                }
+            });
+
+            function showToast(msg, type) {
+                var \$toast = $('#hareka-order-toast');
+                if (!\$toast.length) {
+                    \$toast = $('<div id=\"hareka-order-toast\" style=\"position:fixed;bottom:24px;right:24px;z-index:999999;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;box-shadow:0 6px 16px rgba(0,0,0,0.18);transition:all 0.3s ease;transform:translateY(20px);opacity:0;\"></div>').appendTo('body');
+                }
+                var bg = type === 'success' ? '#2e7d32' : (type === 'error' ? '#c62828' : '#1565c0');
+                \$toast.css({ background: bg, color: '#fff', transform: 'translateY(0)', opacity: '1' }).text(msg);
+                if (type !== 'info') {
+                    setTimeout(function() {
+                        \$toast.css({ transform: 'translateY(20px)', opacity: '0' });
+                    }, 2500);
+                }
+            }
+        });
+        ";
+        wp_add_inline_script( 'jquery-ui-sortable', $custom_js );
+
+        $custom_css = "
+        .wp-list-table.posts tr.ui-sortable-helper {
+            background-color: #fef9f5 !important;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2) !important;
+            display: table !important;
+        }
+        .wp-list-table.posts tr.ui-sortable-placeholder {
+            visibility: visible !important;
+            background-color: #fdf5f0 !important;
+            border: 2px dashed #b54737 !important;
+            height: 48px !important;
+        }
+        .hareka-drag-handle {
+            cursor: grab;
+            color: #8c735d;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            background: #faf7f2;
+            border: 1px solid #e7dac5;
+            font-weight: 600;
+            font-size: 11px;
+            user-select: none;
+        }
+        .hareka-drag-handle:hover {
+            background: #f5ede2;
+            border-color: #b54737;
+            color: #b54737;
+        }
+        .hareka-drag-handle:active {
+            cursor: grabbing;
+            background: #b54737;
+            color: #fff;
+        }
+        .column-menu_order_col {
+            width: 80px;
+            text-align: center;
+        }
+        ";
+        wp_add_inline_style( 'wp-admin', $custom_css );
+    }
+}
+add_action( 'admin_enqueue_scripts', 'hareka_admin_menu_sortable_scripts' );
+
+/**
+ * AJAX: ドラッグ＆ドロップによるメニュー並び順（menu_order）の一括保存
+ */
+function hareka_save_menu_order_callback() {
+    check_ajax_referer( 'hareka_menu_order_nonce', 'nonce' );
+    if ( ! current_user_can( 'edit_posts' ) ) {
+        wp_send_json_error( array( 'message' => '権限がありません' ) );
+    }
+    $order_ids = $_POST['order'] ?? array();
+    if ( ! is_array( $order_ids ) || empty( $order_ids ) ) {
+        wp_send_json_error( array( 'message' => '無効なデータです' ) );
+    }
+
+    global $wpdb;
+    foreach ( $order_ids as $index => $post_id ) {
+        $post_id = (int) $post_id;
+        $menu_order = (int) $index + 1;
+        $wpdb->update(
+            $wpdb->posts,
+            array( 'menu_order' => $menu_order ),
+            array( 'ID' => $post_id ),
+            array( '%d' ),
+            array( '%d' )
+        );
+        clean_post_cache( $post_id );
+    }
+    wp_send_json_success( array( 'message' => '並び順を更新しました' ) );
+}
+add_action( 'wp_ajax_hareka_save_menu_order', 'hareka_save_menu_order_callback' );
 
 /**
  * --------------------------------------------------------------------------
@@ -821,6 +1048,7 @@ function hareka_register_rest_fields() {
                 'takeout'   => get_post_meta( $post['id'], '_hareka_takeout', true ) === '1',
                 'featured'  => get_post_meta( $post['id'], '_hareka_featured', true ) === '1',
                 'tags'      => array_values( $tags ),
+                'order'     => (int) ( get_post( $post['id'] )->menu_order ?? 0 ),
                 'thumbnail' => get_the_post_thumbnail_url( $post['id'], 'hareka-card' ),
             );
         },
