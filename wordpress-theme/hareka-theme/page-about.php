@@ -124,7 +124,7 @@ $theme_uri = get_template_directory_uri();
   <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-[#f4eee3] rounded-3xl p-8 sm:p-12 border border-[#e7dac5] flex flex-col md:flex-row items-center gap-8">
       <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden shrink-0 border-4 border-white shadow-md">
-        <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80" alt="店主・パティシエ" class="w-full h-full object-cover">
+        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/okazaki_chef.jpg' ); ?>" alt="代表・パティシエ 岡崎 健太郎" class="w-full h-full object-cover object-top">
       </div>
       <div class="space-y-3 text-center md:text-left">
         <span class="text-xs font-bold tracking-widest text-[#b54737] uppercase block">OWNER & CHEF MESSAGE</span>

@@ -196,9 +196,9 @@ export const AboutPage: React.FC = () => {
         <div className="bg-[#f4eee3] rounded-3xl p-8 sm:p-12 border border-[#e7dac5] flex flex-col md:flex-row items-center gap-8">
           <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden shrink-0 border-4 border-white shadow-md">
             <img
-              src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80"
-              alt="店主・パティシエ"
-              className="w-full h-full object-cover"
+              src="/images/okazaki_chef.jpg"
+              alt="代表・パティシエ 岡崎 健太郎"
+              className="w-full h-full object-cover object-top"
             />
           </div>
           <div className="space-y-3 text-center md:text-left">
