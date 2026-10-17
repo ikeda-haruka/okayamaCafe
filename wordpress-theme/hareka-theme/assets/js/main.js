@@ -131,6 +131,157 @@ document.addEventListener('DOMContentLoaded', function () {
     const inquiryTypeRadios = document.querySelectorAll('input[name="inquiry_type"]');
     const reservationFields = document.getElementById('reservation-fields');
 
+    // 多言語切り替え関連のDOM要素
+    const langBtnJa = document.getElementById('lang-btn-ja');
+    const langBtnEn = document.getElementById('lang-btn-en');
+    let currentLang = 'ja';
+
+    const pageMainTitle = document.getElementById('page-main-title');
+    const pageMainDesc = document.getElementById('page-main-desc');
+    const formHeadingTitle = document.getElementById('form-heading-title');
+    const formHeadingDesc = document.getElementById('form-heading-desc');
+    const safeBadgeText = document.getElementById('safe-badge-text');
+    const kanaHintText = document.getElementById('kana-hint-text');
+    const privacyAgreeText = document.getElementById('privacy-agree-text');
+    const faqMainTitle = document.getElementById('faq-main-title');
+    const faqMainSub = document.getElementById('faq-main-sub');
+    const cardPhoneTitle = document.getElementById('card-phone-title');
+    const cardPhoneSub = document.getElementById('card-phone-sub');
+    const cardPhoneHours = document.getElementById('card-phone-hours');
+    const cardPhoneNotice = document.getElementById('card-phone-notice');
+    const bookingProvisionalHeading = document.getElementById('booking-provisional-heading');
+    const bookingProvisionalText = document.getElementById('booking-provisional-text');
+    const bookingCompleteDesc = document.getElementById('booking-complete-desc');
+
+    function updateLanguageUI(lang) {
+        currentLang = lang;
+
+        // ボタンのアクティブ状態切り替え
+        if (lang === 'ja') {
+            if (langBtnJa) {
+                langBtnJa.className = 'lang-toggle-btn active px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#392d23] text-white transition-all shadow-sm cursor-pointer';
+            }
+            if (langBtnEn) {
+                langBtnEn.className = 'lang-toggle-btn px-3.5 py-1.5 rounded-xl text-xs font-bold text-[#574636] hover:bg-[#faf7f2] transition-all cursor-pointer';
+            }
+        } else {
+            if (langBtnEn) {
+                langBtnEn.className = 'lang-toggle-btn active px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#392d23] text-white transition-all shadow-sm cursor-pointer';
+            }
+            if (langBtnJa) {
+                langBtnJa.className = 'lang-toggle-btn px-3.5 py-1.5 rounded-xl text-xs font-bold text-[#574636] hover:bg-[#faf7f2] transition-all cursor-pointer';
+            }
+        }
+
+        // ページヘッダー文言
+        if (pageMainTitle) {
+            pageMainTitle.textContent = lang === 'ja' ? 'ご予約・お問い合わせ' : 'Reservation & Inquiry';
+        }
+        if (pageMainDesc) {
+            pageMainDesc.innerHTML = lang === 'ja'
+                ? 'お席の事前予約リクエストや、果物の入荷確認、団体・取材のお問い合わせなど、お気軽にご連絡ください。<br class="hidden sm:inline" />空き状況のリアルタイム確認が可能です。'
+                : 'Feel free to request advance table reservations, check fruit arrivals, or make private party and media inquiries.<br class="hidden sm:inline" />Real-time seat availability is available below.';
+        }
+
+        // フォーム見出し
+        if (formHeadingTitle) {
+            formHeadingTitle.textContent = lang === 'ja' ? 'お問い合わせ・席予約フォーム' : 'Reservation & Contact Form';
+        }
+        if (formHeadingDesc) {
+            formHeadingDesc.textContent = lang === 'ja' ? '必須項目をご入力の上、送信してください。' : 'Please fill in the required fields and submit your request.';
+        }
+
+        // 誤予約防止バッジ
+        if (safeBadgeText) {
+            safeBadgeText.textContent = lang === 'ja' ? '満席誤予約防止機能 ON' : 'Live Availability Active';
+        }
+
+        // フリガナ注記
+        if (kanaHintText) {
+            kanaHintText.textContent = lang === 'ja'
+                ? '※海外の方・カタカナをお持ちでない方はローマ字でご入力いただけます。'
+                : '* International guests may enter names in English alphabet / Romaji.';
+        }
+
+        // プライバシー同意文
+        if (privacyAgreeText) {
+            privacyAgreeText.textContent = lang === 'ja'
+                ? '当店のプライバシーポリシーに同意の上、送信します。'
+                : 'I agree to the Privacy Policy for reservation handling.';
+        }
+
+        // 送信ボタン文言
+        updateSubmitButtonText();
+
+        // 凡例（Legend）
+        const legendAvail = document.querySelector('.legend-avail');
+        const legendFew = document.querySelector('.legend-few');
+        const legendFull = document.querySelector('.legend-full');
+        if (legendAvail) legendAvail.textContent = lang === 'ja' ? '◎ 余裕あり' : '◎ Available';
+        if (legendFew) legendFew.textContent = lang === 'ja' ? '△ 残少' : '△ Few Left';
+        if (legendFull) legendFull.textContent = lang === 'ja' ? '✕ 満席' : '✕ Full';
+
+        // お電話案内カード
+        if (cardPhoneTitle) cardPhoneTitle.textContent = lang === 'ja' ? 'お電話でのお問い合わせ' : 'Phone Inquiry';
+        if (cardPhoneSub) cardPhoneSub.textContent = lang === 'ja' ? '当日の空席確認・お急ぎの場合' : 'Same-day seating & urgent inquiries';
+        if (cardPhoneHours) cardPhoneHours.textContent = lang === 'ja' ? '受付時間：10:00 〜 18:00（毎週水曜・定休除く）' : 'Hours: 10:00 - 18:00 (Closed on Wednesdays)';
+        if (cardPhoneNotice) cardPhoneNotice.textContent = lang === 'ja'
+            ? '※ランチタイム（11:30〜13:30）の混雑時はお電話が繋がりにくい場合がございます。'
+            : '* Phone lines may be busy during peak lunch hours (11:30 - 13:30).';
+
+        // よくある質問（FAQ）
+        if (faqMainTitle) faqMainTitle.textContent = lang === 'ja' ? 'よくあるご質問（FAQ）' : 'Frequently Asked Questions (FAQ)';
+        if (faqMainSub) faqMainSub.textContent = lang === 'ja' ? 'ご予約・ご来店に関して多くいただくご質問です。' : 'Helpful information regarding reservations, parking, and dining.';
+
+        document.querySelectorAll('.faq-question-text').forEach(el => {
+            el.textContent = lang === 'ja' ? el.getAttribute('data-q-ja') : el.getAttribute('data-q-en');
+        });
+        document.querySelectorAll('.faq-answer-text').forEach(el => {
+            el.textContent = lang === 'ja' ? el.getAttribute('data-a-ja') : el.getAttribute('data-a-en');
+        });
+
+        // 完了画面テキストの更新
+        if (bookingProvisionalHeading) {
+            bookingProvisionalHeading.textContent = lang === 'ja' ? '現時点では【仮予約】の状態です' : 'Your booking is currently PROVISIONAL';
+        }
+        if (bookingProvisionalText) {
+            bookingProvisionalText.textContent = lang === 'ja'
+                ? '店舗スタッフが配席状況を確認の上、24時間以内に「ご予約確定メール」をお送りいたします。確定メールの受信をもってご予約成立となります。'
+                : 'Our cafe team will check table assignments and send you a confirmation email within 24 hours to finalize your reservation.';
+        }
+        if (bookingCompleteDesc) {
+            bookingCompleteDesc.textContent = lang === 'ja'
+                ? 'ご入力いただいたメールアドレス宛に自動返信メールを送信いたしました。メールが届かない場合は、迷惑メールフォルダをご確認いただくか、店舗（086-234-5678）までお電話ください。'
+                : 'An automated confirmation email has been sent to your inbox. If you do not receive it, please check your spam folder or call us at 086-234-5678.';
+        }
+
+        // スロット再描画
+        if (dateInput && slotsGrid && typeof renderTimeSlots === 'function') {
+            renderTimeSlots(dateInput.value);
+        }
+    }
+
+    function updateSubmitButtonText() {
+        if (!submitText) return;
+        const inquiryType = document.querySelector('input[name="inquiry_type"]:checked')?.value || '席のご予約';
+        if (inquiryType === '席のご予約') {
+            submitText.textContent = currentLang === 'ja'
+                ? '空き枠で仮予約リクエストを送信する'
+                : 'Submit Provisional Reservation Request';
+        } else {
+            submitText.textContent = currentLang === 'ja'
+                ? 'お問い合わせを送信する'
+                : 'Submit Inquiry';
+        }
+    }
+
+    if (langBtnJa) {
+        langBtnJa.addEventListener('click', () => updateLanguageUI('ja'));
+    }
+    if (langBtnEn) {
+        langBtnEn.addEventListener('click', () => updateLanguageUI('en'));
+    }
+
     if (dateInput && slotsGrid) {
         // 1) 明日の日付をデフォルト設定し、min属性に今日を設定
         const today = new Date();
@@ -152,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function () {
             dateInput.value = tomorrowStr;
         }
 
-        // 2) スロット生成関数（空き状況シミュレーション）
+        // 2) スロット生成関数（空き状況シミュレーション・多言語対応）
         function renderTimeSlots(dateVal) {
             slotsGrid.innerHTML = '';
             if (!dateVal) return;
@@ -163,7 +314,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (dayOfWeek === 3) {
                 // 水曜日は定休日
                 if (wednesdayAlert) wednesdayAlert.classList.remove('hidden');
-                slotsGrid.innerHTML = '<div class="col-span-full py-4 text-center text-xs text-[#a48c6f] bg-white rounded-xl border border-[#e7dac5]">定休日のため時間枠は選択できません</div>';
+                const closedMsg = currentLang === 'ja'
+                    ? '定休日のため時間枠は選択できません'
+                    : 'Closed on Wednesdays. Slots unavailable.';
+                slotsGrid.innerHTML = `<div class="col-span-full py-4 text-center text-xs text-[#a48c6f] bg-white rounded-xl border border-[#e7dac5]">${closedMsg}</div>`;
                 return;
             } else {
                 if (wednesdayAlert) wednesdayAlert.classList.add('hidden');
@@ -177,17 +331,17 @@ document.addEventListener('DOMContentLoaded', function () {
             baseTimes.forEach((time, idx) => {
                 const hash = (dateNum + idx * 7) % 10;
                 let status = 'available'; // 'available' | 'few' | 'full'
-                let badgeText = '◎ 余裕あり';
+                let badgeText = currentLang === 'ja' ? '◎ 余裕あり' : '◎ Available';
                 let badgeColor = 'text-[#4a8235] bg-[#eaf4e6]';
 
                 // ピーク時や決定論的パターンで満席/残少を算出
                 if (time === '12:00' || (time === '13:00' && hash > 4) || hash === 3) {
                     status = 'full';
-                    badgeText = '✕ 満席';
+                    badgeText = currentLang === 'ja' ? '✕ 満席' : '✕ Fully Booked';
                     badgeColor = 'text-[#9ca3af] bg-[#f3f4f6]';
                 } else if (hash === 2 || hash === 6) {
                     status = 'few';
-                    badgeText = '△ 残り1組';
+                    badgeText = currentLang === 'ja' ? '△ 残少' : '△ Few Left';
                     badgeColor = 'text-[#d97706] bg-[#fef3c7]';
                 }
 
@@ -254,11 +408,10 @@ document.addEventListener('DOMContentLoaded', function () {
             radio.addEventListener('change', function () {
                 if (this.value === '席のご予約') {
                     reservationFields.classList.remove('hidden');
-                    if (submitText) submitText.textContent = '空き枠で仮予約リクエストを送信する';
                 } else {
                     reservationFields.classList.add('hidden');
-                    if (submitText) submitText.textContent = 'お問い合わせを送信する';
                 }
+                updateSubmitButtonText();
             });
         });
     }
@@ -273,7 +426,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (inquiryType === '席のご予約' && dateInput) {
                 const selectedDate = new Date(dateInput.value);
                 if (selectedDate.getDay() === 3) {
-                    alert('水曜日は定休日のためご予約いただけません。別の日程をお選びください。');
+                    alert(currentLang === 'ja'
+                        ? '水曜日は定休日のためご予約いただけません。別の日程をお選びください。'
+                        : 'We are closed on Wednesdays. Please choose another date.');
                     return;
                 }
             }
@@ -294,13 +449,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactForm.classList.add('hidden');
                 completeBox.classList.remove('hidden');
 
-                if (refBadge) refBadge.textContent = `受付番号: ${bookingRef}`;
+                if (refBadge) {
+                    refBadge.textContent = currentLang === 'ja' ? `受付番号: ${bookingRef}` : `Booking Ref: ${bookingRef}`;
+                }
 
                 if (inquiryType === '席のご予約') {
-                    if (completeTitle) completeTitle.textContent = 'ご予約リクエスト（仮予約）を受け付けました';
+                    if (completeTitle) {
+                        completeTitle.textContent = currentLang === 'ja'
+                            ? 'ご予約リクエスト（仮予約）を受け付けました'
+                            : 'Reservation Request Received (Provisional)';
+                    }
                     if (provisionalNotice) provisionalNotice.classList.remove('hidden');
                 } else {
-                    if (completeTitle) completeTitle.textContent = 'お問い合わせを送信いたしました';
+                    if (completeTitle) {
+                        completeTitle.textContent = currentLang === 'ja'
+                            ? 'お問い合わせを送信いたしました'
+                            : 'Inquiry Submitted Successfully';
+                    }
                     if (provisionalNotice) provisionalNotice.classList.add('hidden');
                 }
 
