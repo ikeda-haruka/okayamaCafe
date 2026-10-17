@@ -11,18 +11,18 @@ $theme_uri = get_template_directory_uri();
 
 <div class="space-y-20 sm:space-y-28 overflow-hidden pb-16">
   <!-- ヒーローセクション -->
-  <section class="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-[#fde2d9]/50 via-[#faf7f2] to-[#e2f0d9]/50 px-4 sm:px-6 lg:px-8 py-16">
+  <section id="hero" class="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-[#fde2d9]/50 via-[#faf7f2] to-[#e2f0d9]/50 px-4 sm:px-6 lg:px-8 py-16">
     <div class="absolute top-1/4 left-10 w-72 h-72 rounded-full bg-[#fbc6b6]/30 blur-3xl pointer-events-none"></div>
     <div class="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-[#a9d997]/25 blur-3xl pointer-events-none"></div>
 
     <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
       <!-- テキストコンテンツ -->
       <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-[#fbc6b6] shadow-sm text-xs text-[#b54737] font-medium">
+        <div class="motion-fade-up inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-[#fbc6b6] shadow-sm text-xs text-[#b54737] font-medium">
           <span>✨ 2026年秋・岡山県北区吉備津にグランドオープン</span>
         </div>
 
-        <div class="space-y-3">
+        <div class="space-y-3 motion-fade-up motion-delay-100">
           <p class="text-xs sm:text-sm font-semibold tracking-[0.3em] text-[#a48c6f] uppercase">
             Okayama Local Fruits & Slow Time
           </p>
@@ -36,12 +36,12 @@ $theme_uri = get_template_directory_uri();
           </h1>
         </div>
 
-        <p class="text-sm sm:text-base text-[#6b5a4d] leading-relaxed max-w-xl mx-auto lg:mx-0">
+        <p class="motion-fade-up motion-delay-200 text-sm sm:text-base text-[#6b5a4d] leading-relaxed max-w-xl mx-auto lg:mx-0">
           岡山の大地と農家さんが手塩にかけて育てた白桃やシャインマスカット。<br>
           木漏れ日あふれる温かな空間で、ここ岡山でしか出逢えない瑞々しい旬のスイーツと穏やかなカフェ時間をお届けします。
         </p>
 
-        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+        <div class="motion-fade-up motion-delay-300 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
           <a href="<?php echo esc_url( home_url( '/menu/' ) ); ?>" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-[#e26d5c] to-[#b54737] text-white font-medium text-sm shadow-md hover:shadow-lg transition">
             <span>旬のメニューを見る</span>
           </a>
@@ -51,7 +51,7 @@ $theme_uri = get_template_directory_uri();
         </div>
 
         <!-- 本日の入荷速報ミニカード -->
-        <div class="pt-4">
+        <div class="pt-4 motion-fade-up motion-delay-400">
           <div class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-2xl border border-[#e7dac5] text-xs text-[#574636]">
             <span class="w-2 h-2 rounded-full bg-[#6cae54] animate-pulse"></span>
             <span class="font-semibold text-[#b54737]">本日の産直入荷</span>
@@ -61,7 +61,7 @@ $theme_uri = get_template_directory_uri();
       </div>
 
       <!-- ヒーロービジュアル -->
-      <div class="lg:col-span-5 relative">
+      <div class="lg:col-span-5 relative motion-scale-up">
         <div class="relative mx-auto max-w-md lg:max-w-none">
           <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white">
             <img src="<?php echo esc_url( $theme_uri . '/assets/images/peach_parfait.jpg' ); ?>" alt="岡山県産 清水白桃パフェ" class="w-full h-[400px] sm:h-[480px] object-cover hover:scale-105 transition-transform duration-700">
@@ -79,7 +79,7 @@ $theme_uri = get_template_directory_uri();
           </div>
 
           <!-- フローティングバッジ -->
-          <div class="absolute -top-4 -left-4 sm:-left-8 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-[#e7dac5] flex items-center gap-3">
+          <div class="animate-float-slow-1 absolute -top-4 -left-4 sm:-left-8 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-[#e7dac5] flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-[#e2f0d9] overflow-hidden flex items-center justify-center shrink-0 border border-[#a9d997]/50">
               <img src="<?php echo esc_url( $theme_uri . '/assets/images/shine_muscat_vine.jpg' ); ?>" alt="晴王 シャインマスカット" class="w-full h-full object-cover">
             </div>
@@ -90,7 +90,7 @@ $theme_uri = get_template_directory_uri();
             </div>
           </div>
 
-          <div class="absolute -bottom-6 -right-4 sm:-right-6 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-[#e7dac5] flex items-center gap-3">
+          <div class="animate-float-slow-2 absolute -bottom-6 -right-4 sm:-right-6 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-[#e7dac5] flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-[#fde2d9] flex items-center justify-center text-xl">
               🌿
             </div>
@@ -105,7 +105,7 @@ $theme_uri = get_template_directory_uri();
   </section>
 
   <!-- 3つの約束セクション -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center space-y-3 mb-14">
       <span class="text-xs sm:text-sm font-semibold tracking-[0.3em] text-[#e26d5c] uppercase">CONCEPT</span>
       <h2 class="font-serif text-2xl sm:text-4xl font-bold text-[#392d23]">CAFE HAREKA が大切にすること</h2>
@@ -137,7 +137,7 @@ $theme_uri = get_template_directory_uri();
   </section>
 
   <!-- 今月のおすすめメニュー（WordPressカスタム投稿 menu_item よりループ表示） -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
       <div class="space-y-2">
         <span class="text-xs sm:text-sm font-semibold tracking-[0.3em] text-[#e26d5c] uppercase">RECOMMENDED MENU</span>
@@ -218,7 +218,7 @@ $theme_uri = get_template_directory_uri();
   </section>
 
   <!-- 岡山の果物 特集バナー -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="relative rounded-3xl overflow-hidden bg-[#392d23] text-white p-8 sm:p-12 lg:p-16">
       <div class="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay" style="background-image: url('<?php echo esc_url( $theme_uri . '/assets/images/shine_muscat_vine.jpg' ); ?>');"></div>
       <div class="relative z-10 max-w-2xl space-y-6">
@@ -238,7 +238,7 @@ $theme_uri = get_template_directory_uri();
   </section>
 
   <!-- お知らせ・News（WordPressの通常投稿 post よりループ表示） -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-white rounded-3xl p-6 sm:p-10 border border-[#e7dac5] shadow-sm">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-[#f4eee3] mb-6 gap-3">
         <div>
@@ -293,7 +293,7 @@ $theme_uri = get_template_directory_uri();
   </section>
 
   <!-- アクセス＆予約CTA -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-gradient-to-r from-[#fde2d9] to-[#e2f0d9] rounded-3xl p-8 sm:p-12 border border-[#e7dac5] flex flex-col lg:flex-row items-center justify-between gap-8">
       <div class="space-y-3 text-center lg:text-left">
         <span class="inline-block bg-white/90 text-[#b54737] text-xs font-bold px-3 py-1 rounded-full shadow-sm">観光・ドライブの立ち寄りに最適</span>

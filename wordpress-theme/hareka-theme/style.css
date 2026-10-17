@@ -56,3 +56,75 @@ a img.aligncenter {
   margin: 0;
   padding: 0 4px 5px;
 }
+
+/* ==========================================================================
+   Motion & Animation System (framer-motion 互換)
+   ========================================================================== */
+
+/* スクロールフェードイン（AnimatedSection / WhileInView 互換） */
+.motion-fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.motion-fade-up.is-in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ヒーロー画像等のスケールアップイン */
+.motion-scale-up {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.motion-scale-up.is-in-view {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* フェードインのみ */
+.motion-fade-in {
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity;
+}
+.motion-fade-in.is-in-view {
+  opacity: 1;
+}
+
+/* スタッガー用ディレイ */
+.motion-delay-100 { transition-delay: 0.1s; }
+.motion-delay-200 { transition-delay: 0.2s; }
+.motion-delay-300 { transition-delay: 0.3s; }
+.motion-delay-400 { transition-delay: 0.4s; }
+.motion-delay-500 { transition-delay: 0.5s; }
+
+/* ヒーロー画像上のフローティングバッジ浮遊アニメーション */
+@keyframes floatSlow1 {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes floatSlow2 {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.animate-float-slow-1 {
+  animation: floatSlow1 4s ease-in-out infinite;
+}
+
+.animate-float-slow-2 {
+  animation: floatSlow2 5s ease-in-out infinite;
+}

@@ -555,4 +555,47 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    /* ==========================================================================
+       6. Scroll & Entrance Motion System (framer-motion 互換)
+       ========================================================================== */
+    // メインコンテンツ内の各セクションを自動的にスクロールモーション対象に登録
+    const contentSections = document.querySelectorAll('main section, .site-main section, #page > div > section, #page > section');
+    contentSections.forEach((sec, idx) => {
+        // ヒーロー（最初のセクション）以外で未設定のセクションに自動付与
+        if (!sec.classList.contains('motion-fade-up') && !sec.classList.contains('motion-scale-up') && !sec.closest('#hero') && idx > 0) {
+            sec.classList.add('motion-fade-up');
+        }
+    });
+
+    const motionElements = document.querySelectorAll('.motion-fade-up, .motion-scale-up, .motion-fade-in');
+
+    if (motionElements.length > 0) {
+        if ('IntersectionObserver' in window) {
+            const motionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-in-view');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px 0px -40px 0px',
+                threshold: 0.05
+            });
+
+            motionElements.forEach(el => motionObserver.observe(el));
+        } else {
+            motionElements.forEach(el => el.classList.add('is-in-view'));
+        }
+    }
+
+    // ヒーローセクション（画面冒頭）にある要素は初期ロード時に自動トリガー
+    const heroElements = document.querySelectorAll('#hero .motion-fade-up, #hero .motion-scale-up, #hero .motion-fade-in, .hero-motion');
+    if (heroElements.length > 0) {
+        setTimeout(() => {
+            heroElements.forEach(el => el.classList.add('is-in-view'));
+        }, 100);
+    }
 });
