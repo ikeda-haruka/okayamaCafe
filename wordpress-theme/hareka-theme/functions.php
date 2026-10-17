@@ -145,7 +145,17 @@ add_action( 'init', 'hareka_register_custom_post_types' );
  * カスタムフィールド（メタボックス）の登録
  */
 function hareka_add_custom_meta_boxes() {
-    // メニュー項目用メタボックス（右サイドバーに配置して見落としを防止）
+    // 1. 通常投稿（お知らせ）用：直感的な3択種別ラジオボタン（右サイドバー配置）
+    add_meta_box(
+        'hareka_post_category_box',
+        '📢 お知らせ種別（必須選択）',
+        'hareka_render_post_category_box',
+        'post',
+        'side',
+        'high'
+    );
+
+    // 2. メニュー項目用メタボックス（右サイドバーに配置して見落としを防止）
     add_meta_box(
         'hareka_menu_details',
         '🍽️ メニュー詳細設定（価格・産地等）',
@@ -155,7 +165,7 @@ function hareka_add_custom_meta_boxes() {
         'high'
     );
 
-    // 果物図鑑用メタボックス
+    // 3. 果物図鑑用メタボックス
     add_meta_box(
         'hareka_fruit_details',
         '果物詳細設定（読み方・旬・糖度・契約農家）',
@@ -166,6 +176,62 @@ function hareka_add_custom_meta_boxes() {
     );
 }
 add_action( 'add_meta_boxes', 'hareka_add_custom_meta_boxes' );
+
+// 通常投稿（お知らせ）用の3択ラジオボタン入力フォーム
+function hareka_render_post_category_box( $post ) {
+    wp_nonce_field( 'hareka_post_cat_save', 'hareka_post_cat_nonce' );
+
+    $categories = get_the_category( $post->ID );
+    $current_cat_name = ! empty( $categories ) ? $categories[0]->name : 'お知らせ';
+
+    $options = array(
+        'お知らせ' => array(
+            'icon'  => '📢',
+            'desc'  => '営業時間・休業日・店舗案内・新メニューなど',
+            'bg'    => '#fef2ee',
+            'color' => '#b54737',
+        ),
+        '旬の入荷' => array(
+            'icon'  => '🍇',
+            'desc'  => '白桃・シャインマスカット・ピオーネ等の産直入荷',
+            'bg'    => '#f4f8f0',
+            'color' => '#4a8235',
+        ),
+        'イベント' => array(
+            'icon'  => '🎪',
+            'desc'  => '週末限定体験・試食ワークショップ・テラス企画など',
+            'bg'    => '#faf7f2',
+            'color' => '#574636',
+        ),
+    );
+    ?>
+    <div style="display:flex;flex-direction:column;gap:8px;padding:4px 0;">
+        <p style="font-size:11px;color:#6b5a4d;margin:0 0 4px;line-height:1.4;">
+            記事の内容に合わせて3つの中から選んでください（Webサイト上でカラーバッジが自動表示されます）。
+        </p>
+        <?php foreach ( $options as $name => $opt ) : ?>
+            <label style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:8px;border:1px solid #d8c8b2;background:<?php echo $opt['bg']; ?>;cursor:pointer;">
+                <input
+                    type="radio"
+                    name="hareka_news_category"
+                    value="<?php echo esc_attr( $name ); ?>"
+                    <?php checked( $current_cat_name, $name ); ?>
+                    style="margin-top:2px;"
+                />
+                <div style="flex:1;">
+                    <div style="display:flex;align-items:center;gap:4px;">
+                        <span><?php echo $opt['icon']; ?></span>
+                        <strong style="font-size:12px;color:<?php echo $opt['color']; ?>;"><?php echo esc_html( $name ); ?></strong>
+                    </div>
+                    <div style="font-size:10px;color:#6b5a4d;margin-top:2px;line-height:1.3;">
+                        <?php echo esc_html( $opt['desc'] ); ?>
+                    </div>
+                </div>
+            </label>
+        <?php endforeach; ?>
+    </div>
+    <?php
+}
 
 // メニュー項目の入力フォーム（右サイドバー・ブロックエディタ最適化UI）
 function hareka_render_menu_meta_box( $post ) {
@@ -346,6 +412,107 @@ function hareka_custom_menu_item_column( $column, $post_id ) {
     }
 }
 add_action( 'manage_menu_item_posts_custom_column', 'hareka_custom_menu_item_column', 10, 2 );
+
+/**
+ * --------------------------------------------------------------------------
+ * 通常投稿（お知らせ）の専用UI最適化（3択ラジオボタン・タグ非表示・一覧バッジ）
+ * --------------------------------------------------------------------------
+ */
+
+// 1. お知らせ種別の保存処理（標準カテゴリーへ自動マッピング）
+function hareka_save_post_category( $post_id ) {
+    if ( ! isset( $_POST['hareka_post_cat_nonce'] ) || ! wp_verify_nonce( $_POST['hareka_post_cat_nonce'], 'hareka_post_cat_save' ) ) {
+        return;
+    }
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+    if ( ! current_user_can( 'edit_post', $post_id ) ) return;
+
+    if ( isset( $_POST['hareka_news_category'] ) ) {
+        $cat_name = sanitize_text_field( $_POST['hareka_news_category'] );
+        $term = get_term_by( 'name', $cat_name, 'category' );
+        if ( ! $term ) {
+            $slug_map = array( 'お知らせ' => 'news', '旬の入荷' => 'seasonal', 'イベント' => 'event' );
+            $new_term = wp_insert_term( $cat_name, 'category', array( 'slug' => $slug_map[$cat_name] ?? '' ) );
+            if ( ! is_wp_error( $new_term ) ) {
+                $term_id = $new_term['term_id'];
+            }
+        } else {
+            $term_id = $term->term_id;
+        }
+
+        if ( isset( $term_id ) ) {
+            // 選択されたカテゴリー1つだけに設定（重複や未分類を解除）
+            wp_set_post_categories( $post_id, array( $term_id ) );
+        }
+    }
+}
+add_action( 'save_post', 'hareka_save_post_category' );
+
+// 2. お知らせ用初期カテゴリーの登録と不要な「タグ」の解除
+function hareka_setup_news_taxonomies() {
+    // お知らせ・旬の入荷・イベント カテゴリーの自動初期化
+    $default_cats = array(
+        'お知らせ'   => 'news',
+        '旬の入荷' => 'seasonal',
+        'イベント'   => 'event',
+    );
+    foreach ( $default_cats as $name => $slug ) {
+        if ( ! term_exists( $name, 'category' ) ) {
+            wp_insert_term( $name, 'category', array( 'slug' => $slug ) );
+        }
+    }
+
+    // 投稿者にとって使いづらく不要な「タグ」機能を投稿から解除
+    unregister_taxonomy_for_object_type( 'post_tag', 'post' );
+}
+add_action( 'init', 'hareka_setup_news_taxonomies' );
+
+// 3. 投稿一覧テーブル（edit.php）のカラムカスタマイズ
+function hareka_set_post_columns( $columns ) {
+    $new_columns = array();
+    foreach ( $columns as $key => $title ) {
+        if ( $key === 'categories' ) {
+            $new_columns['hareka_post_type'] = '📢 お知らせ種別';
+        } elseif ( $key === 'tags' ) {
+            continue; // タグ列は削除
+        } else {
+            $new_columns[$key] = $title;
+        }
+    }
+    return $new_columns;
+}
+add_filter( 'manage_post_posts_columns', 'hareka_set_post_columns' );
+
+function hareka_custom_post_column( $column, $post_id ) {
+    if ( $column === 'hareka_post_type' ) {
+        $cats = get_the_category( $post_id );
+        $cat_name = ! empty( $cats ) ? $cats[0]->name : 'お知らせ';
+
+        if ( $cat_name === '旬の入荷' ) {
+            echo '<span style="background:#e2f0d9;color:#4a8235;border:1px solid #c4e4b5;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:bold;display:inline-block;">🍇 旬の入荷</span>';
+        } elseif ( $cat_name === 'イベント' ) {
+            echo '<span style="background:#f4eee3;color:#574636;border:1px solid #e7dac5;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:bold;display:inline-block;">🎪 イベント</span>';
+        } else {
+            echo '<span style="background:#fde2d9;color:#b54737;border:1px solid #fbc6b6;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:bold;display:inline-block;">📢 お知らせ</span>';
+        }
+    }
+}
+add_action( 'manage_post_posts_custom_column', 'hareka_custom_post_column', 10, 2 );
+
+// 4. ブロックエディタの標準カテゴリーパネル（未分類や手動入力欄）を非表示にして専用の3択種別ボックスに一本化
+function hareka_admin_news_ui_styles() {
+    echo '<style>
+        /* ブロックエディタの標準カテゴリーパネルを非表示 */
+        .components-panel__body:has(.editor-post-taxonomies__hierarchical-terms-list) {
+            display: none !important;
+        }
+        /* クラシックエディタの場合の標準カテゴリーボックス非表示 */
+        #categorydiv {
+            display: none !important;
+        }
+    </style>';
+}
+add_action( 'admin_head', 'hareka_admin_news_ui_styles' );
 
 /**
  * REST API にカスタムメタフィールドを登録（ヘッドレスWordPress連携用）
