@@ -80,9 +80,9 @@
               （吉備津神社参道より車で2分・山陽道 岡山ICより15分）
             </p>
             <div class="pt-1">
-              <a href="tel:086-234-5678" class="inline-flex items-center gap-2 text-white font-semibold hover:text-[#f7a48d] transition">
-                📞 086-234-5678
-              </a>
+              <span class="inline-flex items-center gap-2 text-white font-semibold" title="架空の店舗のため、実際のお電話はご利用いただけません">
+                📞 086-XXXX-XXX
+              </span>
             </div>
             <div>
               <a href="mailto:info@hareka-okayama-cafe.example.com" class="text-[#d8c8b2] hover:text-white transition text-[11px]">
@@ -112,10 +112,10 @@
         <span class="text-sm">📍</span>
         <span>アクセス</span>
       </a>
-      <a href="tel:086-234-5678" class="flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-medium text-[#574636] hover:bg-[#f4eee3]">
+      <button type="button" onclick="alert('【CAFE HAREKA】\n当サイトは架空のポートフォリオ用店舗のため、お電話（086-XXXX-XXX）での通話発信はご利用いただけません。ご予約やお問合せはWebフォームをご利用ください。');" class="flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-medium text-[#574636] hover:bg-[#f4eee3] cursor-pointer" title="架空の店舗のため、実際のお電話はご利用いただけません">
         <span class="text-sm">📞</span>
         <span>お電話</span>
-      </a>
+      </button>
       <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold bg-gradient-to-r from-[#e26d5c] to-[#b54737] text-white shadow-sm">
         <span class="text-sm">📅</span>
         <span>席予約</span>

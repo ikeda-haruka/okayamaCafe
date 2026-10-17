@@ -77,9 +77,10 @@ export const AccessPage: React.FC = () => {
 
               <div className="flex gap-4">
                 <span className="w-24 text-[#a48c6f] shrink-0 font-medium">電話番号</span>
-                <a href="tel:086-234-5678" className="text-[#b54737] font-bold hover:underline">
-                  086-234-5678
-                </a>
+                <span className="text-[#b54737] font-bold flex items-center gap-2" title="架空の店舗のため、実際のお電話はご利用いただけません">
+                  086-XXXX-XXX
+                  <span className="text-[11px] font-normal text-[#a48c6f]">（架空番号）</span>
+                </span>
               </div>
 
               <div className="flex gap-4">

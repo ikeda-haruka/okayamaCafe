@@ -13,8 +13,8 @@ $faq_items = array(
     array(
         'q_ja' => '予約はいつから受け付けていますか？',
         'q_en' => 'How far in advance can I make a reservation?',
-        'a_ja' => 'ご来店希望日の30日前から、前日の17:00までこちらのWebフォームより受け付けております。当日のご予約や空席確認につきましては、お電話（086-234-5678）にて直接お問い合わせください。',
-        'a_en' => 'We accept online reservations from 30 days up to 1 day prior (until 17:00). For same-day reservations or immediate seat checks, please call us directly (086-234-5678).',
+        'a_ja' => 'ご来店希望日の30日前から、前日の17:00までこちらのWebフォームより受け付けております。当日のご予約や空席確認につきましては、お電話（086-XXXX-XXX ※架空番号）にて直接お問い合わせください。',
+        'a_en' => 'We accept online reservations from 30 days up to 1 day prior (until 17:00). For same-day reservations or immediate seat checks, please call us directly (086-XXXX-XXX *dummy number).',
     ),
     array(
         'q_ja' => '満席の時間帯は予約できませんか？',
@@ -123,7 +123,7 @@ $faq_items = array(
                     </div>
 
                     <p id="booking-complete-desc" class="text-xs text-[#6b5a4d] max-w-md mx-auto leading-relaxed">
-                        ご入力いただいたメールアドレス宛に自動返信メールを送信いたしました。メールが届かない場合は、迷惑メールフォルダをご確認いただくか、店舗（086-234-5678）までお電話ください。
+                        ご入力いただいたメールアドレス宛に自動返信メールを送信いたしました。メールが届かない場合は、迷惑メールフォルダをご確認いただくか、店舗（086-XXXX-XXX ※架空番号）までお問い合わせください。
                     </p>
 
                     <div class="pt-4">
@@ -419,9 +419,14 @@ $faq_items = array(
                     </div>
 
                     <div class="space-y-1">
-                        <a href="tel:086-234-5678" class="text-2xl sm:text-3xl font-serif font-bold text-[#b54737] hover:underline block">
-                            086-234-5678
-                        </a>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-2xl sm:text-3xl font-serif font-bold text-[#b54737] block" title="架空の店舗のため、実際のお電話はご利用いただけません">
+                                086-XXXX-XXX
+                            </span>
+                            <span class="text-[11px] font-medium text-[#a48c6f] bg-[#faf7f2] px-2 py-0.5 rounded border border-[#e7dac5]">
+                                ※架空番号
+                            </span>
+                        </div>
                         <p class="text-xs text-[#6b5a4d]" id="card-phone-hours">
                             受付時間：10:00 〜 18:00（毎週水曜・定休除く） / 10:00 - 18:00 (Closed Wed)
                         </p>

@@ -251,8 +251,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         if (bookingCompleteDesc) {
             bookingCompleteDesc.textContent = lang === 'ja'
-                ? 'ご入力いただいたメールアドレス宛に自動返信メールを送信いたしました。メールが届かない場合は、迷惑メールフォルダをご確認いただくか、店舗（086-234-5678）までお電話ください。'
-                : 'An automated confirmation email has been sent to your inbox. If you do not receive it, please check your spam folder or call us at 086-234-5678.';
+                ? 'ご入力いただいたメールアドレス宛に自動返信メールを送信いたしました。メールが届かない場合は、迷惑メールフォルダをご確認いただくか、店舗（086-XXXX-XXX ※架空番号）までお問い合わせください。'
+                : 'An automated confirmation email has been sent to your inbox. If you do not receive it, please check your spam folder or contact us at 086-XXXX-XXX (*dummy number).';
         }
 
         // スロット再描画

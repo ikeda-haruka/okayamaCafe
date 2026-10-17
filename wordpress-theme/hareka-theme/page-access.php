@@ -84,9 +84,10 @@ get_header();
 
                     <div class="flex gap-4">
                         <span class="w-24 text-[#a48c6f] shrink-0 font-medium">電話番号</span>
-                        <a href="tel:086-234-5678" class="text-[#b54737] font-bold hover:underline">
-                            086-234-5678
-                        </a>
+                        <span class="text-[#b54737] font-bold flex items-center gap-2" title="架空の店舗のため、実際のお電話はご利用いただけません">
+                            086-XXXX-XXX
+                            <span class="text-[11px] font-normal text-[#a48c6f]">（架空番号）</span>
+                        </span>
                     </div>
 
                     <div class="flex gap-4">

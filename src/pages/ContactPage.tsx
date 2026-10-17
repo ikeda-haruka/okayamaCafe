@@ -270,8 +270,8 @@ export const ContactPage: React.FC = () => {
     {
       qJa: '予約はいつから受け付けていますか？',
       qEn: 'How far in advance can I make a reservation?',
-      aJa: 'ご来店希望日の30日前から、前日の17:00までこちらのWebフォームより受け付けております。当日のご予約や空席確認につきましては、お電話（086-234-5678）にて直接お問い合わせください。',
-      aEn: 'We accept online reservations from 30 days up to 1 day prior (until 17:00). For same-day reservations or immediate seat checks, please call us directly (+81-86-234-5678).'
+      aJa: 'ご来店希望日の30日前から、前日の17:00までこちらのWebフォームより受け付けております。当日のご予約や空席確認につきましては、お電話（086-XXXX-XXX ※架空番号）にて直接お問い合わせください。',
+      aEn: 'We accept online reservations from 30 days up to 1 day prior (until 17:00). For same-day reservations or immediate seat checks, please call us directly (086-XXXX-XXX *dummy number).'
     },
     {
       qJa: '満席の時間帯は予約できませんか？',
@@ -742,9 +742,17 @@ export const ContactPage: React.FC = () => {
               </div>
 
               <div className="space-y-1">
-                <a href="tel:086-234-5678" className="text-2xl sm:text-3xl font-serif font-bold text-[#b54737] hover:underline block">
-                  086-234-5678
-                </a>
+                <div className="flex items-baseline gap-2">
+                  <span
+                    className="text-2xl sm:text-3xl font-serif font-bold text-[#b54737] block"
+                    title="架空の店舗のため、実際のお電話はご利用いただけません"
+                  >
+                    086-XXXX-XXX
+                  </span>
+                  <span className="text-[11px] font-medium text-[#a48c6f] bg-[#faf7f2] px-2 py-0.5 rounded border border-[#e7dac5]">
+                    ※架空番号
+                  </span>
+                </div>
                 <p className="text-xs text-[#6b5a4d]">
                   {currentT.phoneCardHours}
                 </p>

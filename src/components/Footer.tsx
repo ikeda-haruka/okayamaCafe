@@ -105,12 +105,12 @@ export const Footer: React.FC = () => {
                 （吉備津神社参道より車で2分・山陽道 岡山ICより15分）
               </p>
               <div className="pt-1">
-                <a
-                  href="tel:086-234-5678"
-                  className="inline-flex items-center gap-2 text-white font-semibold hover:text-[#f7a48d] transition"
+                <span
+                  className="inline-flex items-center gap-2 text-white font-semibold"
+                  title="架空の店舗のため、実際のお電話はご利用いただけません"
                 >
-                  <Phone className="w-3.5 h-3.5" /> 086-234-5678
-                </a>
+                  <Phone className="w-3.5 h-3.5 text-[#f7a48d]" /> 086-XXXX-XXX
+                </span>
               </div>
               <div>
                 <a

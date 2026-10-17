@@ -112,7 +112,7 @@
         </div>
         <div class="flex items-center gap-4 text-[#d8c8b2]">
           <span>岡山市北区吉備津780</span>
-          <a href="tel:086-234-5678" class="hover:text-white transition">📞 086-234-5678</a>
+          <span class="text-[#fceee9]" title="架空の店舗のため、実際のお電話はご利用いただけません">📞 086-XXXX-XXX</span>
         </div>
       </div>
     </div>
@@ -133,9 +133,9 @@
       <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="w-full flex items-center justify-center py-3 rounded-xl bg-gradient-to-r from-[#e26d5c] to-[#b54737] text-white font-medium shadow text-sm">
         お席の事前予約・お問い合わせ
       </a>
-      <a href="tel:086-234-5678" class="w-full flex items-center justify-center py-2.5 rounded-xl border border-[#d8c8b2] text-[#574636] font-medium text-sm">
-        📞 お電話：086-234-5678
-      </a>
+      <div class="w-full flex items-center justify-center py-2.5 rounded-xl border border-[#d8c8b2] text-[#574636] font-medium text-sm bg-white/50" title="架空の店舗のため、実際のお電話はご利用いただけません">
+        📞 お電話：086-XXXX-XXX
+      </div>
     </div>
   </div>
 

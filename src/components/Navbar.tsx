@@ -134,9 +134,9 @@ export const Navbar: React.FC = () => {
             <span className="flex items-center gap-1">
               <MapPin className="w-3 h-3 text-[#f7a48d]" /> 岡山市北区吉備津780
             </span>
-            <a href="tel:086-234-5678" className="hover:text-white transition flex items-center gap-1">
-              <Phone className="w-3 h-3" /> 086-234-5678
-            </a>
+            <span className="flex items-center gap-1 text-[#fceee9]" title="架空の店舗のため、実際のお電話はご利用いただけません">
+              <Phone className="w-3 h-3" /> 086-XXXX-XXX
+            </span>
           </div>
         </div>
       </div>
@@ -184,13 +184,13 @@ export const Navbar: React.FC = () => {
                   <Calendar className="w-4 h-4" />
                   <span>お席の事前予約・お問い合わせ</span>
                 </Link>
-                <a
-                  href="tel:086-234-5678"
-                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#d8c8b2] text-[#574636] font-medium hover:bg-[#f4eee3] transition"
+                <div
+                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#d8c8b2] text-[#574636] font-medium bg-white/50 text-sm"
+                  title="架空の店舗のため、実際のお電話はご利用いただけません"
                 >
-                  <Phone className="w-4 h-4" />
-                  <span>お電話：086-234-5678</span>
-                </a>
+                  <Phone className="w-4 h-4 text-[#e26d5c]" />
+                  <span>お電話：086-XXXX-XXX</span>
+                </div>
               </div>
             </div>
           </motion.div>
