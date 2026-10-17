@@ -483,4 +483,76 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    /* ==========================================================================
+       5. News Modal Popup (page-news.php, home.php)
+       ========================================================================== */
+    const newsModal = document.getElementById('news-modal');
+    const newsModalDate = document.getElementById('news-modal-date');
+    const newsModalBadge = document.getElementById('news-modal-badge');
+    const newsModalImage = document.getElementById('news-modal-image');
+    const newsModalTitle = document.getElementById('news-modal-title');
+    const newsModalBody = document.getElementById('news-modal-body');
+    const newsModalCloseX = document.getElementById('news-modal-close-x');
+    const newsModalCloseBtn = document.getElementById('news-modal-close-btn');
+    const newsCards = document.querySelectorAll('.js-news-card');
+
+    function openNewsModal(card) {
+        if (!newsModal) return;
+        const date = card.getAttribute('data-date') || '';
+        const category = card.getAttribute('data-category') || '';
+        const badgeCls = card.getAttribute('data-badge') || 'bg-[#fde2d9] text-[#b54737]';
+        const title = card.getAttribute('data-title') || '';
+        const img = card.getAttribute('data-img') || '';
+        const bodyEl = card.querySelector('.js-news-body');
+        const bodyHtml = bodyEl ? bodyEl.innerHTML : '';
+
+        if (newsModalDate) newsModalDate.textContent = date;
+        if (newsModalBadge) {
+            newsModalBadge.textContent = category;
+            newsModalBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full ml-2 ' + badgeCls;
+        }
+        if (newsModalImage) {
+            newsModalImage.src = img;
+            newsModalImage.alt = title;
+        }
+        if (newsModalTitle) newsModalTitle.textContent = title;
+        if (newsModalBody) newsModalBody.innerHTML = bodyHtml;
+
+        newsModal.classList.remove('hidden');
+        newsModal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeNewsModal() {
+        if (!newsModal) return;
+        newsModal.classList.add('hidden');
+        newsModal.classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+
+    if (newsCards.length > 0 && newsModal) {
+        newsCards.forEach(card => {
+            card.addEventListener('click', function (e) {
+                // 通常のページ遷移をキャンセルしてモーダルを開く
+                e.preventDefault();
+                openNewsModal(this);
+            });
+        });
+
+        if (newsModalCloseX) newsModalCloseX.addEventListener('click', closeNewsModal);
+        if (newsModalCloseBtn) newsModalCloseBtn.addEventListener('click', closeNewsModal);
+
+        newsModal.addEventListener('click', function (e) {
+            if (e.target === newsModal) {
+                closeNewsModal();
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !newsModal.classList.contains('hidden')) {
+                closeNewsModal();
+            }
+        });
+    }
 });
