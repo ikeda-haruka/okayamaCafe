@@ -26,8 +26,8 @@ $categories = get_categories( array(
 
 <div class="space-y-12 sm:space-y-16 pb-20">
     <!-- ページヘッダー -->
-    <section class="relative bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/60 py-16 sm:py-24 border-b border-[#e7dac5]">
-        <div class="max-w-4xl mx-auto px-4 text-center space-y-4">
+    <section class="relative bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/60 py-16 sm:py-24 border-b border-[#e7dac5] page-header-box">
+        <div class="max-w-4xl mx-auto px-4 text-center space-y-4 page-header-motion">
             <span class="inline-block text-xs sm:text-sm font-semibold tracking-[0.3em] text-[#e26d5c] uppercase">
                 NEWS & TOPICS
             </span>
@@ -43,7 +43,7 @@ $categories = get_categories( array(
 
     <!-- カテゴリフィルター -->
     <?php if ( ! empty( $categories ) ) : ?>
-        <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section class="motion-fade-up max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
                 <a
                     href="<?php echo esc_url( get_permalink() ); ?>"
@@ -64,7 +64,7 @@ $categories = get_categories( array(
     <?php endif; ?>
 
     <!-- 記事一覧グリッド -->
-    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="motion-fade-up max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <?php if ( $news_query->have_posts() ) : ?>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <?php while ( $news_query->have_posts() ) : $news_query->the_post(); ?>

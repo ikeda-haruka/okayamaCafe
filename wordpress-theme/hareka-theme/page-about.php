@@ -11,8 +11,8 @@ $theme_uri = get_template_directory_uri();
 
 <div class="space-y-16 sm:space-y-24 pb-20">
   <!-- ページヘッダー -->
-  <div class="relative py-12 md:py-20 bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/40 border-b border-[#e7dac5]/60 overflow-hidden text-center">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-3">
+  <div class="relative py-12 md:py-20 bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/40 border-b border-[#e7dac5]/60 overflow-hidden text-center page-header-box">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-3 page-header-motion">
       <div class="flex items-center justify-center gap-2 text-xs text-[#a48c6f] mb-4">
         <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hover:text-[#b54737] transition">HOME</a>
         <span>›</span>
@@ -27,11 +27,11 @@ $theme_uri = get_template_directory_uri();
   </div>
 
   <!-- コンセプトストーリー -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
       <div class="lg:col-span-6 relative">
-        <div class="rounded-3xl overflow-hidden shadow-xl border-4 border-white bg-white">
-          <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1000&q=80" alt="CAFE HAREKA 店内風景" class="w-full h-[400px] sm:h-[480px] object-cover">
+        <div class="rounded-3xl overflow-hidden shadow-xl border-4 border-white bg-white hover-lift">
+          <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1000&q=80" alt="CAFE HAREKA 店内風景" class="w-full h-[400px] sm:h-[480px] object-cover hover:scale-105 transition-transform duration-700">
         </div>
       </div>
       <div class="lg:col-span-6 space-y-6">
@@ -50,7 +50,7 @@ $theme_uri = get_template_directory_uri();
   </section>
 
   <!-- 3つのこだわり -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center space-y-3 mb-14">
       <span class="text-xs sm:text-sm font-semibold tracking-[0.3em] text-[#e26d5c] uppercase">OUR COMMITMENT</span>
       <h2 class="font-serif text-2xl sm:text-4xl font-bold text-[#392d23]">CAFE HAREKA の3つのこだわり</h2>
@@ -78,7 +78,7 @@ $theme_uri = get_template_directory_uri();
   </section>
 
   <!-- 設備ガイド -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-white rounded-3xl p-8 sm:p-12 border border-[#e7dac5] shadow-sm">
       <div class="max-w-2xl mx-auto text-center space-y-3 mb-10">
         <span class="text-xs font-semibold tracking-widest text-[#a48c6f] uppercase">FACILITIES & COMFORTS</span>
@@ -121,7 +121,7 @@ $theme_uri = get_template_directory_uri();
   </section>
 
   <!-- 店主メッセージ -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-[#f4eee3] rounded-3xl p-8 sm:p-12 border border-[#e7dac5] flex flex-col md:flex-row items-center gap-8">
       <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden shrink-0 border-4 border-white shadow-md">
         <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80" alt="店主・パティシエ" class="w-full h-full object-cover">

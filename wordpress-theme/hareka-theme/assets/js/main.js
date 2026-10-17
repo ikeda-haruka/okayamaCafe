@@ -12,37 +12,61 @@ document.addEventListener('DOMContentLoaded', function () {
     'use strict';
 
     /* ==========================================================================
-       1. Mobile Menu Drawer
+       1. Mobile Menu Drawer & Header Scroll Motion (Navbar.tsx 互換)
        ========================================================================== */
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenuBtn = document.getElementById('mobile-menu-toggle') || document.getElementById('mobile-menu-btn');
     const mobileMenuClose = document.getElementById('mobile-menu-close');
     const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
     const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+    const siteHeader = document.querySelector('header');
 
-    function openMobileMenu() {
-        if (!mobileMenuDrawer || !mobileMenuBackdrop) return;
-        mobileMenuBackdrop.classList.remove('hidden');
-        mobileMenuDrawer.classList.remove('translate-x-full');
-        document.body.style.overflow = 'hidden';
+    // スクロール時のヘッダー縮小＆ブラー演出
+    function handleHeaderScroll() {
+        if (!siteHeader) return;
+        if (window.scrollY > 20) {
+            siteHeader.classList.add('bg-[#faf7f2]/95', 'backdrop-blur-md', 'py-3', 'shadow-sm');
+            siteHeader.classList.remove('py-3.5', 'py-4');
+        } else {
+            siteHeader.classList.remove('py-3', 'shadow-sm');
+            siteHeader.classList.add('py-3.5');
+        }
     }
+    window.addEventListener('scroll', handleHeaderScroll, { passive: true });
+    handleHeaderScroll();
 
-    function closeMobileMenu() {
-        if (!mobileMenuDrawer || !mobileMenuBackdrop) return;
-        mobileMenuDrawer.classList.add('translate-x-full');
-        setTimeout(() => {
-            mobileMenuBackdrop.classList.add('hidden');
-            document.body.style.overflow = '';
-        }, 250);
+    function toggleMobileMenu() {
+        if (!mobileMenuDrawer) return;
+        const isHidden = mobileMenuDrawer.classList.contains('hidden');
+        if (isHidden) {
+            mobileMenuDrawer.classList.remove('hidden');
+            mobileMenuDrawer.style.opacity = '0';
+            mobileMenuDrawer.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                mobileMenuDrawer.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+                mobileMenuDrawer.style.opacity = '1';
+                mobileMenuDrawer.style.transform = 'translateY(0)';
+            }, 10);
+            if (mobileMenuBackdrop) mobileMenuBackdrop.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        } else {
+            mobileMenuDrawer.style.opacity = '0';
+            mobileMenuDrawer.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                mobileMenuDrawer.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 250);
+            if (mobileMenuBackdrop) mobileMenuBackdrop.classList.add('hidden');
+        }
     }
 
     if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', openMobileMenu);
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
     }
     if (mobileMenuClose) {
-        mobileMenuClose.addEventListener('click', closeMobileMenu);
+        mobileMenuClose.addEventListener('click', toggleMobileMenu);
     }
     if (mobileMenuBackdrop) {
-        mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
+        mobileMenuBackdrop.addEventListener('click', toggleMobileMenu);
     }
 
     /* ==========================================================================
@@ -576,15 +600,59 @@ document.addEventListener('DOMContentLoaded', function () {
     /* ==========================================================================
        6. Scroll & Entrance Motion System (framer-motion 互換)
        ========================================================================== */
-    // メインコンテンツ内の各セクションを自動的にスクロールモーション対象に登録
-    const contentSections = document.querySelectorAll('main section, .site-main section, #page > div > section, #page > section');
-    contentSections.forEach((sec, idx) => {
-        // ヒーロー（最初のセクション）以外で未設定のセクションに自動付与
-        if (!sec.classList.contains('motion-fade-up') && !sec.classList.contains('motion-scale-up') && !sec.closest('#hero') && idx > 0) {
-            sec.classList.add('motion-fade-up');
+
+    // 1) ページヘッダー（固定ページ冒頭の見出しエリア）の自動エントランス演出
+    // React版 PageHeader.tsx (initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}) 互換
+    const headerBoxes = document.querySelectorAll(
+        '.page-header-box, ' +
+        'div[class*="bg-gradient-to-b"] > .max-w-7xl, ' +
+        'section[class*="bg-gradient-to-b"] > .max-w-4xl, ' +
+        'section[class*="bg-gradient-to-b"] > .max-w-7xl'
+    );
+    headerBoxes.forEach(box => {
+        const titleGroup = box.querySelector('.space-y-3, .space-y-4') || box;
+        if (titleGroup && !titleGroup.classList.contains('page-header-motion')) {
+            titleGroup.classList.add('page-header-motion');
         }
     });
 
+    // 2) 各ページのセクションを自動検出してスクロールモーション対象に登録
+    // React版 AnimatedSection.tsx (initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}) 互換
+    const contentSections = document.querySelectorAll(
+        '#page section, ' +
+        '#page > div > section, ' +
+        'main section, ' +
+        '.site-main section, ' +
+        '.animated-section'
+    );
+
+    contentSections.forEach(sec => {
+        // ヒーロー（トップ冒頭）およびヘッダーセクション自体は別制御
+        if (sec.id === 'hero' || sec.classList.contains('site-header') || sec.closest('header') || sec.closest('footer')) {
+            return;
+        }
+
+        if (!sec.classList.contains('motion-fade-up') && !sec.classList.contains('motion-scale-up')) {
+            sec.classList.add('motion-fade-up');
+        }
+
+        // セクション内のグリッドカード群（3列・4列など）にスタッガーアニメーションを自動適用
+        const grid = sec.querySelector('.grid');
+        if (grid && !grid.closest('#hero') && !grid.classList.contains('no-stagger')) {
+            const cards = Array.from(grid.children);
+            if (cards.length > 1 && cards.length <= 16) {
+                cards.forEach((card, cIdx) => {
+                    if (!card.classList.contains('stagger-item')) {
+                        card.classList.add('stagger-item');
+                        const delay = ((cIdx % 6) * 0.08 + 0.04).toFixed(2);
+                        card.style.transitionDelay = `${delay}s`;
+                    }
+                });
+            }
+        }
+    });
+
+    // 3) IntersectionObserver によるスクロールフェードイン実行
     const motionElements = document.querySelectorAll('.motion-fade-up, .motion-scale-up, .motion-fade-in');
 
     if (motionElements.length > 0) {
@@ -593,26 +661,43 @@ document.addEventListener('DOMContentLoaded', function () {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('is-in-view');
+                        // 子要素のスタッガーアイテムも同時に表示状態へ
+                        entry.target.querySelectorAll('.stagger-item').forEach(item => {
+                            item.classList.add('is-in-view');
+                        });
                         observer.unobserve(entry.target);
                     }
                 });
             }, {
                 root: null,
-                rootMargin: '0px 0px -40px 0px',
-                threshold: 0.05
+                rootMargin: '0px 0px -50px 0px', // framer-motion margin: '-50px' と完全一致
+                threshold: 0.04
             });
 
-            motionElements.forEach(el => motionObserver.observe(el));
+            motionElements.forEach(el => {
+                // ファーストビュー（画面内にすでに入っている要素）の即時フェードイン
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    setTimeout(() => {
+                        el.classList.add('is-in-view');
+                        el.querySelectorAll('.stagger-item').forEach(item => {
+                            item.classList.add('is-in-view');
+                        });
+                    }, 60);
+                } else {
+                    motionObserver.observe(el);
+                }
+            });
         } else {
             motionElements.forEach(el => el.classList.add('is-in-view'));
         }
     }
 
-    // ヒーローセクション（画面冒頭）にある要素は初期ロード時に自動トリガー
+    // 4) ヒーローセクション（トップページ冒頭）の段階的スタッガー表示
     const heroElements = document.querySelectorAll('#hero .motion-fade-up, #hero .motion-scale-up, #hero .motion-fade-in, .hero-motion');
     if (heroElements.length > 0) {
         setTimeout(() => {
             heroElements.forEach(el => el.classList.add('is-in-view'));
-        }, 100);
+        }, 80);
     }
 });

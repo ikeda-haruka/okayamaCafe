@@ -11,8 +11,8 @@ $theme_uri = get_template_directory_uri();
 
 <div class="space-y-16 sm:space-y-20 pb-20">
   <!-- ページヘッダー -->
-  <div class="relative py-12 md:py-20 bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/40 border-b border-[#e7dac5]/60 overflow-hidden text-center">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-3">
+  <div class="relative py-12 md:py-20 bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/40 border-b border-[#e7dac5]/60 overflow-hidden text-center page-header-box">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-3 page-header-motion">
       <div class="flex items-center justify-center gap-2 text-xs text-[#a48c6f] mb-4">
         <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hover:text-[#b54737] transition">HOME</a>
         <span>›</span>
@@ -27,7 +27,7 @@ $theme_uri = get_template_directory_uri();
   </div>
 
   <!-- 季節の果物リレーカレンダー -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-white rounded-3xl p-6 sm:p-8 border border-[#e7dac5] shadow-sm">
       <div class="flex items-center gap-2 text-[#b54737] font-semibold text-xs mb-3">
         <span>📅 季節の果物 リレーカレンダー（現在の旬をチェック）</span>
@@ -58,7 +58,7 @@ $theme_uri = get_template_directory_uri();
   </section>
 
   <!-- カテゴリ切り替えタブ（JSフィルター対応） -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10" id="menu-filter-tabs">
       <button data-category="all" class="menu-tab-btn active px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all bg-[#392d23] text-white shadow-md">
         すべて <span class="text-[10px] opacity-70 ml-1 font-normal">ALL</span>
@@ -194,7 +194,7 @@ $theme_uri = get_template_directory_uri();
   </section>
 
   <!-- 注意事項 -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-[#f4eee3] rounded-3xl p-6 sm:p-8 border border-[#e7dac5] text-xs text-[#6b5a4d] space-y-1.5">
       <h4 class="font-bold text-[#392d23]">メニューに関するご案内</h4>
       <p>・天候や収穫状況により、果物の品種や提供期間が予告なく変更となる場合がございます。</p>

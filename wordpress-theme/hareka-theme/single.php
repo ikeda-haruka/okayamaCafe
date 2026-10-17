@@ -14,8 +14,8 @@ $post_type = get_post_type();
     <!-- お知らせ投稿（NEWS）専用詳細レイアウト（React版デザイン準拠） -->
     <div class="space-y-12 sm:space-y-16 pb-20">
         <!-- ページヘッダー -->
-        <section class="relative bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/60 py-12 sm:py-16 border-b border-[#e7dac5]">
-            <div class="max-w-4xl mx-auto px-4 text-center space-y-3">
+        <section class="relative bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/60 py-12 sm:py-16 border-b border-[#e7dac5] page-header-box">
+            <div class="max-w-4xl mx-auto px-4 text-center space-y-3 page-header-motion">
                 <span class="inline-block text-xs sm:text-sm font-semibold tracking-[0.3em] text-[#e26d5c] uppercase">
                     NEWS & TOPICS
                 </span>
@@ -27,7 +27,7 @@ $post_type = get_post_type();
         </section>
 
         <!-- お知らせ詳細カード（Reactモーダル完全一致レイアウト） -->
-        <section class="max-w-xl mx-auto px-4 sm:px-6">
+        <section class="motion-fade-up max-w-xl mx-auto px-4 sm:px-6">
             <?php while ( have_posts() ) : the_post(); ?>
                 <?php
                 $cats      = get_the_category();

@@ -11,8 +11,8 @@ get_header();
 
 <div class="space-y-16 sm:space-y-24 pb-20">
     <!-- ページヘッダー -->
-    <section class="relative bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/60 py-16 sm:py-24 border-b border-[#e7dac5]">
-        <div class="max-w-4xl mx-auto px-4 text-center space-y-4">
+    <section class="relative bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/60 py-16 sm:py-24 border-b border-[#e7dac5] page-header-box">
+        <div class="max-w-4xl mx-auto px-4 text-center space-y-4 page-header-motion">
             <span class="inline-block text-xs sm:text-sm font-semibold tracking-[0.3em] text-[#e26d5c] uppercase">
                 LOCATION & ACCESS
             </span>
@@ -28,7 +28,7 @@ get_header();
     </section>
 
     <!-- マップ＆基本情報 -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <!-- インタラクティブマップエリア -->
             <div class="lg:col-span-7 bg-white rounded-3xl overflow-hidden border border-[#e7dac5] shadow-sm">
@@ -130,7 +130,7 @@ get_header();
     </section>
 
     <!-- 交通アクセス手段案内 -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center space-y-3 mb-12">
             <span class="text-xs sm:text-sm font-semibold tracking-[0.3em] text-[#e26d5c] uppercase">
                 HOW TO GET HERE
@@ -219,7 +219,7 @@ get_header();
     </section>
 
     <!-- 岡山観光おすすめモデルコース -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-gradient-to-br from-[#fde2d9]/40 via-[#faf7f2] to-[#e2f0d9]/40 rounded-3xl p-8 sm:p-12 border border-[#e7dac5]">
             <div class="max-w-2xl mx-auto text-center space-y-3 mb-10">
                 <span class="text-xs font-semibold tracking-widest text-[#b54737] uppercase block">

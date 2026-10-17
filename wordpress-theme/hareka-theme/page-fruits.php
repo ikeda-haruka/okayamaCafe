@@ -89,8 +89,8 @@ $climate_points = array(
 
 <div class="space-y-16 sm:space-y-24 pb-20">
     <!-- ページヘッダー -->
-    <section class="relative bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/60 py-16 sm:py-24 border-b border-[#e7dac5]">
-        <div class="max-w-4xl mx-auto px-4 text-center space-y-4">
+    <section class="relative bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/60 py-16 sm:py-24 border-b border-[#e7dac5] page-header-box">
+        <div class="max-w-4xl mx-auto px-4 text-center space-y-4 page-header-motion">
             <span class="inline-block text-xs sm:text-sm font-semibold tracking-[0.3em] text-[#e26d5c] uppercase">
                 OKAYAMA FRUITS STORY
             </span>
@@ -106,7 +106,7 @@ $climate_points = array(
     </section>
 
     <!-- 岡山の果物が美味しい4つの理由 -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center space-y-3 mb-12">
             <span class="text-xs sm:text-sm font-semibold tracking-[0.3em] text-[#e26d5c] uppercase">
                 WHY OKAYAMA?
@@ -145,7 +145,7 @@ $climate_points = array(
     </section>
 
     <!-- 旬の果物図鑑 -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center space-y-3 mb-14">
             <span class="text-xs sm:text-sm font-semibold tracking-[0.3em] text-[#e26d5c] uppercase">
                 FRUITS ENCYCLOPEDIA
@@ -296,7 +296,7 @@ $climate_points = array(
     </section>
 
     <!-- 契約農家さんインタビュー -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-[#f4eee3] rounded-3xl p-8 sm:p-12 border border-[#e7dac5]">
             <div class="max-w-3xl mx-auto space-y-6">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white text-[#b54737] text-xs font-bold shadow-sm">
@@ -322,7 +322,7 @@ $climate_points = array(
     </section>
 
     <!-- メニュー誘導CTA -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="p-8 sm:p-12 rounded-3xl bg-white border border-[#e7dac5] space-y-4 shadow-sm">
             <h3 class="font-serif text-xl sm:text-2xl font-bold text-[#392d23]">
                 これらの果実をふんだんに使ったスイーツはいかがですか？

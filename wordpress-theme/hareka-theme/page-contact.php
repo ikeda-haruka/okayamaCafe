@@ -51,8 +51,8 @@ $faq_items = array(
 
 <div class="space-y-16 sm:space-y-24 pb-20">
     <!-- ページヘッダー -->
-    <section class="relative bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/60 py-16 sm:py-24 border-b border-[#e7dac5]">
-        <div class="max-w-4xl mx-auto px-4 text-center space-y-4">
+    <section class="relative bg-gradient-to-b from-[#fde2d9]/60 via-[#faf7f2] to-[#e2f0d9]/60 py-16 sm:py-24 border-b border-[#e7dac5] page-header-box">
+        <div class="max-w-4xl mx-auto px-4 text-center space-y-4 page-header-motion">
             <span class="inline-block text-xs sm:text-sm font-semibold tracking-[0.3em] text-[#e26d5c] uppercase" id="page-subtitle-en">
                 RESERVATION & CONTACT
             </span>
@@ -67,7 +67,7 @@ $faq_items = array(
         </div>
     </section>
 
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="motion-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- 言語切り替えバー -->
         <div class="flex justify-end mb-6">
             <div class="inline-flex items-center gap-1 bg-white p-1 rounded-2xl border border-[#e7dac5] shadow-sm">

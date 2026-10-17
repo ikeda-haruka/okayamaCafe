@@ -42,21 +42,28 @@ add_action( 'after_setup_theme', 'hareka_theme_setup' );
  * CSS・JavaScriptのエンキュー
  */
 function hareka_theme_scripts() {
+    $theme_dir = get_template_directory();
+    $theme_uri = get_template_directory_uri();
+
     // Google Fonts (Shippori Mincho & Noto Sans JP)
     wp_enqueue_style( 'hareka-google-fonts', 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Shippori+Mincho:wght@400;500;600;700&display=swap', array(), null );
 
     // Tailwind CSS & テーマスタイル
-    wp_enqueue_style( 'hareka-theme-css', get_template_directory_uri() . '/assets/css/theme.css', array(), '1.0.0' );
-    wp_enqueue_style( 'hareka-main-style', get_stylesheet_uri(), array( 'hareka-theme-css' ), '1.0.0' );
+    $css_ver = file_exists( $theme_dir . '/assets/css/theme.css' ) ? filemtime( $theme_dir . '/assets/css/theme.css' ) : '1.0.0';
+    wp_enqueue_style( 'hareka-theme-css', $theme_uri . '/assets/css/theme.css', array(), $css_ver );
 
-    // テーマ用インタラクティブスクリプト（タブ切り替え、FAQ、空き状況、モバイルメニュー）
-    wp_enqueue_script( 'hareka-main-js', get_template_directory_uri() . '/assets/js/main.js', array(), '1.0.0', true );
+    $style_ver = file_exists( $theme_dir . '/style.css' ) ? filemtime( $theme_dir . '/style.css' ) : '1.0.0';
+    wp_enqueue_style( 'hareka-main-style', get_stylesheet_uri(), array( 'hareka-theme-css' ), $style_ver );
+
+    // テーマ用インタラクティブスクリプト（タブ切り替え、FAQ、空き状況、スクロールモーション等）
+    $js_ver = file_exists( $theme_dir . '/assets/js/main.js' ) ? filemtime( $theme_dir . '/assets/js/main.js' ) : '1.0.0';
+    wp_enqueue_script( 'hareka-main-js', $theme_uri . '/assets/js/main.js', array(), $js_ver, true );
 
     // JavaScriptへデータを渡す（APIエンドポイントやnonceなど）
     wp_localize_script( 'hareka-main-js', 'harekaThemeData', array(
         'rootUrl'     => get_site_url(),
         'restUrl'     => esc_url_raw( rest_url() ),
-        'themeUrl'    => get_template_directory_uri(),
+        'themeUrl'    => $theme_uri,
         'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
     ) );
 }
