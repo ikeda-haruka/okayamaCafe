@@ -299,7 +299,7 @@ $theme_uri = get_template_directory_uri();
         <span class="inline-block bg-white/90 text-[#b54737] text-xs font-bold px-3 py-1 rounded-full shadow-sm">観光・ドライブの立ち寄りに最適</span>
         <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#392d23]">岡山へのご旅行や週末のカフェ巡りに。</h2>
         <p class="text-sm text-[#6b5a4d] max-w-xl">
-          吉備津神社から車で2分、岡山ICから15分。無料駐車場20台を完備しております。<br>
+          <?php echo esc_html( hareka_get_shop_info( 'access_note' ) ); ?>。<?php echo esc_html( hareka_get_shop_info( 'parking' ) ); ?>。<br>
           県内外問わず、皆さまのご来店を心よりお待ちしております。
         </p>
       </div>

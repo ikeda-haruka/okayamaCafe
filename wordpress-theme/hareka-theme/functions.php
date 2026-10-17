@@ -9,6 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
+// 店舗情報・営業時間 一元管理モジュール
+require_once get_template_directory() . '/inc/shop-settings.php';
+
 /**
  * テーマのセットアップ
  */
@@ -59,12 +62,13 @@ function hareka_theme_scripts() {
     $js_ver = file_exists( $theme_dir . '/assets/js/main.js' ) ? filemtime( $theme_dir . '/assets/js/main.js' ) : '1.0.0';
     wp_enqueue_script( 'hareka-main-js', $theme_uri . '/assets/js/main.js', array(), $js_ver, true );
 
-    // JavaScriptへデータを渡す（APIエンドポイントやnonceなど）
+    // JavaScriptへデータを渡す（APIエンドポイントやnonce、店舗情報など）
     wp_localize_script( 'hareka-main-js', 'harekaThemeData', array(
         'rootUrl'     => get_site_url(),
         'restUrl'     => esc_url_raw( rest_url() ),
         'themeUrl'    => $theme_uri,
         'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+        'shopInfo'    => hareka_get_shop_info(),
     ) );
 }
 add_action( 'wp_enqueue_scripts', 'hareka_theme_scripts' );

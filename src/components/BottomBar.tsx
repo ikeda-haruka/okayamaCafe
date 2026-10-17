@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Utensils, Calendar, MapPin, Phone } from 'lucide-react';
+import { useShopInfo } from '../data/shopInfo';
 
 export const BottomBar: React.FC = () => {
   const location = useLocation();
+  const shopInfo = useShopInfo();
 
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#faf7f2]/95 backdrop-blur-md border-t border-[#e7dac5] px-3 py-2 shadow-lg">
@@ -34,9 +36,9 @@ export const BottomBar: React.FC = () => {
 
         <button
           type="button"
-          onClick={() => alert('【CAFE HAREKA】\n当サイトは架空のポートフォリオ用店舗のため、お電話（086-XXXX-XXX）での通話発信はご利用いただけません。ご予約やお問合せはWebフォームをご利用ください。')}
+          onClick={() => alert(`【${shopInfo.name}】\n${shopInfo.phone_note}`)}
           className="flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-medium text-[#574636] hover:bg-[#f4eee3] transition cursor-pointer"
-          title="架空の店舗のため、実際のお電話はご利用いただけません"
+          title={shopInfo.phone_note}
         >
           <Phone className="w-4 h-4 mb-0.5 text-[#e26d5c]" />
           <span>お電話</span>

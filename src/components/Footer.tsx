@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Clock, Heart, Sparkles, Compass } from 'lucide-react';
-
+import { useShopInfo } from '../data/shopInfo';
 
 export const Footer: React.FC = () => {
+  const shopInfo = useShopInfo();
   return (
     <footer className="bg-[#392d23] text-[#f4eee3] pt-16 pb-24 md:pb-16 border-t-4 border-[#e26d5c]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,17 +39,19 @@ export const Footer: React.FC = () => {
             <ul className="text-xs text-[#d8c8b2] space-y-2.5">
               <li>
                 <span className="text-white block font-medium">営業時間</span>
-                10:00 〜 18:00（L.O. 17:30）
-                <span className="block text-[11px] text-[#a48c6f]">※ランチタイム 11:00〜14:00</span>
+                {shopInfo.hours_text}
+                {shopInfo.special_notice && (
+                  <span className="block text-[11px] text-[#fbc6b6] mt-0.5">{shopInfo.special_notice}</span>
+                )}
               </li>
               <li>
                 <span className="text-white block font-medium">定休日</span>
-                毎週水曜日（祝日の場合は翌木曜振替）
+                {shopInfo.closed_day}
               </li>
               <li>
                 <span className="text-white block font-medium">席数 / 設備</span>
-                全42席（店内28席 / テラス14席・ペット同伴可）
-                <br />駐車場 20台完備（無料） / Free Wi-Fi / 全席禁煙
+                {shopInfo.seats}
+                <br />{shopInfo.facility}
               </li>
             </ul>
           </div>
@@ -70,7 +73,7 @@ export const Footer: React.FC = () => {
               <div className="text-xs text-[#d8c8b2] mb-2">公式SNSで旬の入荷情報を配信中</div>
               <div className="flex gap-3">
                 <a
-                  href="https://instagram.com"
+                  href={shopInfo.instagram_url}
                   target="_blank"
                   rel="noreferrer"
                   className="w-8 h-8 rounded-full bg-[#574636] hover:bg-[#e26d5c] transition flex items-center justify-center text-white"
@@ -81,13 +84,13 @@ export const Footer: React.FC = () => {
                   </svg>
                 </a>
                 <a
-                  href="https://line.me"
+                  href={shopInfo.x_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-8 h-8 rounded-full bg-[#574636] hover:bg-[#6cae54] transition flex items-center justify-center text-white text-xs font-bold"
-                  aria-label="LINE"
+                  className="w-8 h-8 rounded-full bg-[#574636] hover:bg-[#433932] transition flex items-center justify-center text-white text-xs font-bold"
+                  aria-label="X"
                 >
-                  LINE
+                  𝕏
                 </a>
               </div>
             </div>
@@ -100,24 +103,24 @@ export const Footer: React.FC = () => {
             </h4>
             <div className="text-xs text-[#d8c8b2] space-y-2">
               <p>
-                〒701-1341<br />
-                岡山県岡山市北区吉備津780-1<br />
-                （吉備津神社参道より車で2分・山陽道 岡山ICより15分）
+                {shopInfo.postal_code}<br />
+                {shopInfo.address}<br />
+                （{shopInfo.access_note}）
               </p>
               <div className="pt-1">
                 <span
                   className="inline-flex items-center gap-2 text-white font-semibold"
-                  title="架空の店舗のため、実際のお電話はご利用いただけません"
+                  title={shopInfo.phone_note}
                 >
-                  <Phone className="w-3.5 h-3.5 text-[#f7a48d]" /> 086-XXXX-XXX
+                  <Phone className="w-3.5 h-3.5 text-[#f7a48d]" /> {shopInfo.phone}
                 </span>
               </div>
               <div>
                 <a
-                  href="mailto:info@hareka-okayama-cafe.example.com"
+                  href={`mailto:${shopInfo.email}`}
                   className="inline-flex items-center gap-2 text-[#d8c8b2] hover:text-white transition text-[11px]"
                 >
-                  <Mail className="w-3.5 h-3.5" /> info@hareka-okayama.jp
+                  <Mail className="w-3.5 h-3.5" /> {shopInfo.email}
                 </a>
               </div>
             </div>
@@ -126,7 +129,7 @@ export const Footer: React.FC = () => {
 
         {/* コピーライト */}
         <div className="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-[#a48c6f] gap-3">
-          <p>© 2026 CAFE HAREKA All Rights Reserved. (架空ポートフォリオWebサイト制作実績)</p>
+          <p>© {new Date().getFullYear()} {shopInfo.name} All Rights Reserved. (架空ポートフォリオWebサイト制作実績)</p>
           <p className="flex items-center gap-1">
             Made with <Heart className="w-3.5 h-3.5 text-[#e26d5c] fill-current" /> in Okayama, Japan
           </p>

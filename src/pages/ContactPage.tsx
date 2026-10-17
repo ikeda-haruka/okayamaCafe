@@ -12,6 +12,7 @@ import {
   Check
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useShopInfo } from '../data/shopInfo';
 
 // 時間帯と空き状況の型
 interface TimeSlot {
@@ -24,6 +25,7 @@ interface TimeSlot {
 type Language = 'ja' | 'en';
 
 export const ContactPage: React.FC = () => {
+  const shopInfo = useShopInfo();
   const [lang, setLang] = useState<Language>('ja');
 
   // 明日の日付をデフォルト値に設定（YYYY-MM-DD）
@@ -53,16 +55,20 @@ export const ContactPage: React.FC = () => {
   const [bookingRef, setBookingRef] = useState('');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
-  // 選択日が定休日（水曜日）かどうか判定
-  const isWednesday = useMemo(() => {
+  // 選択日が定休日かどうか判定
+  const isClosedDay = useMemo(() => {
     if (!formData.date) return false;
+    const closedNum = typeof shopInfo.closed_day_num === 'number'
+      ? shopInfo.closed_day_num
+      : parseInt(shopInfo.closed_day_num as string, 10);
+    if (closedNum < 0) return false;
     const day = new Date(formData.date).getDay();
-    return day === 3; // 3 = Wednesday
-  }, [formData.date]);
+    return day === closedNum;
+  }, [formData.date, shopInfo.closed_day_num]);
 
   // 選択日・人数に応じた時間枠の空き状況（シミュレーション生成）
   const timeSlots = useMemo<TimeSlot[]>(() => {
-    if (!formData.date || isWednesday) return [];
+    if (!formData.date || isClosedDay) return [];
 
     const baseSlots = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
     const dateNum = new Date(formData.date).getDate();
@@ -77,7 +83,7 @@ export const ContactPage: React.FC = () => {
         return { time, status: 'available', remaining: 3 };
       }
     });
-  }, [formData.date, isWednesday]);
+  }, [formData.date, isClosedDay]);
 
   const handleSelectTime = (slot: TimeSlot) => {
     if (slot.status === 'full') return;
@@ -88,11 +94,11 @@ export const ContactPage: React.FC = () => {
     e.preventDefault();
 
     if (formData.type === '席のご予約') {
-      if (isWednesday) {
+      if (isClosedDay) {
         alert(
           lang === 'ja'
-            ? '水曜日は定休日のためご予約いただけません。別の日程をお選びください。'
-            : 'We are closed on Wednesdays. Please select another date.'
+            ? `${shopInfo.closed_day_short}は定休日のためご予約いただけません。別の日程をお選びください。`
+            : `We are closed on ${shopInfo.closed_day_short}. Please select another date.`
         );
         return;
       }
@@ -157,9 +163,9 @@ export const ContactPage: React.FC = () => {
       sectionBooking: '席予約詳細・空き状況選択',
       safeBadge: '満席誤予約防止機能 ON',
       dateLabel: 'ご来店希望日',
-      dateSub: '※毎週水曜日は定休日です',
+      dateSub: `※${shopInfo.closed_day}`,
       guestsLabel: 'ご利用人数',
-      wednesdayAlert: '水曜日は定休日のためご予約いただけません。別の日程をお選びください。',
+      wednesdayAlert: `${shopInfo.closed_day_short}は定休日のためご予約いただけません。別の日程をお選びください。`,
       timeSlotLabel: 'ご来店時間枠の選択',
       statusAvailable: '◎ 余裕あり',
       statusFew: '△ 残り1組',
@@ -184,7 +190,7 @@ export const ContactPage: React.FC = () => {
       submitBtnInq: 'お問い合わせを送信する',
       phoneCardTitle: 'お電話でのお問い合わせ',
       phoneCardSub: '当日の空席確認・お急ぎの場合',
-      phoneCardHours: '受付時間：10:00 〜 18:00（水曜定休）',
+      phoneCardHours: `受付時間：${shopInfo.phone_hours}`,
       phoneCardNotice: '※ランチタイム（11:30〜13:30）の混雑時はお電話が繋がりにくい場合がございます。',
       faqTitle: 'よくあるご質問（FAQ）',
       faqSub: 'ご予約・ご来店に関して多くいただくご質問です。',
@@ -247,7 +253,7 @@ export const ContactPage: React.FC = () => {
       submitBtnInq: 'Submit Inquiry',
       phoneCardTitle: 'Telephone Inquiries',
       phoneCardSub: 'For Same-Day Seating or Urgent Inquiries',
-      phoneCardHours: 'Hours: 10:00 - 18:00 (Closed on Wednesdays)',
+      phoneCardHours: `Hours: ${shopInfo.phone_hours}`,
       phoneCardNotice: '※ During peak lunch hours (11:30 - 13:30), phone lines may be busy.',
       faqTitle: 'Frequently Asked Questions (FAQ)',
       faqSub: 'Common questions from our visitors and international travelers.',
@@ -497,8 +503,8 @@ export const ContactPage: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* 水曜日警告 */}
-                    {isWednesday && (
+                    {/* 定休日警告 */}
+                    {isClosedDay && (
                       <div className="p-3.5 rounded-xl bg-[#fff3cd] border border-[#ffeeba] text-xs text-[#856404] flex items-start gap-2">
                         <AlertTriangle className="w-4 h-4 text-[#856404] shrink-0 mt-0.5" />
                         <span><strong>{currentT.wednesdayAlert}</strong></span>
@@ -506,7 +512,7 @@ export const ContactPage: React.FC = () => {
                     )}
 
                     {/* 時間帯空き枠グリッド */}
-                    {!isWednesday && (
+                    {!isClosedDay && (
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <label className="block text-xs font-bold text-[#392d23]">
@@ -719,12 +725,9 @@ export const ContactPage: React.FC = () => {
                 <div className="flex items-baseline gap-2">
                   <span
                     className="text-2xl sm:text-3xl font-serif font-bold text-[#b54737] block"
-                    title="架空の店舗のため、実際のお電話はご利用いただけません"
+                    title={shopInfo.phone_note}
                   >
-                    086-XXXX-XXX
-                  </span>
-                  <span className="text-[11px] font-medium text-[#a48c6f] bg-[#faf7f2] px-2 py-0.5 rounded border border-[#e7dac5]">
-                    ※架空番号
+                    {shopInfo.phone}
                   </span>
                 </div>
                 <p className="text-xs text-[#6b5a4d]">

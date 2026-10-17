@@ -3,11 +3,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone, Calendar, MapPin, Sparkles } from 'lucide-react';
 import { PortfolioBanner } from './PortfolioBanner';
+import { useShopInfo } from '../data/shopInfo';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const shopInfo = useShopInfo();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -124,7 +126,7 @@ export const Navbar: React.FC = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-1 bg-[#6cae54] text-white px-2 py-0.5 rounded-full text-[10px] font-medium">
-              <Sparkles className="w-2.5 h-2.5" /> 営業中 10:00 - 18:00 (L.O. 17:30) / 水曜定休
+              <Sparkles className="w-2.5 h-2.5" /> 営業中 {shopInfo.hours_header} / {shopInfo.closed_day_short}
             </span>
             <span className="text-[#fbc6b6] font-medium">
               🍑 今週は「赤磐産 清水白桃」極上パフェをご提供中！
@@ -132,10 +134,10 @@ export const Navbar: React.FC = () => {
           </div>
           <div className="flex items-center gap-4 text-[#d8c8b2]">
             <span className="flex items-center gap-1">
-              <MapPin className="w-3 h-3 text-[#f7a48d]" /> 岡山市北区吉備津780
+              <MapPin className="w-3 h-3 text-[#f7a48d]" /> {shopInfo.address_short}
             </span>
-            <span className="flex items-center gap-1 text-[#fceee9]" title="架空の店舗のため、実際のお電話はご利用いただけません">
-              <Phone className="w-3 h-3" /> 086-XXXX-XXX
+            <span className="flex items-center gap-1 text-[#fceee9]" title={shopInfo.phone_note}>
+              <Phone className="w-3 h-3" /> {shopInfo.phone}
             </span>
           </div>
         </div>
@@ -186,10 +188,10 @@ export const Navbar: React.FC = () => {
                 </Link>
                 <div
                   className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#d8c8b2] text-[#574636] font-medium bg-white/50 text-sm"
-                  title="架空の店舗のため、実際のお電話はご利用いただけません"
+                  title={shopInfo.phone_note}
                 >
                   <Phone className="w-4 h-4 text-[#e26d5c]" />
-                  <span>お電話：086-XXXX-XXX</span>
+                  <span>お電話：{shopInfo.phone}</span>
                 </div>
               </div>
             </div>

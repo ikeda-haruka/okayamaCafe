@@ -256,8 +256,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // お電話案内カード
         if (cardPhoneTitle) cardPhoneTitle.textContent = lang === 'ja' ? 'お電話でのお問い合わせ' : 'Phone Inquiry';
-        if (cardPhoneSub) cardPhoneSub.textContent = lang === 'ja' ? '当日の空席確認・お急ぎの場合' : 'Same-day seating & urgent inquiries';
-        if (cardPhoneHours) cardPhoneHours.textContent = lang === 'ja' ? '受付時間：10:00 〜 18:00（毎週水曜・定休除く）' : 'Hours: 10:00 - 18:00 (Closed on Wednesdays)';
+        const currentPhoneHours = (window.harekaThemeData && window.harekaThemeData.shopInfo && window.harekaThemeData.shopInfo.phone_hours)
+            ? window.harekaThemeData.shopInfo.phone_hours
+            : '10:00 〜 18:00（毎週水曜・定休除く）';
+        if (cardPhoneHours) cardPhoneHours.textContent = lang === 'ja' ? `受付時間：${currentPhoneHours}` : `Hours: ${currentPhoneHours}`;
         if (cardPhoneNotice) cardPhoneNotice.textContent = lang === 'ja'
             ? '※ランチタイム（11:30〜13:30）の混雑時はお電話が繋がりにくい場合がございます。'
             : '* Phone lines may be busy during peak lunch hours (11:30 - 13:30).';
@@ -342,14 +344,20 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!dateVal) return;
 
             const selectedDate = new Date(dateVal);
-            const dayOfWeek = selectedDate.getDay(); // 3 = 水曜
+            const dayOfWeek = selectedDate.getDay();
+            const shopClosedNum = (window.harekaThemeData && window.harekaThemeData.shopInfo && window.harekaThemeData.shopInfo.closed_day_num !== undefined)
+                ? parseInt(window.harekaThemeData.shopInfo.closed_day_num, 10)
+                : 3;
+            const closedDayShort = (window.harekaThemeData && window.harekaThemeData.shopInfo && window.harekaThemeData.shopInfo.closed_day_short)
+                ? window.harekaThemeData.shopInfo.closed_day_short
+                : '定休日';
 
-            if (dayOfWeek === 3) {
-                // 水曜日は定休日
+            if (shopClosedNum >= 0 && dayOfWeek === shopClosedNum) {
+                // 定休日のためスロット自動ロック
                 if (wednesdayAlert) wednesdayAlert.classList.remove('hidden');
                 const closedMsg = currentLang === 'ja'
-                    ? '定休日のため時間枠は選択できません'
-                    : 'Closed on Wednesdays. Slots unavailable.';
+                    ? `${closedDayShort}のため時間枠は選択できません`
+                    : 'Closed today. Slots unavailable.';
                 slotsGrid.innerHTML = `<div class="col-span-full py-4 text-center text-xs text-[#a48c6f] bg-white rounded-xl border border-[#e7dac5]">${closedMsg}</div>`;
                 return;
             } else {
@@ -458,10 +466,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (inquiryType === '席のご予約' && dateInput) {
                 const selectedDate = new Date(dateInput.value);
-                if (selectedDate.getDay() === 3) {
+                const shopClosedNum = (window.harekaThemeData && window.harekaThemeData.shopInfo && window.harekaThemeData.shopInfo.closed_day_num !== undefined)
+                    ? parseInt(window.harekaThemeData.shopInfo.closed_day_num, 10)
+                    : 3;
+                const closedDayShort = (window.harekaThemeData && window.harekaThemeData.shopInfo && window.harekaThemeData.shopInfo.closed_day_short)
+                    ? window.harekaThemeData.shopInfo.closed_day_short
+                    : '定休日';
+
+                if (shopClosedNum >= 0 && selectedDate.getDay() === shopClosedNum) {
                     alert(currentLang === 'ja'
-                        ? '水曜日は定休日のためご予約いただけません。別の日程をお選びください。'
-                        : 'We are closed on Wednesdays. Please choose another date.');
+                        ? `${closedDayShort}は定休日のためご予約いただけません。別の日程をお選びください。`
+                        : `We are closed on ${closedDayShort}. Please choose another date.`);
                     return;
                 }
             }

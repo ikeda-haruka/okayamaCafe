@@ -31,17 +31,19 @@
           <ul class="text-xs text-[#d8c8b2] space-y-2.5">
             <li>
               <span class="text-white block font-medium">営業時間</span>
-              10:00 〜 18:00（L.O. 17:30）
-              <span class="block text-[11px] text-[#a48c6f]">※ランチタイム 11:00〜14:00</span>
+              <?php echo esc_html( hareka_get_shop_info( 'hours_text' ) ); ?>
+              <?php if ( ! empty( hareka_get_shop_info( 'special_notice' ) ) ) : ?>
+                <span class="block text-[11px] text-[#fbc6b6] mt-0.5"><?php echo esc_html( hareka_get_shop_info( 'special_notice' ) ); ?></span>
+              <?php endif; ?>
             </li>
             <li>
               <span class="text-white block font-medium">定休日</span>
-              毎週水曜日（祝日の場合は翌木曜振替）
+              <?php echo esc_html( hareka_get_shop_info( 'closed_day' ) ); ?>
             </li>
             <li>
               <span class="text-white block font-medium">席数 / 設備</span>
-              全42席（店内28席 / テラス14席・ペット同伴可）<br>
-              無料駐車場20台 / Free Wi-Fi / 全席禁煙
+              <?php echo esc_html( hareka_get_shop_info( 'seats' ) ); ?><br>
+              <?php echo esc_html( hareka_get_shop_info( 'facility' ) ); ?>
             </li>
           </ul>
         </div>
@@ -60,11 +62,11 @@
           <div class="pt-2">
             <div class="text-xs text-[#d8c8b2] mb-2">公式SNSで旬の入荷情報を配信中</div>
             <div class="flex gap-3">
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" class="w-8 h-8 rounded-full bg-[#574636] hover:bg-[#e26d5c] transition flex items-center justify-center text-white" aria-label="Instagram">
-                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              <a href="<?php echo esc_url( hareka_get_shop_info( 'instagram_url' ) ); ?>" target="_blank" rel="noreferrer" class="w-8 h-8 rounded-full bg-[#574636] hover:bg-[#e26d5c] transition flex items-center justify-center text-white" aria-label="Instagram">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.449-1.44z"/></svg>
               </a>
-              <a href="https://line.me" target="_blank" rel="noreferrer" class="w-8 h-8 rounded-full bg-[#574636] hover:bg-[#6cae54] transition flex items-center justify-center text-white text-xs font-bold" aria-label="LINE">
-                LINE
+              <a href="<?php echo esc_url( hareka_get_shop_info( 'x_url' ) ); ?>" target="_blank" rel="noreferrer" class="w-8 h-8 rounded-full bg-[#574636] hover:bg-[#433932] transition flex items-center justify-center text-white text-xs font-bold" aria-label="X">
+                𝕏
               </a>
             </div>
           </div>
@@ -75,18 +77,18 @@
           <h4 class="font-serif text-base font-semibold text-white">所在地・ご連絡</h4>
           <div class="text-xs text-[#d8c8b2] space-y-2">
             <p>
-              〒701-1341<br>
-              岡山県岡山市北区吉備津780-1<br>
-              （吉備津神社参道より車で2分・山陽道 岡山ICより15分）
+              <?php echo esc_html( hareka_get_shop_info( 'postal_code' ) ); ?><br>
+              <?php echo esc_html( hareka_get_shop_info( 'address' ) ); ?><br>
+              （<?php echo esc_html( hareka_get_shop_info( 'access_note' ) ); ?>）
             </p>
             <div class="pt-1">
-              <span class="inline-flex items-center gap-2 text-white font-semibold" title="架空の店舗のため、実際のお電話はご利用いただけません">
-                📞 086-XXXX-XXX
+              <span class="inline-flex items-center gap-2 text-white font-semibold" title="<?php echo esc_attr( hareka_get_shop_info( 'phone_note' ) ); ?>">
+                📞 <?php echo esc_html( hareka_get_shop_info( 'phone' ) ); ?>
               </span>
             </div>
             <div>
-              <a href="mailto:info@hareka-okayama-cafe.example.com" class="text-[#d8c8b2] hover:text-white transition text-[11px]">
-                ✉ info@hareka-okayama.jp
+              <a href="mailto:<?php echo esc_attr( hareka_get_shop_info( 'email' ) ); ?>" class="text-[#d8c8b2] hover:text-white transition text-[11px]">
+                ✉ <?php echo esc_html( hareka_get_shop_info( 'email' ) ); ?>
               </a>
             </div>
           </div>
@@ -95,7 +97,7 @@
 
       <!-- コピーライト -->
       <div class="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-[#a48c6f] gap-3">
-        <p>© <?php echo date('Y'); ?> CAFE HAREKA All Rights Reserved. (WordPress CMS化対応テーマ)</p>
+        <p>© <?php echo date('Y'); ?> <?php echo esc_html( hareka_get_shop_info( 'name' ) ); ?> All Rights Reserved. (WordPress CMS化対応テーマ)</p>
         <p>Made with love in Okayama, Japan</p>
       </div>
     </div>
@@ -112,7 +114,7 @@
         <span class="text-sm">📍</span>
         <span>アクセス</span>
       </a>
-      <button type="button" onclick="alert('【CAFE HAREKA】\n当サイトは架空のポートフォリオ用店舗のため、お電話（086-XXXX-XXX）での通話発信はご利用いただけません。ご予約やお問合せはWebフォームをご利用ください。');" class="flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-medium text-[#574636] hover:bg-[#f4eee3] cursor-pointer" title="架空の店舗のため、実際のお電話はご利用いただけません">
+      <button type="button" onclick="alert('【<?php echo esc_js( hareka_get_shop_info( 'name' ) ); ?>】\n<?php echo esc_js( hareka_get_shop_info( 'phone_note' ) ); ?>');" class="flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-medium text-[#574636] hover:bg-[#f4eee3] cursor-pointer" title="<?php echo esc_attr( hareka_get_shop_info( 'phone_note' ) ); ?>">
         <span class="text-sm">📞</span>
         <span>お電話</span>
       </button>

@@ -8,9 +8,10 @@ import {
   ExternalLink,
   CheckCircle2
 } from 'lucide-react';
-
+import { useShopInfo } from '../data/shopInfo';
 
 export const AccessPage: React.FC = () => {
+  const shopInfo = useShopInfo();
   return (
     <div className="space-y-16 sm:space-y-24 pb-20">
       <PageHeader
@@ -33,8 +34,8 @@ export const AccessPage: React.FC = () => {
                 loading="lazy"
               />
               <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl shadow-md border border-[#e7dac5] text-xs space-y-1">
-                <span className="font-bold text-[#392d23] block">CAFE HAREKA（晴果）</span>
-                <span className="text-[#6b5a4d] block">岡山県岡山市北区吉備津780-1</span>
+                <span className="font-bold text-[#392d23] block">{shopInfo.name}</span>
+                <span className="text-[#6b5a4d] block">{shopInfo.address}</span>
               </div>
             </div>
 
@@ -43,7 +44,7 @@ export const AccessPage: React.FC = () => {
                 ※ナビゲーションには「吉備津神社」または「吉備津780」とご入力ください。
               </div>
               <a
-                href="https://maps.google.com/?q=吉備津神社+岡山"
+                href={shopInfo.google_map_url}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#392d23] text-white text-xs font-semibold hover:bg-[#574636] transition shadow-sm shrink-0"
@@ -64,50 +65,51 @@ export const AccessPage: React.FC = () => {
             <div className="space-y-4 text-xs sm:text-sm">
               <div className="flex gap-4">
                 <span className="w-24 text-[#a48c6f] shrink-0 font-medium">店名</span>
-                <span className="font-semibold text-[#392d23]">CAFE HAREKA（カフェ ハレカ / 晴果喫茶）</span>
+                <span className="font-semibold text-[#392d23]">{shopInfo.name}</span>
               </div>
 
               <div className="flex gap-4">
                 <span className="w-24 text-[#a48c6f] shrink-0 font-medium">住所</span>
                 <span className="text-[#574636]">
-                  〒701-1341<br />
-                  岡山県岡山市北区吉備津780-1
+                  {shopInfo.postal_code}<br />
+                  {shopInfo.address}
                 </span>
               </div>
 
               <div className="flex gap-4">
                 <span className="w-24 text-[#a48c6f] shrink-0 font-medium">電話番号</span>
-                <span className="text-[#b54737] font-bold flex items-center gap-2" title="架空の店舗のため、実際のお電話はご利用いただけません">
-                  086-XXXX-XXX
-                  <span className="text-[11px] font-normal text-[#a48c6f]">（架空番号）</span>
+                <span className="text-[#b54737] font-bold flex items-center gap-2" title={shopInfo.phone_note}>
+                  {shopInfo.phone}
                 </span>
               </div>
 
               <div className="flex gap-4">
                 <span className="w-24 text-[#a48c6f] shrink-0 font-medium">営業時間</span>
                 <div className="text-[#574636]">
-                  10:00 〜 18:00（L.O. 17:30）<br />
+                  {shopInfo.hours_text}<br />
+                  {shopInfo.special_notice && (
+                    <span className="text-xs text-[#b54737] block mt-0.5">{shopInfo.special_notice}</span>
+                  )}
                   <span className="text-xs text-[#a48c6f]">・ランチタイム：11:00 〜 14:00<br />・カフェタイム：終日</span>
                 </div>
               </div>
 
               <div className="flex gap-4">
                 <span className="w-24 text-[#a48c6f] shrink-0 font-medium">定休日</span>
-                <span className="text-[#574636]">毎週水曜日（祝日の場合は翌営業日）</span>
+                <span className="text-[#574636]">{shopInfo.closed_day}</span>
               </div>
 
               <div className="flex gap-4">
                 <span className="w-24 text-[#a48c6f] shrink-0 font-medium">席数</span>
                 <span className="text-[#574636]">
-                  全42席（店内28席 / テラス14席・ペット同伴可）
+                  {shopInfo.seats}
                 </span>
               </div>
 
               <div className="flex gap-4">
                 <span className="w-24 text-[#a48c6f] shrink-0 font-medium">駐車場</span>
                 <span className="text-[#574636]">
-                  専用無料駐車場 20台完備<br />
-                  <span className="text-xs text-[#4a8235]">（EV普通充電器 2基あり）</span>
+                  {shopInfo.parking}
                 </span>
               </div>
 

@@ -2,9 +2,10 @@ import React from 'react';
 import { PageHeader } from '../components/PageHeader';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { Sparkles, CheckCircle } from 'lucide-react';
-
+import { useShopInfo } from '../data/shopInfo';
 
 export const AboutPage: React.FC = () => {
+  const shopInfo = useShopInfo();
   return (
     <div className="space-y-16 sm:space-y-24 pb-20">
       <PageHeader
@@ -213,7 +214,7 @@ export const AboutPage: React.FC = () => {
               岡山に観光でお越しの方も、お近くにお住まいの方も、ふらっと立ち寄って笑顔になれる場所であり続けます。
             </p>
             <div className="text-xs font-semibold text-[#574636] pt-1">
-              CAFE HAREKA 代表・パティシエ / 岡崎 健太郎
+              {shopInfo.name} 代表・パティシエ / {shopInfo.chef_name}
             </div>
           </div>
         </div>

@@ -133,7 +133,7 @@ $theme_uri = get_template_directory_uri();
           果物は生き物です。その日の気温や日照で毎日甘みや酸味のバランスが変わります。私たちは毎朝届く果物を一口一口味見し、その日その実が一番輝く仕立てでお出ししています。
         </p>
         <div class="text-xs font-semibold text-[#574636] pt-1">
-          CAFE HAREKA 代表・パティシエ / 岡崎 健太郎
+          <?php echo esc_html( hareka_get_shop_info( 'name' ) ); ?> 代表・パティシエ / <?php echo esc_html( hareka_get_shop_info( 'chef_name' ) ); ?>
         </div>
       </div>
     </div>

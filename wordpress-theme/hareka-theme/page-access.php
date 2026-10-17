@@ -40,8 +40,8 @@ get_header();
                         loading="lazy"
                     ></iframe>
                     <div class="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl shadow-md border border-[#e7dac5] text-xs space-y-1">
-                        <span class="font-bold text-[#392d23] block">CAFE HAREKA（晴果）</span>
-                        <span class="text-[#6b5a4d] block">岡山県岡山市北区吉備津780-1</span>
+                        <span class="font-bold text-[#392d23] block"><?php echo esc_html( hareka_get_shop_info( 'name' ) ); ?></span>
+                        <span class="text-[#6b5a4d] block"><?php echo esc_html( hareka_get_shop_info( 'address' ) ); ?></span>
                     </div>
                 </div>
 
@@ -50,7 +50,7 @@ get_header();
                         ※カーナビゲーションには「吉備津神社」または「吉備津780」とご入力ください。
                     </div>
                     <a
-                        href="https://maps.google.com/?q=吉備津神社+岡山"
+                        href="<?php echo esc_url( hareka_get_shop_info( 'google_map_url' ) ); ?>"
                         target="_blank"
                         rel="noreferrer"
                         class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#392d23] text-white text-xs font-semibold hover:bg-[#574636] transition shadow-sm shrink-0"
@@ -71,50 +71,51 @@ get_header();
                 <div class="space-y-4 text-xs sm:text-sm">
                     <div class="flex gap-4">
                         <span class="w-24 text-[#a48c6f] shrink-0 font-medium">店名</span>
-                        <span class="font-semibold text-[#392d23]">CAFE HAREKA（カフェ ハレカ / 晴果喫茶）</span>
+                        <span class="font-semibold text-[#392d23]"><?php echo esc_html( hareka_get_shop_info( 'name' ) ); ?></span>
                     </div>
 
                     <div class="flex gap-4">
                         <span class="w-24 text-[#a48c6f] shrink-0 font-medium">住所</span>
                         <span class="text-[#574636]">
-                            〒701-1341<br />
-                            岡山県岡山市北区吉備津780-1
+                            <?php echo esc_html( hareka_get_shop_info( 'postal_code' ) ); ?><br />
+                            <?php echo esc_html( hareka_get_shop_info( 'address' ) ); ?>
                         </span>
                     </div>
 
                     <div class="flex gap-4">
                         <span class="w-24 text-[#a48c6f] shrink-0 font-medium">電話番号</span>
-                        <span class="text-[#b54737] font-bold flex items-center gap-2" title="架空の店舗のため、実際のお電話はご利用いただけません">
-                            086-XXXX-XXX
-                            <span class="text-[11px] font-normal text-[#a48c6f]">（架空番号）</span>
+                        <span class="text-[#b54737] font-bold flex items-center gap-2" title="<?php echo esc_attr( hareka_get_shop_info( 'phone_note' ) ); ?>">
+                            <?php echo esc_html( hareka_get_shop_info( 'phone' ) ); ?>
                         </span>
                     </div>
 
                     <div class="flex gap-4">
                         <span class="w-24 text-[#a48c6f] shrink-0 font-medium">営業時間</span>
                         <div class="text-[#574636]">
-                            10:00 〜 18:00（L.O. 17:30）<br />
+                            <?php echo esc_html( hareka_get_shop_info( 'hours_text' ) ); ?><br />
+                            <?php if ( ! empty( hareka_get_shop_info( 'special_notice' ) ) ) : ?>
+                                <span class="text-xs text-[#b54737] block mt-0.5"><?php echo esc_html( hareka_get_shop_info( 'special_notice' ) ); ?></span>
+                            <?php endif; ?>
                             <span class="text-xs text-[#a48c6f]">・ランチタイム：11:00 〜 14:00<br />・カフェタイム：終日</span>
                         </div>
                     </div>
 
                     <div class="flex gap-4">
                         <span class="w-24 text-[#a48c6f] shrink-0 font-medium">定休日</span>
-                        <span class="text-[#574636]">毎週水曜日（祝日の場合は翌営業日）</span>
+                        <span class="text-[#574636]"><?php echo esc_html( hareka_get_shop_info( 'closed_day' ) ); ?></span>
                     </div>
 
                     <div class="flex gap-4">
                         <span class="w-24 text-[#a48c6f] shrink-0 font-medium">席数</span>
                         <span class="text-[#574636]">
-                            全42席（店内28席 / テラス14席・ペット同伴可）
+                            <?php echo esc_html( hareka_get_shop_info( 'seats' ) ); ?>
                         </span>
                     </div>
 
                     <div class="flex gap-4">
                         <span class="w-24 text-[#a48c6f] shrink-0 font-medium">駐車場</span>
                         <span class="text-[#574636]">
-                            専用無料駐車場 20台完備<br />
-                            <span class="text-xs text-[#4a8235]">（EV普通充電器 2基あり）</span>
+                            <?php echo esc_html( hareka_get_shop_info( 'parking' ) ); ?>
                         </span>
                     </div>
 

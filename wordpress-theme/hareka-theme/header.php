@@ -108,15 +108,15 @@
       <div class="max-w-7xl mx-auto flex justify-between items-center">
         <div class="flex items-center gap-3">
           <span class="inline-flex items-center gap-1 bg-[#6cae54] text-white px-2 py-0.5 rounded-full text-[10px] font-medium">
-            ● 営業中 10:00 - 18:00 (L.O. 17:30) / 水曜定休
+            ● 営業中 <?php echo esc_html( hareka_get_shop_info( 'hours_header' ) ); ?> / <?php echo esc_html( hareka_get_shop_info( 'closed_day_short' ) ); ?>
           </span>
           <span class="text-[#fbc6b6] font-medium">
             🍑 今週は「赤磐産 清水白桃」極上パフェをご提供中！
           </span>
         </div>
         <div class="flex items-center gap-4 text-[#d8c8b2]">
-          <span>岡山市北区吉備津780</span>
-          <span class="text-[#fceee9]" title="架空の店舗のため、実際のお電話はご利用いただけません">📞 086-XXXX-XXX</span>
+          <span><?php echo esc_html( hareka_get_shop_info( 'address_short' ) ); ?></span>
+          <span class="text-[#fceee9]" title="<?php echo esc_attr( hareka_get_shop_info( 'phone_note' ) ); ?>">📞 <?php echo esc_html( hareka_get_shop_info( 'phone' ) ); ?></span>
         </div>
       </div>
     </div>
@@ -137,8 +137,8 @@
       <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="w-full flex items-center justify-center py-3 rounded-xl bg-gradient-to-r from-[#e26d5c] to-[#b54737] text-white font-medium shadow text-sm">
         お席の事前予約・お問い合わせ
       </a>
-      <div class="w-full flex items-center justify-center py-2.5 rounded-xl border border-[#d8c8b2] text-[#574636] font-medium text-sm bg-white/50" title="架空の店舗のため、実際のお電話はご利用いただけません">
-        📞 お電話：086-XXXX-XXX
+      <div class="w-full flex items-center justify-center py-2.5 rounded-xl border border-[#d8c8b2] text-[#574636] font-medium text-sm bg-white/50" title="<?php echo esc_attr( hareka_get_shop_info( 'phone_note' ) ); ?>">
+        📞 お電話：<?php echo esc_html( hareka_get_shop_info( 'phone' ) ); ?>
       </div>
     </div>
   </div>

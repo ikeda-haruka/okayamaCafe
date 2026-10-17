@@ -13,8 +13,8 @@ $faq_items = array(
     array(
         'q_ja' => '予約はいつから受け付けていますか？',
         'q_en' => 'How far in advance can I make a reservation?',
-        'a_ja' => 'ご来店希望日の30日前から、前日の17:00までこちらのWebフォームより受け付けております。当日のご予約や空席確認につきましては、お電話（086-XXXX-XXX ※架空番号）にて直接お問い合わせください。',
-        'a_en' => 'We accept online reservations from 30 days up to 1 day prior (until 17:00). For same-day reservations or immediate seat checks, please call us directly (086-XXXX-XXX *dummy number).',
+        'a_ja' => 'ご来店希望日の30日前から、前日の17:00までこちらのWebフォームより受け付けております。当日のご予約や空席確認につきましては、お電話（' . hareka_get_shop_info( 'phone' ) . '）にて直接お問い合わせください。',
+        'a_en' => 'We accept online reservations from 30 days up to 1 day prior (until 17:00). For same-day reservations or immediate seat checks, please call us directly (' . hareka_get_shop_info( 'phone' ) . ').',
     ),
     array(
         'q_ja' => '満席の時間帯は予約できませんか？',
@@ -123,7 +123,7 @@ $faq_items = array(
                     </div>
 
                     <p id="booking-complete-desc" class="text-xs text-[#6b5a4d] max-w-md mx-auto leading-relaxed">
-                        ご入力いただいたメールアドレス宛に自動返信メールを送信いたしました。メールが届かない場合は、迷惑メールフォルダをご確認いただくか、店舗（086-XXXX-XXX ※架空番号）までお問い合わせください。
+                        ご入力いただいたメールアドレス宛に自動返信メールを送信いたしました。メールが届かない場合は、迷惑メールフォルダをご確認いただくか、店舗（<?php echo esc_html( hareka_get_shop_info( 'phone' ) ); ?>）までお問い合わせください。
                     </p>
 
                     <div class="pt-4">
@@ -211,7 +211,7 @@ $faq_items = array(
                                     class="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
                                 />
                                 <span class="text-[11px] text-[#b54737] mt-1 block" id="text-wednesday-notice">
-                                    ※毎週水曜日は定休日です / Closed on Wednesdays
+                                    ※<?php echo esc_html( hareka_get_shop_info( 'closed_day' ) ); ?>
                                 </span>
                             </div>
 
@@ -239,7 +239,7 @@ $faq_items = array(
                         <!-- 水曜定休日警告アラート -->
                         <div id="wednesday-alert" class="hidden p-3.5 rounded-xl bg-[#fff3cd] border border-[#ffeeba] text-xs text-[#856404] flex items-start gap-2">
                             <svg class="w-4 h-4 text-[#856404] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                            <span id="wednesday-alert-text"><strong>水曜日は定休日です。</strong> 水曜日以外の日程をご選択ください。 / We are closed on Wednesdays. Please select another date.</span>
+                            <span id="wednesday-alert-text"><strong><?php echo esc_html( hareka_get_shop_info( 'closed_day_short' ) ); ?>は定休日です。</strong> 定休日以外の日程をご選択ください。 / We are closed on <?php echo esc_html( hareka_get_shop_info( 'closed_day_short' ) ); ?>. Please select another date.</span>
                         </div>
 
                         <!-- 時間帯別空き枠セレクター -->
@@ -399,15 +399,12 @@ $faq_items = array(
 
                     <div class="space-y-1">
                         <div class="flex items-baseline gap-2">
-                            <span class="text-2xl sm:text-3xl font-serif font-bold text-[#b54737] block" title="架空の店舗のため、実際のお電話はご利用いただけません">
-                                086-XXXX-XXX
-                            </span>
-                            <span class="text-[11px] font-medium text-[#a48c6f] bg-[#faf7f2] px-2 py-0.5 rounded border border-[#e7dac5]">
-                                ※架空番号
+                            <span class="text-2xl sm:text-3xl font-serif font-bold text-[#b54737] block" title="<?php echo esc_attr( hareka_get_shop_info( 'phone_note' ) ); ?>">
+                                <?php echo esc_html( hareka_get_shop_info( 'phone' ) ); ?>
                             </span>
                         </div>
                         <p class="text-xs text-[#6b5a4d]" id="card-phone-hours">
-                            受付時間：10:00 〜 18:00（毎週水曜・定休除く） / 10:00 - 18:00 (Closed Wed)
+                            受付時間：<?php echo esc_html( hareka_get_shop_info( 'phone_hours' ) ); ?>
                         </p>
                     </div>
 
