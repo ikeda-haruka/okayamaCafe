@@ -43,6 +43,10 @@ export async function fetchWpNews(): Promise<NewsItem[]> {
         }
       }
 
+      // アイキャッチ画像の取得
+      const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
+      const thumbnailUrl = featuredMedia?.source_url || featuredMedia?.media_details?.sizes?.large?.source_url;
+
       // 抜粋または本文のプレーンテキスト化
       const rawExcerpt = post.excerpt?.rendered || post.content?.rendered || '';
       const cleanContent = rawExcerpt.replace(/<[^>]+>/g, '').trim();
@@ -52,7 +56,8 @@ export async function fetchWpNews(): Promise<NewsItem[]> {
         date: formattedDate,
         category: categoryName,
         title: post.title?.rendered || '無題のおしらせ',
-        content: cleanContent
+        content: cleanContent,
+        thumbnailUrl: thumbnailUrl || undefined
       };
     });
   } catch (err) {

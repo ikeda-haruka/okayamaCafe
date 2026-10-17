@@ -58,16 +58,18 @@ export const NewsPage: React.FC = () => {
             <article
               key={item.id}
               onClick={() => setSelectedNews(item)}
-              className="bg-white rounded-3xl overflow-hidden border border-[#e7dac5] shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between p-6 sm:p-7 cursor-pointer group hover:-translate-y-1"
+              className="bg-white rounded-3xl overflow-hidden border border-[#e7dac5] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer group hover:-translate-y-1"
             >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[11px] text-[#a48c6f] font-medium">
-                    <Calendar className="w-3.5 h-3.5 text-[#e26d5c]" />
-                    <span>{item.date}</span>
-                  </div>
+              {/* サムネイル画像（未設定時はCAFE HAREKAロゴ入りイラスト） */}
+              <div className="aspect-video bg-[#faf7f2] relative overflow-hidden border-b border-[#f4eee3]">
+                <img
+                  src={item.thumbnailUrl || '/images/hareka-placeholder.svg'}
+                  alt={item.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-3 left-3">
                   <span
-                    className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
+                    className={`text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm backdrop-blur-sm ${
                       item.category === '旬の入荷'
                         ? 'bg-[#e2f0d9] text-[#4a8235]'
                         : item.category === 'お知らせ'
@@ -78,22 +80,31 @@ export const NewsPage: React.FC = () => {
                     {item.category}
                   </span>
                 </div>
-
-                <h3 className="font-serif text-base font-bold text-[#392d23] group-hover:text-[#b54737] transition-colors line-clamp-2 leading-snug">
-                  {item.title}
-                </h3>
-
-                <p className="text-xs text-[#6b5a4d] line-clamp-3 leading-relaxed">
-                  {item.content}
-                </p>
               </div>
 
-              <div className="pt-4 border-t border-[#f4eee3] mt-5 flex items-center justify-between">
-                <span className="text-xs font-semibold text-[#b54737] group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                  <span>詳しく読む</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </span>
-                <span className="text-[10px] text-[#a48c6f]">CAFE HAREKA</span>
+              <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                <div className="space-y-2.5">
+                  <div className="flex items-center gap-2 text-[11px] text-[#a48c6f] font-medium">
+                    <Calendar className="w-3.5 h-3.5 text-[#e26d5c]" />
+                    <span>{item.date}</span>
+                  </div>
+
+                  <h3 className="font-serif text-base font-bold text-[#392d23] group-hover:text-[#b54737] transition-colors line-clamp-2 leading-snug">
+                    {item.title}
+                  </h3>
+
+                  <p className="text-xs text-[#6b5a4d] line-clamp-3 leading-relaxed">
+                    {item.content}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-[#f4eee3] flex items-center justify-between">
+                  <span className="text-xs font-semibold text-[#b54737] group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                    <span>詳しく読む</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </span>
+                  <span className="text-[10px] text-[#a48c6f]">CAFE HAREKA</span>
+                </div>
               </div>
             </article>
           ))}
@@ -144,6 +155,15 @@ export const NewsPage: React.FC = () => {
               >
                 ✕
               </button>
+            </div>
+
+            {/* サムネイル画像（未設定時はCAFE HAREKAロゴ入りイラスト） */}
+            <div className="rounded-2xl overflow-hidden aspect-video bg-[#faf7f2] border border-[#f4eee3]">
+              <img
+                src={selectedNews.thumbnailUrl || '/images/hareka-placeholder.svg'}
+                alt={selectedNews.title}
+                className="w-full h-full object-cover"
+              />
             </div>
 
             <h3 className="font-serif text-lg sm:text-xl font-bold text-[#392d23] leading-snug">

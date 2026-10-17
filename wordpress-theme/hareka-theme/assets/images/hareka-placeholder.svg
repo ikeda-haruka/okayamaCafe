@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <!-- 背景グラデーション -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdfaf5" />
+      <stop offset="50%" stop-color="#faf6f0" />
+      <stop offset="100%" stop-color="#f4ede1" />
+    </linearGradient>
+
+    <!-- 桃のグラデーション -->
+    <linearGradient id="peachGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff5f2" />
+      <stop offset="35%" stop-color="#fbc6b6" />
+      <stop offset="75%" stop-color="#e26d5c" />
+      <stop offset="100%" stop-color="#b54737" />
+    </linearGradient>
+
+    <!-- マスカットグラデーション -->
+    <linearGradient id="muscatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#eef8ea" />
+      <stop offset="60%" stop-color="#88c56d" />
+      <stop offset="100%" stop-color="#4a8235" />
+    </linearGradient>
+
+    <!-- エンブレム枠グラデーション -->
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde2d9" />
+      <stop offset="50%" stop-color="#faf7f2" />
+      <stop offset="100%" stop-color="#e2f0d9" />
+    </linearGradient>
+
+    <!-- パターン装飾（うっすらと広がる果樹の波紋） -->
+    <radialGradient id="softGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ベース背景 -->
+  <rect width="800" height="450" fill="url(#bgGrad)" />
+
+  <!-- 中央の柔らかな光彩 -->
+  <circle cx="400" cy="225" r="280" fill="url(#softGlow)" />
+
+  <!-- 外枠エレガントボーダー -->
+  <rect x="24" y="24" width="752" height="402" rx="16" fill="none" stroke="#e7dac5" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.7" />
+  <rect x="32" y="32" width="736" height="386" rx="12" fill="none" stroke="#e7dac5" stroke-width="1" opacity="0.5" />
+
+  <!-- コーナーアクセント装飾 -->
+  <g stroke="#c7b399" stroke-width="1.5" fill="none" opacity="0.6">
+    <path d="M 38 50 L 38 38 L 50 38" />
+    <path d="M 762 50 L 762 38 L 750 38" />
+    <path d="M 38 400 L 38 412 L 50 412" />
+    <path d="M 762 400 L 762 412 L 750 412" />
+  </g>
+
+  <!-- 中央のエンブレムサークル -->
+  <g transform="translate(400, 155)">
+    <!-- 外輪リング -->
+    <circle cx="0" cy="0" r="64" fill="url(#ringGrad)" stroke="#ebdcc9" stroke-width="2" />
+    <circle cx="0" cy="0" r="58" fill="#ffffff" stroke="#f4eee3" stroke-width="1" />
+
+    <!-- 桃とマスカットのイラスト -->
+    <g transform="translate(0, -6) scale(1.1)">
+      <!-- 葉っぱ -->
+      <path d="M 4 -28 C 4 -40, 22 -44, 28 -38 C 30 -24, 14 -20, 4 -28 Z" fill="#6cae54" />
+      <path d="M 8 -30 C 14 -34, 22 -35, 26 -36" stroke="#a9d997" stroke-width="1.5" stroke-linecap="round" fill="none" />
+
+      <!-- マスカット小粒（左上寄り） -->
+      <circle cx="-16" cy="-14" r="10" fill="url(#muscatGrad)" stroke="#ffffff" stroke-width="1" opacity="0.95" />
+      <circle cx="-8" cy="-22" r="8" fill="url(#muscatGrad)" stroke="#ffffff" stroke-width="1" opacity="0.9" />
+
+      <!-- 桃の果実本体 -->
+      <path d="M 0 -22 C -18 -30, -38 -16, -38 4 C -38 24, -14 36, 0 40 C 14 36, 38 24, 38 4 C 38 -16, 18 -30, 0 -22 Z" fill="url(#peachGrad)" />
+      <!-- 桃の割れ目ライン -->
+      <path d="M 0 -22 C -1 -8, -1 18, 0 38" stroke="#f7a48d" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7" />
+    </g>
+  </g>
+
+  <!-- タイポグラフィ・ブランドロゴテキスト -->
+  <!-- 英文サブヘッダー -->
+  <text x="400" y="260" font-family="'Helvetica Neue', 'Noto Sans JP', sans-serif" font-size="12" font-weight="600" fill="#a48c6f" text-anchor="middle" letter-spacing="4">
+    OKAYAMA LOCAL FRUITS &amp; CAFE
+  </text>
+
+  <!-- メインブランド名 -->
+  <text x="400" y="300" font-family="'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', serif" font-size="34" font-weight="700" fill="#392d23" text-anchor="middle" letter-spacing="3">
+    CAFE HAREKA
+  </text>
+
+  <!-- 漢字表記と落款印風装飾 -->
+  <g transform="translate(400, 328)">
+    <line x1="-120" y1="0" x2="-35" y2="0" stroke="#d8c8b2" stroke-width="1" />
+    <text x="0" y="4" font-family="'Shippori Mincho', serif" font-size="15" font-weight="600" fill="#6b5a4d" text-anchor="middle" letter-spacing="4">
+      晴 果
+    </text>
+    <line x1="35" y1="0" x2="120" y2="0" stroke="#d8c8b2" stroke-width="1" />
+  </g>
+
+  <!-- 下部フッター装飾テキスト -->
+  <text x="400" y="375" font-family="'Helvetica Neue', 'Noto Sans JP', sans-serif" font-size="11" font-weight="500" fill="#b54737" text-anchor="middle" letter-spacing="2">
+    ✦ NEWS &amp; TOPICS ✦
+  </text>
+  <text x="400" y="395" font-family="'Noto Sans JP', sans-serif" font-size="10" fill="#a48c6f" text-anchor="middle">
+    岡山県吉備路の太陽と樹上のめぐみ
+  </text>
+</svg>

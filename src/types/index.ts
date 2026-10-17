@@ -31,6 +31,7 @@ export interface NewsItem {
   category: 'お知らせ' | '旬の入荷' | 'イベント';
   title: string;
   content: string;
+  thumbnailUrl?: string;
 }
 
 export interface FAQItem {

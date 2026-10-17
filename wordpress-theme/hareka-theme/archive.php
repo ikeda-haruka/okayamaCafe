@@ -76,7 +76,7 @@ $categories = get_categories( array(
                                 <?php the_post_thumbnail( 'hareka-card', array( 'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500' ) ); ?>
                             <?php else : ?>
                                 <img
-                                    src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/shimizu_peach.jpg' ); ?>"
+                                    src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/hareka-placeholder.svg' ); ?>"
                                     alt="<?php the_title_attribute(); ?>"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
