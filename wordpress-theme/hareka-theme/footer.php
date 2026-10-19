@@ -74,7 +74,10 @@
 
         <!-- 所在地・お問い合わせ -->
         <div class="space-y-3">
-          <h4 class="font-serif text-base font-semibold text-white">所在地・ご連絡</h4>
+          <h4 class="font-serif text-base font-semibold text-white flex items-center gap-2">
+            <svg class="w-4 h-4 text-[#f7a48d]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+            所在地・ご連絡
+          </h4>
           <div class="text-xs text-[#d8c8b2] space-y-2">
             <p>
               <?php echo esc_html( hareka_get_shop_info( 'postal_code' ) ); ?><br>
@@ -83,12 +86,14 @@
             </p>
             <div class="pt-1">
               <span class="inline-flex items-center gap-2 text-white font-semibold" title="<?php echo esc_attr( hareka_get_shop_info( 'phone_note' ) ); ?>">
-                📞 <?php echo esc_html( hareka_get_shop_info( 'phone' ) ); ?>
+                <svg class="w-3.5 h-3.5 text-[#f7a48d]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <?php echo esc_html( hareka_get_shop_info( 'phone' ) ); ?>
               </span>
             </div>
             <div>
-              <a href="mailto:<?php echo esc_attr( hareka_get_shop_info( 'email' ) ); ?>" class="text-[#d8c8b2] hover:text-white transition text-[11px]">
-                ✉ <?php echo esc_html( hareka_get_shop_info( 'email' ) ); ?>
+              <a href="mailto:<?php echo esc_attr( hareka_get_shop_info( 'email' ) ); ?>" class="inline-flex items-center gap-2 text-[#d8c8b2] hover:text-white transition text-[11px]">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                <?php echo esc_html( hareka_get_shop_info( 'email' ) ); ?>
               </a>
             </div>
           </div>
@@ -98,7 +103,9 @@
       <!-- コピーライト -->
       <div class="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-[#a48c6f] gap-3">
         <p>© <?php echo date('Y'); ?> <?php echo esc_html( hareka_get_shop_info( 'name' ) ); ?> All Rights Reserved. (WordPress CMS化対応テーマ)</p>
-        <p>Made with love in Okayama, Japan</p>
+        <p class="flex items-center gap-1">
+          Made with <svg class="w-3.5 h-3.5 text-[#e26d5c] fill-current" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg> in Okayama, Japan
+        </p>
       </div>
     </div>
   </footer>
@@ -115,7 +122,7 @@
         <span>アクセス</span>
       </a>
       <button type="button" onclick="alert('【<?php echo esc_js( hareka_get_shop_info( 'name' ) ); ?>】\n<?php echo esc_js( hareka_get_shop_info( 'phone_note' ) ); ?>');" class="flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-medium text-[#574636] hover:bg-[#f4eee3] cursor-pointer" title="<?php echo esc_attr( hareka_get_shop_info( 'phone_note' ) ); ?>">
-        <span class="text-sm">📞</span>
+        <svg class="w-4 h-4 mb-0.5 text-[#574636]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         <span>お電話</span>
       </button>
       <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold bg-gradient-to-r from-[#e26d5c] to-[#b54737] text-white shadow-sm">

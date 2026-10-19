@@ -1273,3 +1273,43 @@ function hareka_submit_booking_callback() {
         'admin_sent'  => (bool) $mail_admin_sent,
     ) );
 }
+
+/**
+ * WordPress標準の絵文字自動置換（wp-emoji-loader）を無効化
+ * - 外部CDN（s.w.org）への余計なHTTPリクエストを削減
+ * - 絵文字の動的DOM置換によるアイコンのチラつき・点滅（FOUT）を根本解決
+ */
+function hareka_disable_wp_emojis() {
+    remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+    remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+    remove_action( 'wp_print_styles', 'print_emoji_styles' );
+    remove_action( 'admin_print_styles', 'print_emoji_styles' );
+    remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+    remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
+    remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+    add_filter( 'tiny_mce_plugins', 'hareka_disable_emojis_tinymce' );
+    add_filter( 'wp_resource_hints', 'hareka_disable_emojis_dns_prefetch', 10, 2 );
+}
+add_action( 'init', 'hareka_disable_wp_emojis' );
+
+/**
+ * TinyMCEエディタ内の絵文字プラグインを除去
+ */
+function hareka_disable_emojis_tinymce( $plugins ) {
+    if ( is_array( $plugins ) ) {
+        return array_diff( $plugins, array( 'wpemoji' ) );
+    }
+    return array();
+}
+
+/**
+ * 絵文字CDN（s.w.org）へのdns-prefetchを除去
+ */
+function hareka_disable_emojis_dns_prefetch( $urls, $relation_type ) {
+    if ( 'dns-prefetch' === $relation_type ) {
+        $emoji_svg_url = apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/2/svg/' );
+        $urls = array_diff( $urls, array( $emoji_svg_url ) );
+    }
+    return $urls;
+}
+

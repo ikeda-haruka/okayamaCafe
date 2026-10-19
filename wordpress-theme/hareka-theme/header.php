@@ -115,8 +115,14 @@
           </span>
         </div>
         <div class="flex items-center gap-4 text-[#d8c8b2]">
-          <span><?php echo esc_html( hareka_get_shop_info( 'address_short' ) ); ?></span>
-          <span class="text-[#fceee9]" title="<?php echo esc_attr( hareka_get_shop_info( 'phone_note' ) ); ?>">📞 <?php echo esc_html( hareka_get_shop_info( 'phone' ) ); ?></span>
+          <span class="flex items-center gap-1">
+            <svg class="w-3 h-3 text-[#f7a48d]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+            <?php echo esc_html( hareka_get_shop_info( 'address_short' ) ); ?>
+          </span>
+          <span class="flex items-center gap-1 text-[#fceee9]" title="<?php echo esc_attr( hareka_get_shop_info( 'phone_note' ) ); ?>">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <?php echo esc_html( hareka_get_shop_info( 'phone' ) ); ?>
+          </span>
         </div>
       </div>
     </div>
@@ -134,11 +140,13 @@
       <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">お問い合わせ</a>
     </div>
     <div class="pt-4 border-t border-[#e7dac5] space-y-2">
-      <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="w-full flex items-center justify-center py-3 rounded-xl bg-gradient-to-r from-[#e26d5c] to-[#b54737] text-white font-medium shadow text-sm">
-        お席の事前予約・お問い合わせ
+      <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#e26d5c] to-[#b54737] text-white font-medium shadow text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></rect><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line></svg>
+        <span>お席の事前予約・お問い合わせ</span>
       </a>
-      <div class="w-full flex items-center justify-center py-2.5 rounded-xl border border-[#d8c8b2] text-[#574636] font-medium text-sm bg-white/50" title="<?php echo esc_attr( hareka_get_shop_info( 'phone_note' ) ); ?>">
-        📞 お電話：<?php echo esc_html( hareka_get_shop_info( 'phone' ) ); ?>
+      <div class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#d8c8b2] text-[#574636] font-medium text-sm bg-white/50" title="<?php echo esc_attr( hareka_get_shop_info( 'phone_note' ) ); ?>">
+        <svg class="w-4 h-4 text-[#e26d5c]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>お電話：<?php echo esc_html( hareka_get_shop_info( 'phone' ) ); ?></span>
       </div>
     </div>
   </div>
