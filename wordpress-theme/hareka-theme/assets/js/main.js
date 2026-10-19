@@ -290,6 +290,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 : 'An automated confirmation email has been sent to your inbox. If you do not receive it, please check your spam folder or contact us at 086-XXXX-XXX (*dummy number).';
         }
 
+        // 電話番号ラベル & ヒント
+        const labelPhoneText = document.getElementById('label-phone-text');
+        const phoneFormatHint = document.getElementById('phone-format-hint');
+        if (labelPhoneText) {
+            labelPhoneText.textContent = lang === 'ja' ? 'お電話番号（ハイフンなし）' : 'Phone Number (No hyphens)';
+        }
+        if (phoneFormatHint) {
+            phoneFormatHint.textContent = lang === 'ja'
+                ? '※半角数字のみ・ハイフンなし（例：09012345678 / 0861234567）'
+                : '* Digits only without hyphens (e.g. 09012345678)';
+        }
+
         // スロット再描画
         if (dateInput && slotsGrid && typeof renderTimeSlots === 'function') {
             renderTimeSlots(dateInput.value);
@@ -457,10 +469,59 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // お電話番号入力のハイフンなし形式制御（リアルタイム全角半角変換＆ハイフン除去）
+    const userPhoneInput = document.getElementById('user-phone');
+    if (userPhoneInput) {
+        userPhoneInput.addEventListener('input', function () {
+            let val = this.value;
+            // 全角数字を半角数字に変換
+            val = val.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+            // ハイフン、スペース、その他の非数字を除去
+            val = val.replace(/[^0-9]/g, '');
+            if (val.length > 11) {
+                val = val.slice(0, 11);
+            }
+            this.value = val;
+        });
+
+        userPhoneInput.addEventListener('blur', function () {
+            let val = this.value.replace(/[^0-9]/g, '');
+            this.value = val;
+        });
+    }
+
     // 4) フォーム送信ハンドラ
     if (contactForm && completeBox) {
         contactForm.addEventListener('submit', function (e) {
             e.preventDefault();
+
+            // エラー表示をクリア
+            const errorAlert = document.getElementById('booking-error-alert');
+            const errorMsg = document.getElementById('booking-error-msg');
+            if (errorAlert) errorAlert.classList.add('hidden');
+
+            // 電話番号形式バリデーション（ハイフンなし半角数字10〜11桁）
+            const userPhoneEl = document.getElementById('user-phone');
+            if (userPhoneEl) {
+                let cleanPhone = userPhoneEl.value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)).replace(/[^0-9]/g, '');
+                userPhoneEl.value = cleanPhone;
+
+                if (!/^[0-9]{10,11}$/.test(cleanPhone)) {
+                    const phoneErr = currentLang === 'ja'
+                        ? 'お電話番号はハイフンなしの半角数字10〜11桁でご入力ください。（例：09012345678）'
+                        : 'Please enter a valid phone number with 10 to 11 digits without hyphens.';
+                    if (errorAlert && errorMsg) {
+                        errorMsg.textContent = phoneErr;
+                        errorAlert.classList.remove('hidden');
+                        userPhoneEl.focus();
+                        errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    } else {
+                        alert(phoneErr);
+                        userPhoneEl.focus();
+                    }
+                    return;
+                }
+            }
 
             const inquiryType = document.querySelector('input[name="inquiry_type"]:checked')?.value || '席のご予約';
 

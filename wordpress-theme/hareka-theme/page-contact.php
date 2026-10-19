@@ -333,8 +333,8 @@ $faq_items = array(
 
                         <div>
                             <label for="user-phone" class="block text-xs font-bold text-[#392d23] mb-1.5">
-                                <span id="label-phone-text">お電話番号</span>
-                                <span class="text-[10px] text-[#a48c6f]">/ Phone Number</span>
+                                <span id="label-phone-text">お電話番号（ハイフンなし）</span>
+                                <span class="text-[10px] text-[#a48c6f]">/ Phone (No hyphens)</span>
                                 <span class="text-[#e26d5c]">*</span>
                             </label>
                             <input
@@ -342,9 +342,16 @@ $faq_items = array(
                                 id="user-phone"
                                 name="user_phone"
                                 required
-                                placeholder="090-1234-5678 / +1-555-123-4567"
+                                pattern="[0-9]{10,11}"
+                                inputmode="numeric"
+                                maxlength="11"
+                                placeholder="09012345678"
+                                title="半角数字10〜11桁（ハイフンなし）で入力してください"
                                 class="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
                             />
+                            <p class="text-[11px] text-[#8c735d] mt-1" id="phone-format-hint">
+                                ※半角数字のみ・ハイフンなし（例：09012345678 / 0861234567）
+                            </p>
                         </div>
                     </div>
 

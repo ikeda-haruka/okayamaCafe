@@ -1093,7 +1093,10 @@ function hareka_submit_booking_callback() {
     $inquiry_type   = sanitize_text_field( $_POST['inquiry_type'] ?? '席のご予約' );
     $user_name      = sanitize_text_field( $_POST['user_name'] ?? '' );
     $user_email     = sanitize_email( $_POST['user_email'] ?? '' );
-    $user_phone     = sanitize_text_field( $_POST['user_phone'] ?? '' );
+    // 電話番号の正規化（全角数字を半角化、ハイフン・スペース除去）
+    $raw_phone      = sanitize_text_field( $_POST['user_phone'] ?? '' );
+    $raw_phone      = mb_convert_kana( $raw_phone, 'n', 'UTF-8' );
+    $user_phone     = preg_replace( '/[-\sー－]/u', '', $raw_phone );
     $user_message   = sanitize_textarea_field( $_POST['user_message'] ?? '' );
     $reserve_date   = sanitize_text_field( $_POST['reserve_date'] ?? '' );
     $reserve_time   = sanitize_text_field( $_POST['reserve_time'] ?? '' );
@@ -1109,6 +1112,9 @@ function hareka_submit_booking_callback() {
     }
     if ( empty( $user_phone ) ) {
         wp_send_json_error( array( 'message' => 'お電話番号を入力してください。' ) );
+    }
+    if ( ! preg_match( '/^[0-9]{10,11}$/', $user_phone ) ) {
+        wp_send_json_error( array( 'message' => 'お電話番号はハイフンなしの半角数字10〜11桁でご入力ください。（例: 09012345678）' ) );
     }
 
     $is_reservation = ( $inquiry_type === '席のご予約' );
