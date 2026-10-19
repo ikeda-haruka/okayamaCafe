@@ -181,7 +181,7 @@ $faq_items = array(
                                 </div>
                             </label>
                             <label class="flex items-center gap-2 p-3 rounded-2xl border border-[#e7dac5] hover:border-[#b54737] cursor-pointer text-xs font-medium has-[:checked]:bg-[#fef2ee] has-[:checked]:border-[#b54737] has-[:checked]:text-[#b54737]">
-                                <input type="radio" name="inquiry_type" value="果物・ギフトに関するお問い合わせ" class="text-[#b54737] focus:ring-[#b54737]" />
+                                <input type="radio" name="inquiry_type" value="商品・その他" class="text-[#b54737] focus:ring-[#b54737]" />
                                 <div>
                                     <span class="type-text-main block">商品・その他</span>
                                     <span class="text-[10px] text-[#a48c6f] block">General Inquiry</span>
@@ -297,6 +297,110 @@ $faq_items = array(
                         </div>
                     </div>
 
+                    <!-- 取材・貸切専用フィールドグループ（初期非表示） -->
+                    <div id="media-event-fields" class="hidden space-y-5 bg-[#faf7f2] p-5 sm:p-6 rounded-2xl border border-[#e7dac5]">
+                        <div class="flex items-center justify-between border-b border-[#ebdcc9] pb-3">
+                            <h3 class="font-serif text-sm font-bold text-[#392d23] flex items-center gap-2">
+                                <svg class="w-4 h-4 text-[#e26d5c]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                <span id="section-media-title">取材・貸切のご利用詳細</span>
+                            </h3>
+                            <span class="text-[11px] text-[#b54737] font-semibold bg-[#fde2d9] px-2.5 py-0.5 rounded-full" id="media-badge-text">
+                                メディア・イベント専用
+                            </span>
+                        </div>
+
+                        <!-- 貴社名・媒体名・団体名 -->
+                        <div>
+                            <label for="company-name" class="block text-xs font-bold text-[#392d23] mb-1.5">
+                                <span id="label-company-text">貴社名・媒体名・団体名</span>
+                                <span class="text-[10px] text-[#a48c6f]">/ Company, Media or Group</span>
+                                <span class="text-[10px] text-[#8c735d] font-normal ml-1">（個人の場合は空欄可）</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="company-name"
+                                name="company_name"
+                                placeholder="例：株式会社〇〇、月刊〇〇編集部、〇〇サークル など"
+                                class="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
+                            />
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- ご希望日時・時間帯（目安） -->
+                            <div>
+                                <label for="event-date-time" class="block text-xs font-bold text-[#392d23] mb-1.5">
+                                    <span id="label-event-date-text">ご希望日時・時間帯（目安）</span>
+                                    <span class="text-[10px] text-[#a48c6f]">/ Preferred Date & Time</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="event-date-time"
+                                    name="event_date_time"
+                                    placeholder="例：2026年11月中旬 平日午前、3時間程度"
+                                    class="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
+                                />
+                            </div>
+
+                            <!-- ご利用人数・クルー規模（目安） -->
+                            <div>
+                                <label for="event-scale" class="block text-xs font-bold text-[#392d23] mb-1.5">
+                                    <span id="label-event-scale-text">ご利用人数・クルー規模（目安）</span>
+                                    <span class="text-[10px] text-[#a48c6f]">/ Expected Guests or Crew</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="event-scale"
+                                    name="event_scale"
+                                    placeholder="例：貸切 20〜30名様 / 撮影スタッフ 4名"
+                                    class="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="text-[11px] text-[#6b5a4d] bg-white/70 p-3 rounded-xl border border-[#e7dac5]/60 flex items-start gap-2">
+                            <svg class="w-4 h-4 text-[#e26d5c] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            <span id="media-hint-text">店舗全体の貸切（着席最大38席/テラス含む）や、営業時間外（早朝・夜間）のロケーション撮影・取材もご相談いただけます。企画書等がある場合はメッセージ欄にその旨をご記載ください。</span>
+                        </div>
+                    </div>
+
+                    <!-- 商品・その他専用フィールドグループ（初期非表示） -->
+                    <div id="product-inquiry-fields" class="hidden space-y-5 bg-[#faf7f2] p-5 sm:p-6 rounded-2xl border border-[#e7dac5]">
+                        <div class="flex items-center justify-between border-b border-[#ebdcc9] pb-3">
+                            <h3 class="font-serif text-sm font-bold text-[#392d23] flex items-center gap-2">
+                                <svg class="w-4 h-4 text-[#e26d5c]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                                <span id="section-product-title">商品・お問い合わせ項目</span>
+                            </h3>
+                            <span class="text-[11px] text-[#6cae54] font-semibold bg-[#e2f0d9] px-2.5 py-0.5 rounded-full" id="product-badge-text">
+                                商品・入荷・その他
+                            </span>
+                        </div>
+
+                        <!-- お問い合わせ項目（対象カテゴリー） -->
+                        <div>
+                            <label for="inquiry-category" class="block text-xs font-bold text-[#392d23] mb-1.5">
+                                <span id="label-category-text">お問い合わせ項目（該当するものをお選びください）</span>
+                                <span class="text-[10px] text-[#a48c6f]">/ Inquiry Category</span>
+                                <span class="text-[#e26d5c]">*</span>
+                            </label>
+                            <select
+                                id="inquiry-category"
+                                name="inquiry_category"
+                                class="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
+                            >
+                                <option value="果物・旬スイーツの入荷・在庫状況について">果物・旬スイーツの入荷・在庫状況について（白桃・シャインマスカット等）</option>
+                                <option value="ギフト・贈答用フルーツの全国発送・ご注文について">ギフト・贈答用フルーツの全国発送・ご注文について</option>
+                                <option value="テイクアウト商品・ホールケーキのご予約について">テイクアウト商品・ホールケーキのご予約について</option>
+                                <option value="果物仕入れ・生産者様・卸売のご相談">果物仕入れ・生産者様・卸売のご相談</option>
+                                <option value="店舗設備・アクセス・その他ご質問">店舗設備・アクセス・その他ご質問</option>
+                            </select>
+                        </div>
+
+                        <div class="text-[11px] text-[#6b5a4d] bg-white/70 p-3 rounded-xl border border-[#e7dac5]/60 flex items-start gap-2">
+                            <svg class="w-4 h-4 text-[#6cae54] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            <span id="product-hint-text">旬の果物の当日入荷状況やお取り置き、お祝い用ホールタルトのご相談、贈答用フルーツボックスの配送時期など、お気軽にお問い合わせください。</span>
+                        </div>
+                    </div>
+
                     <!-- お客様基本情報 -->
                     <div>
                         <label for="user-name" class="block text-xs font-bold text-[#392d23] mb-1.5">
@@ -355,18 +459,18 @@ $faq_items = array(
                         </div>
                     </div>
 
-                    <!-- メモ・ご要望 -->
+                    <!-- メモ・ご要望・お問い合わせ内容（種別によって動的変更） -->
                     <div>
                         <label for="user-message" class="block text-xs font-bold text-[#392d23] mb-1.5">
                             <span id="label-msg-text">ご要望・メッセージ（アレルギー、記念日など）</span>
-                            <span class="text-[10px] text-[#a48c6f]">/ Special Requests</span>
+                            <span class="text-[10px] text-[#a48c6f]" id="label-msg-sub">/ Special Requests</span>
                         </label>
                         <textarea
                             id="user-message"
                             name="user_message"
-                            rows="4"
+                            rows="5"
                             placeholder="お子様連れ、フルーツアレルギー、お祝いプレートのご相談などご自由にご記入ください。 / Please let us know if you have any allergies or special requests."
-                            class="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c]"
+                            class="w-full px-4 py-2.5 rounded-xl border border-[#d8c8b2] text-xs bg-white text-[#392d23] focus:outline-none focus:ring-2 focus:ring-[#e26d5c] leading-relaxed"
                         ></textarea>
                     </div>
 

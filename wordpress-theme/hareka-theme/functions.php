@@ -1103,6 +1103,12 @@ function hareka_submit_booking_callback() {
     $reserve_guests = sanitize_text_field( $_POST['reserve_guests'] ?? '2' );
     $seat_type      = sanitize_text_field( $_POST['seat_type'] ?? '店内テーブル席' );
 
+    // 取材・貸切、商品・その他専用フィールド
+    $company_name     = sanitize_text_field( $_POST['company_name'] ?? '' );
+    $event_date_time  = sanitize_text_field( $_POST['event_date_time'] ?? '' );
+    $event_scale      = sanitize_text_field( $_POST['event_scale'] ?? '' );
+    $inquiry_category = sanitize_text_field( $_POST['inquiry_category'] ?? '' );
+
     // 3. バリデーション
     if ( empty( $user_name ) ) {
         wp_send_json_error( array( 'message' => 'お名前を入力してください。' ) );
@@ -1118,6 +1124,8 @@ function hareka_submit_booking_callback() {
     }
 
     $is_reservation = ( $inquiry_type === '席のご予約' );
+    $is_media       = ( $inquiry_type === '取材・貸切のご相談' );
+
     if ( $is_reservation ) {
         if ( empty( $reserve_date ) ) {
             wp_send_json_error( array( 'message' => 'ご来店希望日を選択してください。' ) );
@@ -1193,6 +1201,46 @@ function hareka_submit_booking_callback() {
             . "公式サイト: {$site_url}\n"
             . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
             . "※本メールはWebサイトより自動送信されています。心当たりのない場合は破棄をお願いいたします。\n";
+    } elseif ( $is_media ) {
+        $cust_subject = "【CAFE HAREKA】取材・貸切のご相談を受け付けました [受付番号: {$booking_ref}]";
+        $cust_body = "{$user_name} 様\n\n"
+            . "この度は、CAFE HAREKA（カフェ ハレカ）へ取材・貸切のご相談をいただき、誠にありがとうございます。\n\n"
+            . "以下の内容でご相談を受け付けいたしました。\n\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "■ 取材・貸切のご相談内容\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "【受付番号】 {$booking_ref}\n"
+            . "【お問い合わせ種別】 {$inquiry_type}\n";
+
+        if ( ! empty( $company_name ) ) {
+            $cust_body .= "【貴社名・媒体名・団体名】 {$company_name}\n";
+        }
+        if ( ! empty( $event_date_time ) ) {
+            $cust_body .= "【ご希望日時・時間帯（目安）】 {$event_date_time}\n";
+        }
+        if ( ! empty( $event_scale ) ) {
+            $cust_body .= "【ご利用人数・クルー規模（目安）】 {$event_scale}\n";
+        }
+
+        $cust_body .= "【お客様氏名】 {$user_name} 様\n"
+            . "【お電話番号】 {$user_phone}\n"
+            . "【メールアドレス】 {$user_email}\n"
+            . "【取材・貸切の企画内容・ご要望】\n" . ( $user_message ? $user_message : '（特になし）' ) . "\n\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "■ 今後のご案内\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "担当スタッフが企画内容およびスケジュールを確認の上、通常2営業日以内にご連絡差し上げます。\n"
+            . "撮影ロケハンやお急ぎの取材案件につきましては、お電話（{$shop_phone}）でも承っております。\n\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "■ 店舗情報・お問い合わせ先\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "旬果と寛ぎの古民家カフェ\n"
+            . "{$shop_name}\n"
+            . "住所: {$shop_address}\n"
+            . "電話: {$shop_phone}（受付時間: {$shop_hours}）\n"
+            . "定休日: {$shop_closed}\n"
+            . "公式サイト: {$site_url}\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     } else {
         $cust_subject = "【CAFE HAREKA】お問い合わせを受け付けました [受付番号: {$booking_ref}]";
         $cust_body = "{$user_name} 様\n\n"
@@ -1202,14 +1250,19 @@ function hareka_submit_booking_callback() {
             . "■ お問い合わせ内容\n"
             . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
             . "【受付番号】 {$booking_ref}\n"
-            . "【お問い合わせ種別】 {$inquiry_type}\n"
-            . "【お客様氏名】 {$user_name} 様\n"
+            . "【お問い合わせ種別】 {$inquiry_type}\n";
+
+        if ( ! empty( $inquiry_category ) ) {
+            $cust_body .= "【お問い合わせ項目】 {$inquiry_category}\n";
+        }
+
+        $cust_body .= "【お客様氏名】 {$user_name} 様\n"
             . "【お電話番号】 {$user_phone}\n"
             . "【メールアドレス】 {$user_email}\n"
-            . "【お問い合わせ・ご要望内容】\n" . ( $user_message ? $user_message : '（特になし）' ) . "\n\n"
+            . "【お問い合わせ・ご連絡内容】\n" . ( $user_message ? $user_message : '（特になし）' ) . "\n\n"
             . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-            . "店舗スタッフが内容を確認の上、担当者より2〜3営業日以内にご連絡差し上げます。\n"
-            . "お急ぎの場合は、恐れ入りますがお電話（{$shop_phone}）までお問い合わせください。\n\n"
+            . "店舗スタッフが内容を確認の上、担当者より通常2営業日以内にご連絡差し上げます。\n"
+            . "旬の果物の当日入荷状況などお急ぎの場合は、お電話（{$shop_phone}）までお問い合わせください。\n\n"
             . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
             . "■ 店舗情報・お問い合わせ先\n"
             . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
@@ -1227,9 +1280,16 @@ function hareka_submit_booking_callback() {
     // ==========================================
     // B. 店舗管理者宛 通知メール
     // ==========================================
-    $admin_subject = $is_reservation
-        ? "【予約リクエスト受付】{$user_name}様より仮予約が入りました（{$reserve_date} {$reserve_time}）"
-        : "【お問い合わせ受付】{$user_name}様よりお問い合わせが届きました";
+    if ( $is_reservation ) {
+        $admin_subject = "【予約リクエスト受付】{$user_name}様より仮予約が入りました（{$reserve_date} {$reserve_time}）";
+        $admin_lead    = "Webサイトより新しいご予約リクエスト（仮予約）が届きました。\n配席状況をご確認の上、24時間以内にお客様へご予約確定または日程調整のご連絡をお願いいたします。";
+    } elseif ( $is_media ) {
+        $admin_subject = "【取材・貸切相談】{$user_name}様より取材・貸切のご相談が届きました";
+        $admin_lead    = "Webサイトより新しい取材・貸切のご相談が届きました。\n企画内容・日程をご確認の上、通常2営業日以内にお客様へご連絡をお願いいたします。";
+    } else {
+        $admin_subject = "【お問い合わせ受付】{$user_name}様よりお問い合わせが届きました";
+        $admin_lead    = "Webサイトより新しいお問い合わせが届きました。\n内容をご確認の上、通常2営業日以内にお客様へご返信をお願いいたします。";
+    }
 
     $admin_headers = array(
         'Content-Type: text/plain; charset=UTF-8',
@@ -1241,8 +1301,7 @@ function hareka_submit_booking_callback() {
     $remote_ip = $_SERVER['REMOTE_ADDR'] ?? '不明';
 
     $admin_body = "CAFE HAREKA 店舗スタッフ様\n\n"
-        . "Webサイトより新しい" . ( $is_reservation ? "ご予約リクエスト（仮予約）" : "お問い合わせ" ) . "が届きました。\n"
-        . "配席状況をご確認の上、24時間以内にお客様へご予約確定または日程調整のご連絡をお願いいたします。\n\n"
+        . $admin_lead . "\n\n"
         . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
         . "■ 受付明細\n"
         . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
@@ -1254,12 +1313,26 @@ function hareka_submit_booking_callback() {
             . "【ご来店時間帯】 {$reserve_time}\n"
             . "【ご利用人数】 {$reserve_guests} 名様\n"
             . "【ご希望のお席】 {$seat_type}\n";
+    } elseif ( $is_media ) {
+        if ( ! empty( $company_name ) ) {
+            $admin_body .= "【貴社名・媒体名・団体名】 {$company_name}\n";
+        }
+        if ( ! empty( $event_date_time ) ) {
+            $admin_body .= "【ご希望日時・時間帯（目安）】 {$event_date_time}\n";
+        }
+        if ( ! empty( $event_scale ) ) {
+            $admin_body .= "【ご利用人数・クルー規模（目安）】 {$event_scale}\n";
+        }
+    } else {
+        if ( ! empty( $inquiry_category ) ) {
+            $admin_body .= "【お問い合わせ項目】 {$inquiry_category}\n";
+        }
     }
 
     $admin_body .= "【お客様氏名】 {$user_name} 様\n"
         . "【お電話番号】 {$user_phone}\n"
         . "【メールアドレス】 {$user_email}\n"
-        . "【ご要望・メッセージ】\n" . ( $user_message ? $user_message : '（特になし）' ) . "\n\n"
+        . "【メッセージ・詳細内容】\n" . ( $user_message ? $user_message : '（特になし）' ) . "\n\n"
         . "【受付日時】 {$now_str}\n"
         . "【送信元IP】 {$remote_ip}\n"
         . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";

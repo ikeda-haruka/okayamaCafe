@@ -171,6 +171,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const submitText = document.getElementById('submit-btn-text');
     const inquiryTypeRadios = document.querySelectorAll('input[name="inquiry_type"]');
     const reservationFields = document.getElementById('reservation-fields');
+    const mediaEventFields = document.getElementById('media-event-fields');
+    const productInquiryFields = document.getElementById('product-inquiry-fields');
+    const userMessageInput = document.getElementById('user-message');
+    const labelMsgText = document.getElementById('label-msg-text');
+    const labelMsgSub = document.getElementById('label-msg-sub');
 
     // 多言語切り替え関連のDOM要素
     const langBtnJa = document.getElementById('lang-btn-ja');
@@ -192,6 +197,55 @@ document.addEventListener('DOMContentLoaded', function () {
     const bookingProvisionalHeading = document.getElementById('booking-provisional-heading');
     const bookingProvisionalText = document.getElementById('booking-provisional-text');
     const bookingCompleteDesc = document.getElementById('booking-complete-desc');
+
+    // お問い合わせ種別ごとの動的コンテンツ設定辞書
+    const formTypeConfigs = {
+        '席のご予約': {
+            labelJa: 'ご要望・メッセージ（アレルギー、記念日など）',
+            labelEn: 'Special Requests (Allergies, Anniversaries, etc.)',
+            subJa: '/ Special Requests',
+            subEn: '/ Special Requests',
+            placeholderJa: 'お子様連れ、フルーツアレルギー、お祝いプレートのご相談などご自由にご記入ください。',
+            placeholderEn: 'Please let us know if you have any allergies, need baby chairs, or celebrate anniversaries.',
+            submitBtnJa: '空き枠で仮予約リクエストを送信する',
+            submitBtnEn: 'Submit Provisional Reservation Request',
+            completeTitleJa: 'ご予約リクエスト（仮予約）を受け付けました',
+            completeTitleEn: 'Reservation Request Received (Provisional)',
+            completeDescJa: 'ご入力いただいたメールアドレス宛に自動返信メールを送信いたしました。メールが届かない場合は、迷惑メールフォルダをご確認いただくか、店舗までお問い合わせください。',
+            completeDescEn: 'An automated confirmation email has been sent to your inbox. If you do not receive it, please check your spam folder or contact us.',
+            showProvisionalNotice: true
+        },
+        '取材・貸切のご相談': {
+            labelJa: '取材・貸切の企画内容・ご要望',
+            labelEn: 'Media / Private Event Plan & Inquiries',
+            subJa: '/ Event & Media Details',
+            subEn: '/ Event & Media Details',
+            placeholderJa: '【取材・撮影の場合】\n・媒体名・番組名・企画概要（YouTube、テレビ、雑誌、Web等）\n・撮影希望日、所要時間、放送・掲載予定時期\n\n【貸切・イベント利用の場合】\n・ご利用目的（懇親会、誕生日会、ワークショップ等）\n・ご希望プラン（お食事・パフェ提供、席のみ貸切等）、ご予算\nなど、具体的にお書きいただくとスムーズにご案内が可能です。',
+            placeholderEn: 'Please describe:\n- Media or Event details (TV, YouTube, private party, workshop)\n- Proposed schedule, duration, expected attendees/crew\n- Specific catering requests or budget',
+            submitBtnJa: '取材・貸切のご相談を送信する',
+            submitBtnEn: 'Submit Media / Event Inquiry',
+            completeTitleJa: '取材・貸切のご相談を受け付けました',
+            completeTitleEn: 'Media / Private Event Inquiry Received',
+            completeDescJa: 'ご入力いただいたメールアドレス宛に受付完了メールを送信いたしました。担当者より企画内容を確認の上、通常2営業日以内にご連絡差し上げます。',
+            completeDescEn: 'A confirmation email has been sent to your inbox. Our cafe coordinator will review your request and get back to you within 2 business days.',
+            showProvisionalNotice: false
+        },
+        '商品・その他': {
+            labelJa: 'お問い合わせ・ご連絡内容',
+            labelEn: 'Inquiry Message & Details',
+            subJa: '/ Inquiry Details',
+            subEn: '/ Inquiry Details',
+            placeholderJa: '具体的なお問い合わせ内容をご記入ください。\n（例）\n・「赤磐産 清水白桃パフェ」の提供期間や、当日の取り置きは可能か\n・贈答用シャインマスカット（2房化粧箱）の全国発送の手順や送料\n・お誕生日用フルーツタルト（5号サイズ）の予約可能日\n・その他、店舗設備やアクセスに関するご質問\nなど、お気軽にご記入ください。',
+            placeholderEn: 'Please describe your inquiry:\n- Seasonal fruit availability (White Peach, Shine Muscat)\n- Gift delivery / Takeout cake reservations\n- General questions or feedback',
+            submitBtnJa: 'お問い合わせを送信する',
+            submitBtnEn: 'Submit Inquiry',
+            completeTitleJa: 'お問い合わせを受け付けました',
+            completeTitleEn: 'Your Inquiry Has Been Received',
+            completeDescJa: 'ご入力いただいたメールアドレス宛に受付完了メールを送信いたしました。担当スタッフが内容を確認の上、通常2営業日以内にご連絡差し上げます。',
+            completeDescEn: 'A confirmation email has been sent to your inbox. Our team will review your inquiry and reply within 2 business days.',
+            showProvisionalNotice: false
+        }
+    };
 
     function updateLanguageUI(lang) {
         currentLang = lang;
@@ -243,8 +297,44 @@ document.addEventListener('DOMContentLoaded', function () {
                 : 'I agree to the Privacy Policy for reservation handling.';
         }
 
-        // 送信ボタン文言
-        updateSubmitButtonText();
+        // 取材・貸切フィールドの多言語対応
+        const sectionMediaTitle = document.getElementById('section-media-title');
+        const mediaBadgeText = document.getElementById('media-badge-text');
+        const labelCompanyText = document.getElementById('label-company-text');
+        const companyNameEl = document.getElementById('company-name');
+        const labelEventDateText = document.getElementById('label-event-date-text');
+        const eventDateTimeEl = document.getElementById('event-date-time');
+        const labelEventScaleText = document.getElementById('label-event-scale-text');
+        const eventScaleEl = document.getElementById('event-scale');
+        const mediaHintText = document.getElementById('media-hint-text');
+
+        if (sectionMediaTitle) sectionMediaTitle.textContent = lang === 'ja' ? '取材・貸切のご利用詳細' : 'Media / Event Details';
+        if (mediaBadgeText) mediaBadgeText.textContent = lang === 'ja' ? 'メディア・イベント専用' : 'Media & Events';
+        if (labelCompanyText) labelCompanyText.textContent = lang === 'ja' ? '貴社名・媒体名・団体名' : 'Company, Media or Group';
+        if (companyNameEl) companyNameEl.placeholder = lang === 'ja' ? '例：株式会社〇〇、月刊〇〇編集部、〇〇サークル など' : 'e.g. Acme Corp, Monthly Magazine Editorial, etc.';
+        if (labelEventDateText) labelEventDateText.textContent = lang === 'ja' ? 'ご希望日時・時間帯（目安）' : 'Preferred Date & Time';
+        if (eventDateTimeEl) eventDateTimeEl.placeholder = lang === 'ja' ? '例：2026年11月中旬 平日午前、3時間程度' : 'e.g. Mid Nov 2026, weekday morning, 3 hrs';
+        if (labelEventScaleText) labelEventScaleText.textContent = lang === 'ja' ? 'ご利用人数・クルー規模（目安）' : 'Expected Guests or Crew';
+        if (eventScaleEl) eventScaleEl.placeholder = lang === 'ja' ? '例：貸切 20〜30名様 / 撮影スタッフ 4名' : 'e.g. 20-30 guests / 4 crew members';
+        if (mediaHintText) mediaHintText.textContent = lang === 'ja'
+            ? '店舗全体の貸切（着席最大38席/テラス含む）や、営業時間外（早朝・夜間）のロケーション撮影・取材もご相談いただけます。企画書等がある場合はメッセージ欄にその旨をご記載ください。'
+            : 'Private full-cafe buyouts (up to 38 seats incl. terrace) and after-hours filming are negotiable. Please mention your proposal outline in the message.';
+
+        // 商品・その他フィールドの多言語対応
+        const sectionProductTitle = document.getElementById('section-product-title');
+        const productBadgeText = document.getElementById('product-badge-text');
+        const labelCategoryText = document.getElementById('label-category-text');
+        const productHintText = document.getElementById('product-hint-text');
+
+        if (sectionProductTitle) sectionProductTitle.textContent = lang === 'ja' ? '商品・お問い合わせ項目' : 'Inquiry Category';
+        if (productBadgeText) productBadgeText.textContent = lang === 'ja' ? '商品・入荷・その他' : 'Products & Stock';
+        if (labelCategoryText) labelCategoryText.textContent = lang === 'ja' ? 'お問い合わせ項目（該当するものをお選びください）' : 'Inquiry Category (Please select)';
+        if (productHintText) productHintText.textContent = lang === 'ja'
+            ? '旬の果物の当日入荷状況やお取り置き、お祝い用ホールタルトのご相談、贈答用フルーツボックスの配送時期など、お気軽にお問い合わせください。'
+            : 'Feel free to inquire about daily fruit arrivals, reserving whole tarts, or shipping schedules for gift fruit boxes.';
+
+        // 種別ごとのUI（メッセージ欄・ボタン文言など）を更新
+        updateInquiryTypeUI();
 
         // 凡例（Legend）
         const legendAvail = document.querySelector('.legend-avail');
@@ -285,9 +375,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 : 'Our cafe team will check table assignments and send you a confirmation email within 24 hours to finalize your reservation.';
         }
         if (bookingCompleteDesc) {
-            bookingCompleteDesc.textContent = lang === 'ja'
-                ? 'ご入力いただいたメールアドレス宛に自動返信メールを送信いたしました。メールが届かない場合は、迷惑メールフォルダをご確認いただくか、店舗（086-XXXX-XXX ※架空番号）までお問い合わせください。'
-                : 'An automated confirmation email has been sent to your inbox. If you do not receive it, please check your spam folder or contact us at 086-XXXX-XXX (*dummy number).';
+            const checkedType = document.querySelector('input[name="inquiry_type"]:checked')?.value || '席のご予約';
+            const curKey = (checkedType === '果物・ギフトに関するお問い合わせ') ? '商品・その他' : checkedType;
+            const curCfg = formTypeConfigs[curKey] || formTypeConfigs['席のご予約'];
+            bookingCompleteDesc.textContent = lang === 'ja' ? curCfg.completeDescJa : curCfg.completeDescEn;
         }
 
         // 電話番号ラベル & ヒント
@@ -308,17 +399,51 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function updateSubmitButtonText() {
-        if (!submitText) return;
-        const inquiryType = document.querySelector('input[name="inquiry_type"]:checked')?.value || '席のご予約';
-        if (inquiryType === '席のご予約') {
-            submitText.textContent = currentLang === 'ja'
-                ? '空き枠で仮予約リクエストを送信する'
-                : 'Submit Provisional Reservation Request';
-        } else {
-            submitText.textContent = currentLang === 'ja'
-                ? 'お問い合わせを送信する'
-                : 'Submit Inquiry';
+    /**
+     * お問い合わせ種別（席予約／取材・貸切／商品・その他）に応じたフィールドおよびメッセージ欄の動的切り替え
+     */
+    function updateInquiryTypeUI() {
+        const checkedRadio = document.querySelector('input[name="inquiry_type"]:checked');
+        const selectedType = checkedRadio ? checkedRadio.value : '席のご予約';
+
+        // フィールドグループの表示・非表示
+        if (reservationFields) {
+            if (selectedType === '席のご予約') {
+                reservationFields.classList.remove('hidden');
+            } else {
+                reservationFields.classList.add('hidden');
+            }
+        }
+        if (mediaEventFields) {
+            if (selectedType === '取材・貸切のご相談') {
+                mediaEventFields.classList.remove('hidden');
+            } else {
+                mediaEventFields.classList.add('hidden');
+            }
+        }
+        if (productInquiryFields) {
+            if (selectedType === '商品・その他' || selectedType === '果物・ギフトに関するお問い合わせ') {
+                productInquiryFields.classList.remove('hidden');
+            } else {
+                productInquiryFields.classList.add('hidden');
+            }
+        }
+
+        // メッセージ欄のラベル・プレースホルダー・ボタン文言の更新
+        const configKey = (selectedType === '果物・ギフトに関するお問い合わせ') ? '商品・その他' : selectedType;
+        const config = formTypeConfigs[configKey] || formTypeConfigs['席のご予約'];
+
+        if (labelMsgText) {
+            labelMsgText.textContent = currentLang === 'ja' ? config.labelJa : config.labelEn;
+        }
+        if (labelMsgSub) {
+            labelMsgSub.textContent = currentLang === 'ja' ? config.subJa : config.subEn;
+        }
+        if (userMessageInput) {
+            userMessageInput.placeholder = currentLang === 'ja' ? config.placeholderJa : config.placeholderEn;
+        }
+        if (submitText) {
+            submitText.textContent = currentLang === 'ja' ? config.submitBtnJa : config.submitBtnEn;
         }
     }
 
@@ -455,18 +580,15 @@ document.addEventListener('DOMContentLoaded', function () {
         renderTimeSlots(dateInput.value);
     }
 
-    // 3) お問い合わせ種別切り替えによる予約詳細フィールドの表示・非表示
-    if (inquiryTypeRadios.length > 0 && reservationFields) {
+    // 3) お問い合わせ種別切り替えによる動的表示制御
+    if (inquiryTypeRadios.length > 0) {
         inquiryTypeRadios.forEach(radio => {
             radio.addEventListener('change', function () {
-                if (this.value === '席のご予約') {
-                    reservationFields.classList.remove('hidden');
-                } else {
-                    reservationFields.classList.add('hidden');
-                }
-                updateSubmitButtonText();
+                updateInquiryTypeUI();
             });
         });
+        // 初回ロード時の初期化
+        updateInquiryTypeUI();
     }
 
     // お電話番号入力のハイフンなし形式制御（リアルタイム全角半角変換＆ハイフン除去）
@@ -575,20 +697,21 @@ document.addEventListener('DOMContentLoaded', function () {
                         refBadge.textContent = currentLang === 'ja' ? `受付番号: ${bookingRef}` : `Booking Ref: ${bookingRef}`;
                     }
 
-                    if (inquiryType === '席のご予約') {
-                        if (completeTitle) {
-                            completeTitle.textContent = currentLang === 'ja'
-                                ? 'ご予約リクエスト（仮予約）を受け付けました'
-                                : 'Reservation Request Received (Provisional)';
+                    const configKey = (inquiryType === '果物・ギフトに関するお問い合わせ') ? '商品・その他' : inquiryType;
+                    const config = formTypeConfigs[configKey] || formTypeConfigs['席のご予約'];
+
+                    if (completeTitle) {
+                        completeTitle.textContent = currentLang === 'ja' ? config.completeTitleJa : config.completeTitleEn;
+                    }
+                    if (provisionalNotice) {
+                        if (config.showProvisionalNotice) {
+                            provisionalNotice.classList.remove('hidden');
+                        } else {
+                            provisionalNotice.classList.add('hidden');
                         }
-                        if (provisionalNotice) provisionalNotice.classList.remove('hidden');
-                    } else {
-                        if (completeTitle) {
-                            completeTitle.textContent = currentLang === 'ja'
-                                ? 'お問い合わせを送信いたしました'
-                                : 'Inquiry Submitted Successfully';
-                        }
-                        if (provisionalNotice) provisionalNotice.classList.add('hidden');
+                    }
+                    if (bookingCompleteDesc) {
+                        bookingCompleteDesc.textContent = currentLang === 'ja' ? config.completeDescJa : config.completeDescEn;
                     }
 
                     // スムーズスクロール
