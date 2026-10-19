@@ -139,6 +139,13 @@ $faq_items = array(
 
                 <!-- 送信フォーム本体 -->
                 <form id="contact-booking-form" class="space-y-6">
+                    <?php wp_nonce_field( 'hareka_contact_nonce', 'hareka_contact_nonce' ); ?>
+                    <!-- 送信エラー時アラート（初期非表示） -->
+                    <div id="booking-error-alert" class="hidden p-4 rounded-2xl bg-[#fef2ee] border border-[#fbc6b6] text-xs text-[#b54737] flex items-center gap-2">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        <span id="booking-error-msg"></span>
+                    </div>
+
                     <div class="space-y-1 border-b border-[#f4eee3] pb-4">
                         <span class="text-xs font-semibold tracking-widest text-[#a48c6f] uppercase block mb-1">
                             RESERVATION FORM

@@ -68,6 +68,7 @@ function hareka_theme_scripts() {
         'restUrl'     => esc_url_raw( rest_url() ),
         'themeUrl'    => $theme_uri,
         'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+        'contactNonce'=> wp_create_nonce( 'hareka_contact_nonce' ),
         'shopInfo'    => hareka_get_shop_info(),
     ) );
 }
@@ -1072,3 +1073,197 @@ function hareka_register_rest_fields() {
     ) );
 }
 add_action( 'rest_api_init', 'hareka_register_rest_fields' );
+
+/**
+ * --------------------------------------------------------------------------
+ * お問い合わせ・席予約フォーム（AJAX送信 & メール通知処理）
+ * --------------------------------------------------------------------------
+ */
+add_action( 'wp_ajax_hareka_submit_booking', 'hareka_submit_booking_callback' );
+add_action( 'wp_ajax_nopriv_hareka_submit_booking', 'hareka_submit_booking_callback' );
+
+function hareka_submit_booking_callback() {
+    // 1. Nonceチェック（CSRF対策）
+    $nonce = $_POST['nonce'] ?? $_POST['hareka_contact_nonce'] ?? '';
+    if ( ! wp_verify_nonce( $nonce, 'hareka_contact_nonce' ) ) {
+        wp_send_json_error( array( 'message' => 'セッションの有効期限が切れました。ページを再読み込みしてお試しください。' ) );
+    }
+
+    // 2. 入力値のサニタイズ
+    $inquiry_type   = sanitize_text_field( $_POST['inquiry_type'] ?? '席のご予約' );
+    $user_name      = sanitize_text_field( $_POST['user_name'] ?? '' );
+    $user_email     = sanitize_email( $_POST['user_email'] ?? '' );
+    $user_phone     = sanitize_text_field( $_POST['user_phone'] ?? '' );
+    $user_message   = sanitize_textarea_field( $_POST['user_message'] ?? '' );
+    $reserve_date   = sanitize_text_field( $_POST['reserve_date'] ?? '' );
+    $reserve_time   = sanitize_text_field( $_POST['reserve_time'] ?? '' );
+    $reserve_guests = sanitize_text_field( $_POST['reserve_guests'] ?? '2' );
+    $seat_type      = sanitize_text_field( $_POST['seat_type'] ?? '店内テーブル席' );
+
+    // 3. バリデーション
+    if ( empty( $user_name ) ) {
+        wp_send_json_error( array( 'message' => 'お名前を入力してください。' ) );
+    }
+    if ( empty( $user_email ) || ! is_email( $user_email ) ) {
+        wp_send_json_error( array( 'message' => '正しいメールアドレスを入力してください。' ) );
+    }
+    if ( empty( $user_phone ) ) {
+        wp_send_json_error( array( 'message' => 'お電話番号を入力してください。' ) );
+    }
+
+    $is_reservation = ( $inquiry_type === '席のご予約' );
+    if ( $is_reservation ) {
+        if ( empty( $reserve_date ) ) {
+            wp_send_json_error( array( 'message' => 'ご来店希望日を選択してください。' ) );
+        }
+        if ( empty( $reserve_time ) ) {
+            wp_send_json_error( array( 'message' => 'ご来店時間枠を選択してください。' ) );
+        }
+    }
+
+    // 受付番号の生成（HRK-YYYYMMDD-XXXX）
+    $date_part = ! empty( $reserve_date ) ? str_replace( '-', '', $reserve_date ) : current_time( 'Ymd' );
+    $rand_part = rand( 1000, 9999 );
+    $booking_ref = 'HRK-' . $date_part . '-' . $rand_part;
+
+    // 店舗情報取得
+    $shop = function_exists( 'hareka_get_shop_info' ) ? hareka_get_shop_info() : array();
+    $shop_name  = 'CAFE HAREKA（カフェ ハレカ）';
+    $shop_phone = $shop['phone'] ?? '086-XXXX-XXX';
+    $shop_hours = $shop['phone_hours'] ?? '10:00 〜 18:00';
+    $shop_closed = $shop['closed_day'] ?? '毎週水曜日';
+    $shop_address = '〒701-1341 岡山県岡山市北区吉備津780';
+    $site_url   = home_url();
+
+    $admin_email = get_option( 'admin_email' );
+    if ( ! is_email( $admin_email ) ) {
+        $admin_email = 'info@okayamacafe.local';
+    }
+
+    // メール送信元ヘッダー
+    $headers = array(
+        'Content-Type: text/plain; charset=UTF-8',
+        'From: ' . $shop_name . ' <' . $admin_email . '>',
+        'Reply-To: ' . $admin_email,
+    );
+
+    // ==========================================
+    // A. お客様宛 自動返信メール（控えメール）
+    // ==========================================
+    if ( $is_reservation ) {
+        $cust_subject = "【CAFE HAREKA】ご予約リクエスト（仮予約）を受け付けました [受付番号: {$booking_ref}]";
+        $cust_body = "{$user_name} 様\n\n"
+            . "この度は、CAFE HAREKA（カフェ ハレカ）へご予約リクエストをいただき、誠にありがとうございます。\n\n"
+            . "以下の内容で【仮予約】を受け付けいたしました。\n\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "■ ご予約リクエスト内容\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "【受付番号】 {$booking_ref}\n"
+            . "【お申込み種別】 {$inquiry_type}\n"
+            . "【ご来店希望日】 {$reserve_date}\n"
+            . "【ご来店時間帯】 {$reserve_time}\n"
+            . "【ご利用人数】 {$reserve_guests} 名様\n"
+            . "【ご希望のお席】 {$seat_type}\n\n"
+            . "【お客様氏名】 {$user_name} 様\n"
+            . "【お電話番号】 {$user_phone}\n"
+            . "【メールアドレス】 {$user_email}\n"
+            . "【ご要望・メッセージ】\n" . ( $user_message ? $user_message : '（特になし）' ) . "\n\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "■ 今後の流れについて（※重要）\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "現時点では【仮予約】の状態となっております。\n"
+            . "店舗スタッフが配席状況を確認の上、24時間以内に「ご予約確定メール」またはお電話にてご連絡を差し上げます。\n"
+            . "確定メールの受信、もしくはお電話での確認完了をもって正式なご予約成立となりますので、今しばらくお待ちくださいますようお願い申し上げます。\n\n"
+            . "※当日の仕入れや混雑状況により、ご希望のお席に添えない場合や、お時間の調整をご相談させていただく場合がございます。\n"
+            . "※万が一、24時間を経過しても当店からの連絡が届かない場合は、大変お手数ですがお電話（{$shop_phone}）までお問い合わせください。\n\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "■ 店舗情報・お問い合わせ先\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "旬果と寛ぎの古民家カフェ\n"
+            . "{$shop_name}\n"
+            . "住所: {$shop_address}\n"
+            . "電話: {$shop_phone}（受付時間: {$shop_hours}）\n"
+            . "定休日: {$shop_closed}\n"
+            . "公式サイト: {$site_url}\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "※本メールはWebサイトより自動送信されています。心当たりのない場合は破棄をお願いいたします。\n";
+    } else {
+        $cust_subject = "【CAFE HAREKA】お問い合わせを受け付けました [受付番号: {$booking_ref}]";
+        $cust_body = "{$user_name} 様\n\n"
+            . "この度は、CAFE HAREKA（カフェ ハレカ）へお問い合わせいただき、誠にありがとうございます。\n\n"
+            . "以下の内容でお問い合わせを受け付けいたしました。\n\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "■ お問い合わせ内容\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "【受付番号】 {$booking_ref}\n"
+            . "【お問い合わせ種別】 {$inquiry_type}\n"
+            . "【お客様氏名】 {$user_name} 様\n"
+            . "【お電話番号】 {$user_phone}\n"
+            . "【メールアドレス】 {$user_email}\n"
+            . "【お問い合わせ・ご要望内容】\n" . ( $user_message ? $user_message : '（特になし）' ) . "\n\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "店舗スタッフが内容を確認の上、担当者より2〜3営業日以内にご連絡差し上げます。\n"
+            . "お急ぎの場合は、恐れ入りますがお電話（{$shop_phone}）までお問い合わせください。\n\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "■ 店舗情報・お問い合わせ先\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "旬果と寛ぎの古民家カフェ\n"
+            . "{$shop_name}\n"
+            . "住所: {$shop_address}\n"
+            . "電話: {$shop_phone}（受付時間: {$shop_hours}）\n"
+            . "定休日: {$shop_closed}\n"
+            . "公式サイト: {$site_url}\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    }
+
+    $mail_cust_sent = wp_mail( $user_email, $cust_subject, $cust_body, $headers );
+
+    // ==========================================
+    // B. 店舗管理者宛 通知メール
+    // ==========================================
+    $admin_subject = $is_reservation
+        ? "【予約リクエスト受付】{$user_name}様より仮予約が入りました（{$reserve_date} {$reserve_time}）"
+        : "【お問い合わせ受付】{$user_name}様よりお問い合わせが届きました";
+
+    $admin_headers = array(
+        'Content-Type: text/plain; charset=UTF-8',
+        'From: ' . $shop_name . ' 予約システム <' . $admin_email . '>',
+        'Reply-To: ' . $user_name . ' <' . $user_email . '>',
+    );
+
+    $now_str = current_time( 'Y-m-d H:i:s' );
+    $remote_ip = $_SERVER['REMOTE_ADDR'] ?? '不明';
+
+    $admin_body = "CAFE HAREKA 店舗スタッフ様\n\n"
+        . "Webサイトより新しい" . ( $is_reservation ? "ご予約リクエスト（仮予約）" : "お問い合わせ" ) . "が届きました。\n"
+        . "配席状況をご確認の上、24時間以内にお客様へご予約確定または日程調整のご連絡をお願いいたします。\n\n"
+        . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        . "■ 受付明細\n"
+        . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        . "【受付番号】 {$booking_ref}\n"
+        . "【お問い合わせ種別】 {$inquiry_type}\n";
+
+    if ( $is_reservation ) {
+        $admin_body .= "【ご来店希望日】 {$reserve_date}\n"
+            . "【ご来店時間帯】 {$reserve_time}\n"
+            . "【ご利用人数】 {$reserve_guests} 名様\n"
+            . "【ご希望のお席】 {$seat_type}\n";
+    }
+
+    $admin_body .= "【お客様氏名】 {$user_name} 様\n"
+        . "【お電話番号】 {$user_phone}\n"
+        . "【メールアドレス】 {$user_email}\n"
+        . "【ご要望・メッセージ】\n" . ( $user_message ? $user_message : '（特になし）' ) . "\n\n"
+        . "【受付日時】 {$now_str}\n"
+        . "【送信元IP】 {$remote_ip}\n"
+        . "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+
+    $mail_admin_sent = wp_mail( $admin_email, $admin_subject, $admin_body, $admin_headers );
+
+    wp_send_json_success( array(
+        'message'     => '送信が完了しました。',
+        'booking_ref' => $booking_ref,
+        'cust_sent'   => (bool) $mail_cust_sent,
+        'admin_sent'  => (bool) $mail_admin_sent,
+    ) );
+}

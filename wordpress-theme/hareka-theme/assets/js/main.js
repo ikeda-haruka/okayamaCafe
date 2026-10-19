@@ -481,45 +481,91 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
+            // エラー表示をクリア
+            const errorAlert = document.getElementById('booking-error-alert');
+            const errorMsg = document.getElementById('booking-error-msg');
+            if (errorAlert) errorAlert.classList.add('hidden');
+
             // 送信ローディング表示
             if (submitSpinner) submitSpinner.classList.remove('hidden');
             if (submitBtn) submitBtn.disabled = true;
 
-            const datePart = (dateInput && dateInput.value) ? dateInput.value.replace(/-/g, '') : '202610';
-            const randomNum = Math.floor(1000 + Math.random() * 9000);
-            const bookingRef = `HRK-${datePart}-${randomNum}`;
+            const ajaxUrl = (window.harekaThemeData && window.harekaThemeData.ajaxUrl)
+                ? window.harekaThemeData.ajaxUrl
+                : '/wp-admin/admin-ajax.php';
 
-            // 送信シミュレーション（WordPress REST APIまたはAJAXとも接続可能）
-            setTimeout(() => {
+            const formData = new FormData(contactForm);
+            formData.append('action', 'hareka_submit_booking');
+            if (window.harekaThemeData && window.harekaThemeData.contactNonce && !formData.get('hareka_contact_nonce')) {
+                formData.append('nonce', window.harekaThemeData.contactNonce);
+            }
+
+            fetch(ajaxUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
                 if (submitSpinner) submitSpinner.classList.add('hidden');
                 if (submitBtn) submitBtn.disabled = false;
 
-                contactForm.classList.add('hidden');
-                completeBox.classList.remove('hidden');
+                if (data && data.success) {
+                    const bookingRef = data.data && data.data.booking_ref ? data.data.booking_ref : 'HRK-SUCCESS';
 
-                if (refBadge) {
-                    refBadge.textContent = currentLang === 'ja' ? `受付番号: ${bookingRef}` : `Booking Ref: ${bookingRef}`;
-                }
+                    contactForm.classList.add('hidden');
+                    completeBox.classList.remove('hidden');
 
-                if (inquiryType === '席のご予約') {
-                    if (completeTitle) {
-                        completeTitle.textContent = currentLang === 'ja'
-                            ? 'ご予約リクエスト（仮予約）を受け付けました'
-                            : 'Reservation Request Received (Provisional)';
+                    if (refBadge) {
+                        refBadge.textContent = currentLang === 'ja' ? `受付番号: ${bookingRef}` : `Booking Ref: ${bookingRef}`;
                     }
-                    if (provisionalNotice) provisionalNotice.classList.remove('hidden');
+
+                    if (inquiryType === '席のご予約') {
+                        if (completeTitle) {
+                            completeTitle.textContent = currentLang === 'ja'
+                                ? 'ご予約リクエスト（仮予約）を受け付けました'
+                                : 'Reservation Request Received (Provisional)';
+                        }
+                        if (provisionalNotice) provisionalNotice.classList.remove('hidden');
+                    } else {
+                        if (completeTitle) {
+                            completeTitle.textContent = currentLang === 'ja'
+                                ? 'お問い合わせを送信いたしました'
+                                : 'Inquiry Submitted Successfully';
+                        }
+                        if (provisionalNotice) provisionalNotice.classList.add('hidden');
+                    }
+
+                    // スムーズスクロール
+                    completeBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 } else {
-                    if (completeTitle) {
-                        completeTitle.textContent = currentLang === 'ja'
-                            ? 'お問い合わせを送信いたしました'
-                            : 'Inquiry Submitted Successfully';
+                    const msg = (data && data.data && data.data.message)
+                        ? data.data.message
+                        : (currentLang === 'ja' ? '送信に失敗しました。時間をおいて再度お試しいただくか、お電話にてお問い合わせください。' : 'Failed to submit. Please try again later or contact us by phone.');
+                    if (errorAlert && errorMsg) {
+                        errorMsg.textContent = msg;
+                        errorAlert.classList.remove('hidden');
+                        errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    } else {
+                        alert(msg);
                     }
-                    if (provisionalNotice) provisionalNotice.classList.add('hidden');
                 }
+            })
+            .catch(err => {
+                console.error('Submit error:', err);
+                if (submitSpinner) submitSpinner.classList.add('hidden');
+                if (submitBtn) submitBtn.disabled = false;
 
-                // スムーズスクロール
-                completeBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 1000);
+                const msg = currentLang === 'ja'
+                    ? '通信エラーが発生しました。インターネット接続をご確認の上、再度お試しください。'
+                    : 'A network error occurred. Please check your connection and try again.';
+                if (errorAlert && errorMsg) {
+                    errorMsg.textContent = msg;
+                    errorAlert.classList.remove('hidden');
+                    errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    alert(msg);
+                }
+            });
         });
     }
 
