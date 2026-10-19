@@ -52,12 +52,14 @@
         <div class="space-y-3">
           <h4 class="font-serif text-base font-semibold text-white">サイトメニュー</h4>
           <div class="grid grid-cols-2 gap-2 text-xs text-[#d8c8b2]">
-            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hover:text-white transition py-1">ホーム</a>
-            <a href="<?php echo esc_url( home_url( '/about/' ) ); ?>" class="hover:text-white transition py-1">お店について</a>
-            <a href="<?php echo esc_url( home_url( '/menu/' ) ); ?>" class="hover:text-white transition py-1">メニュー一覧</a>
-            <a href="<?php echo esc_url( home_url( '/fruits/' ) ); ?>" class="hover:text-white transition py-1">岡山の果物図鑑</a>
-            <a href="<?php echo esc_url( home_url( '/access/' ) ); ?>" class="hover:text-white transition py-1">アクセス・駐車場</a>
-            <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="hover:text-white transition py-1">ご予約・問合せ</a>
+            <?php
+            $footer_items = hareka_get_nav_items( 'footer' );
+            foreach ( $footer_items as $f_item ) :
+            ?>
+              <a href="<?php echo esc_url( $f_item['url'] ); ?>" target="<?php echo esc_attr( $f_item['target'] ); ?>" class="hover:text-white transition py-1">
+                <?php echo esc_html( $f_item['title'] ); ?>
+              </a>
+            <?php endforeach; ?>
           </div>
           <div class="pt-2">
             <div class="text-xs text-[#d8c8b2] mb-2">公式SNSで旬の入荷情報を配信中</div>

@@ -57,34 +57,19 @@
         <!-- デスクトップナビゲーション -->
         <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
           <?php
-          if ( has_nav_menu( 'primary' ) ) {
-              wp_nav_menu( array(
-                  'theme_location' => 'primary',
-                  'container'      => false,
-                  'menu_class'     => 'flex items-center gap-1 xl:gap-2',
-                  'items_wrap'     => '%3$s',
-                  'fallback_cb'    => false,
-              ) );
-          } else {
-              // デフォルトメニュー
-              $news_page_url = get_permalink( get_option( 'page_for_posts' ) ) ?: home_url( '/news/' );
-              $nav_items = array(
-                  array( 'title' => 'ホーム', 'en' => 'HOME', 'url' => home_url( '/' ) ),
-                  array( 'title' => 'お店について', 'en' => 'ABOUT', 'url' => home_url( '/about/' ) ),
-                  array( 'title' => 'メニュー', 'en' => 'MENU', 'url' => home_url( '/menu/' ) ),
-                  array( 'title' => '岡山の果物', 'en' => 'FRUITS', 'url' => home_url( '/fruits/' ) ),
-                  array( 'title' => 'お知らせ', 'en' => 'NEWS', 'url' => $news_page_url ),
-                  array( 'title' => 'アクセス', 'en' => 'ACCESS', 'url' => home_url( '/access/' ) ),
-                  array( 'title' => 'お問い合わせ', 'en' => 'CONTACT', 'url' => home_url( '/contact/' ) ),
-              );
-              foreach ( $nav_items as $item ) {
-                  echo '<a href="' . esc_url( $item['url'] ) . '" class="px-3 xl:px-4 py-2 rounded-full text-sm font-medium text-[#574636] hover:text-[#b54737] hover:bg-[#f4eee3]/60 transition flex flex-col items-center">';
-                  echo '<span>' . esc_html( $item['title'] ) . '</span>';
-                  echo '<span class="text-[9px] tracking-wider text-[#a48c6f] -mt-0.5">' . esc_html( $item['en'] ) . '</span>';
-                  echo '</a>';
-              }
-          }
+          $header_items = hareka_get_nav_items( 'primary' );
+          foreach ( $header_items as $item ) :
+              $active_cls = $item['is_active']
+                  ? 'text-[#b54737] font-semibold bg-[#fde2d9]/50'
+                  : 'text-[#574636] hover:text-[#b54737] hover:bg-[#f4eee3]/60 font-medium';
           ?>
+            <a href="<?php echo esc_url( $item['url'] ); ?>" target="<?php echo esc_attr( $item['target'] ); ?>" class="px-3 xl:px-4 py-2 rounded-full text-sm <?php echo esc_attr( $active_cls ); ?> transition flex flex-col items-center">
+              <span><?php echo esc_html( $item['title'] ); ?></span>
+              <?php if ( ! empty( $item['en'] ) ) : ?>
+                <span class="text-[9px] tracking-wider text-[#a48c6f] -mt-0.5"><?php echo esc_html( $item['en'] ); ?></span>
+              <?php endif; ?>
+            </a>
+          <?php endforeach; ?>
         </nav>
 
         <!-- CTAボタン（予約） -->
@@ -131,13 +116,23 @@
   <!-- モバイルメニューオーバーレイ（JS開閉） -->
   <div id="mobile-menu-drawer" class="hidden lg:hidden bg-[#faf7f2] border-b border-[#e7dac5] shadow-xl fixed top-[115px] left-0 right-0 z-40 p-6 space-y-4">
     <div class="grid grid-cols-1 gap-2">
-      <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">ホーム</a>
-      <a href="<?php echo esc_url( home_url( '/about/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">お店について</a>
-      <a href="<?php echo esc_url( home_url( '/menu/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">メニュー</a>
-      <a href="<?php echo esc_url( home_url( '/fruits/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">岡山の果物</a>
-      <a href="<?php echo esc_url( $news_page_url ?? home_url( '/news/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">お知らせ</a>
-      <a href="<?php echo esc_url( home_url( '/access/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">アクセス</a>
-      <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="p-3 rounded-xl hover:bg-[#f4eee3] text-sm font-medium">お問い合わせ</a>
+      <?php
+      $drawer_items = hareka_get_nav_items( 'primary' );
+      foreach ( $drawer_items as $item ) :
+          $m_active_cls = $item['is_active']
+              ? 'bg-[#fde2d9] text-[#b54737] font-semibold'
+              : 'text-[#433932] hover:bg-[#f4eee3] font-medium';
+      ?>
+        <a href="<?php echo esc_url( $item['url'] ); ?>" target="<?php echo esc_attr( $item['target'] ); ?>" class="flex items-center justify-between p-3 rounded-xl transition <?php echo esc_attr( $m_active_cls ); ?>">
+          <div>
+            <div class="text-base"><?php echo esc_html( $item['title'] ); ?></div>
+            <?php if ( ! empty( $item['en'] ) ) : ?>
+              <div class="text-xs text-[#a48c6f]"><?php echo esc_html( $item['en'] ); ?></div>
+            <?php endif; ?>
+          </div>
+          <span class="text-xs text-[#a48c6f]">→</span>
+        </a>
+      <?php endforeach; ?>
     </div>
     <div class="pt-4 border-t border-[#e7dac5] space-y-2">
       <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#e26d5c] to-[#b54737] text-white font-medium shadow text-sm">

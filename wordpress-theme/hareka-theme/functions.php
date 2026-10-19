@@ -12,6 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 // 店舗情報・営業時間 一元管理モジュール
 require_once get_template_directory() . '/inc/shop-settings.php';
 
+// ナビゲーションメニュー管理モジュール（動的メニュー＆英語サブテキスト）
+require_once get_template_directory() . '/inc/navigation.php';
+
 /**
  * テーマのセットアップ
  */
