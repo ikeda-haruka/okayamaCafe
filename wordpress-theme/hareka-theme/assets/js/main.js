@@ -542,11 +542,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // エラー表示をクリア
-            const errorAlert = document.getElementById('booking-error-alert');
-            const errorMsg = document.getElementById('booking-error-msg');
-            if (errorAlert) errorAlert.classList.add('hidden');
-
             // 送信ローディング表示
             if (submitSpinner) submitSpinner.classList.remove('hidden');
             if (submitBtn) submitBtn.disabled = true;
